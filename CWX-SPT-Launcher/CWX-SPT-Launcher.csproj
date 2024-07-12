@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <RootNamespace>CWX_SPT_Launcher</RootNamespace>
+        <LangVersion>latestmajor</LangVersion>
+        <Nullable>enable</Nullable>
+        <UseWindowsForms>true</UseWindowsForms>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Folder Include="Components\"/>
+        <Folder Include="Pages\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="Resources\index.html"/>
+        <None Remove="Resources\app.js"/>
+        <None Remove="Resources\app.css"/>
+        <None Remove="Resources\app.ico"/>
+        <EmbeddedResource Include="Resources\index.html"/>
+        <EmbeddedResource Include="Resources\app.js"/>
+        <EmbeddedResource Include="Resources\app.css"/>
+        <EmbeddedResource Include="Resources\app.ico"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.WindowsForms" Version="8.0.70"/>
+    </ItemGroup>
+
+</Project>
