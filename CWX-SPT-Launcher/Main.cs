@@ -8,8 +8,8 @@ public partial class Main : Form
 {
     private SettingsHelper _settingsHelper = null;
     private bool closeWhenIMeanIt = false;
-    public static readonly string _appPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "EftApp\\Resources");
+    public static readonly string AppPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        "CWX-SPT-Launcher\\Resources");
     
     public Main()
     {
@@ -32,9 +32,9 @@ public partial class Main : Form
     private void SetUpNotificationIcon()
     {
         this.notifyIcon = new NotifyIcon();
-        this.notifyIcon.Icon = new System.Drawing.Icon(Path.Combine(_appPath, "app.ico"));
+        this.notifyIcon.Icon = new System.Drawing.Icon(Path.Combine(AppPath, "app.ico"));
         this.notifyIcon.Visible = true;
-        this.notifyIcon.Text = "Eft App";
+        this.notifyIcon.Text = "CWX-SPT-LAUNCHER";
         this.notifyIcon.MouseClick += new MouseEventHandler(NotifyIconOnClick);
         this.notifyIcon.ContextMenuStrip = new ContextMenuStrip();
         this.notifyIcon.ContextMenuStrip.Items.Add("Open", null, (s, e) =>
@@ -105,7 +105,7 @@ public partial class Main : Form
         var blazorWebView = new BlazorWebView()
         {
             Dock = DockStyle.Fill,
-            HostPage = Path.Combine(_appPath, "index.html"),
+            HostPage = Path.Combine(AppPath, "index.html"),
             Services = services.BuildServiceProvider()
         };
 

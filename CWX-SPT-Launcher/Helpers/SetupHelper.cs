@@ -6,18 +6,7 @@ public class SetupHelper
 {
     private static SetupHelper? _instance;
     private static readonly object Lock = new();
-    private readonly string _appPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "EftApp\\Resources");
-    private Dictionary<string, string> _resourcePathing;
-
-    private SetupHelper()
-    {
-        _resourcePathing = new Dictionary<string, string>();
-        _resourcePathing.Add("WinformsBlazor.Resources.index.html", "index.html");
-        _resourcePathing.Add("WinformsBlazor.Resources.app.js", "app.js");
-        _resourcePathing.Add("WinformsBlazor.Resources.app.css", "app.css");
-        _resourcePathing.Add("WinformsBlazor.Resources.app.ico", "app.ico");
-    }
+    private Dictionary<string, string> _resourcePathing = new Dictionary<string, string>();
 
     public static SetupHelper Instance
     {
@@ -32,16 +21,17 @@ public class SetupHelper
 
     public void SetupDirectories()
     {
-        if (!Directory.Exists(_appPath))
+        if (!Directory.Exists(Main.AppPath))
         {
-            Directory.CreateDirectory(_appPath);
+            Directory.CreateDirectory(Main.AppPath);
         }
     }
 
     public void SetupResources()
     {
+        PrecheckResources();
         var assembly = Assembly.GetExecutingAssembly();
-
+        
         foreach (var resource in _resourcePathing)
         {
             using var stream = assembly.GetManifestResourceStream(resource.Key);
@@ -51,12 +41,41 @@ public class SetupHelper
                 return;
             }
 
-            using (var fileStream = new FileStream(Path.Combine(_appPath, resource.Value), FileMode.Create, FileAccess.Write))
+            using (var fileStream = new FileStream(Path.Combine(Main.AppPath, resource.Value), FileMode.Create, FileAccess.Write))
             {
                 stream.CopyTo(fileStream);
             }
 
-            Console.WriteLine($@"Saved {resource.Key} to {resource.Value}");
+            Console.WriteLine($@"Saved {resource.Key} to {Main.AppPath}\{resource.Value}");
+        }
+    }
+
+    private void PrecheckResources()
+    {
+        if (!File.Exists(Path.Combine(Main.AppPath, "index.html")))
+        {
+            _resourcePathing.Add("CWX_SPT_Launcher.Resources.index.html", "index.html");
+        }
+        
+        if (!File.Exists(Path.Combine(Main.AppPath, "app.js")))
+        {
+            _resourcePathing.Add("CWX_SPT_Launcher.Resources.app.js", "app.js");
+        }
+        
+        // if (!File.Exists(Path.Combine(Main.AppPath, "app.css")))
+        // {
+        //     _resourcePathing.Add("CWX_SPT_Launcher.Resources.app.css", "app.css");
+        // }
+        _resourcePathing.Add("CWX_SPT_Launcher.Resources.app.css", "app.css");
+        
+        if (!File.Exists(Path.Combine(Main.AppPath, "app.ico")))
+        {
+            _resourcePathing.Add("CWX_SPT_Launcher.Resources.app.ico", "app.ico");
+        }
+        
+        if (!File.Exists(Path.Combine(Main.AppPath, "settings.json")))
+        {
+            _resourcePathing.Add("CWX_SPT_Launcher.Resources.settings.json", "settings.json");
         }
     }
 }

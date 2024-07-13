@@ -1,0 +1,49 @@
+﻿@page "/"
+
+<div class="server-add-container">
+    <a @onclick="() => OnServerAddClick()"><ServerAddCard/></a>
+</div>
+<div class="server-container">
+    @foreach (var server in _servers)
+    {
+        <a href="asdasdasdas">
+            <ServerCard server="@server"/>
+        </a>
+    }
+</div>
+
+@if (ShowModal)
+{
+    <div class="server-modal-overlay" @onclick="() => OnCloseServerAdd()"></div>
+    
+}
+
+@code {
+    private List<ServersClass> _servers = SettingsHelper.Instance.GetSettings().Servers;
+
+    private bool ShowModal { get; set; } = false;
+    private ServersClass newServerClass { get; set; } = null;
+
+    private async void OnServerAddClick()
+    {
+        if (newServerClass == null)
+        {
+            newServerClass = new ServersClass();
+        }
+        ShowModal = true;
+    }
+
+    private async void OnCloseServerAdd()
+    {
+        ShowModal = false;
+    }
+
+    private async void OnServerAddSave()
+    {
+        // check that class properties are complete
+        // if not show error
+        // else add to _servers
+        // save to settings.json
+    }
+
+}

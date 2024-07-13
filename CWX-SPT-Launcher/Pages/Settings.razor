@@ -1,0 +1,25 @@
+﻿@page "/Settings"
+
+
+<h1>Settings Page</h1>
+<div class="settingscontainer">
+    <div class="setting">
+        <p>Close To Tray</p>
+        <label class="switch">
+            <input @onclick="() => SetCloseToTray()" type="checkbox" checked="@_settingsHelper.GetSettings().AppSettings.CloseToTray">
+            <span class="slider round"></span>
+        </label>
+    </div>
+</div>
+
+
+@code {
+    private SettingsHelper _settingsHelper { get; set; } = SettingsHelper.Instance;
+
+    private void SetCloseToTray()
+    {
+        _settingsHelper.SetCloseToTray(!_settingsHelper.GetSettings().AppSettings.CloseToTray);
+        _settingsHelper.SaveSettings();
+    }
+
+}

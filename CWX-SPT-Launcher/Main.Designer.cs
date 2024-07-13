@@ -28,6 +28,8 @@ partial class Main
     {
         SuspendLayout();
 
+        TopMost = true; // TODO: change to a setting later on
+        BackColor = Color.FromArgb(36, 36, 36);
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         MinimumSize = new Size(640, 450);

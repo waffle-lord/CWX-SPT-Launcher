@@ -1,0 +1,31 @@
+﻿{
+  "FirstRun": true,
+  "AppSettings": {
+    "StartLocation": {
+      "X": 0,
+      "Y": 0
+    },
+    "StartSize": {
+      "Width": 0,
+      "Height": 0
+    },
+    "CloseToTray": false
+  },
+  "Servers": [
+    {
+      "Ip": "127.0.0.1:6969",
+      "DefaultProfile": "MongoID",
+      "RemoteServer": false,
+      "Password": ""
+    },
+    {
+      "Ip": "74.124.420.69:6969",
+      "DefaultProfile": "MongoID",
+      "RemoteServer": true,
+      "Password": ""
+    }
+  ],
+  "DebugSettings": {
+    "DebugLocation": false
+  }
+}

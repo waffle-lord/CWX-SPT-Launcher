@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Reflection;
+using System.Text.Json;
 using CWX_SPT_Launcher.Models;
 
 namespace CWX_SPT_Launcher.Helpers;
@@ -7,13 +8,11 @@ public class SettingsHelper
 {
     private static SettingsHelper _instance = null;
     private static readonly object _lock = new object();
-    private static string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-    private static string settingsPath = Path.Combine(appDataPath, "EftApp", "Settings.json");
     private SettingsClass _settings = null;
 
     private SettingsHelper()
     {
-        PopulateSettings();
+        LoadSettingsFromFile();
     }
 
     public static SettingsHelper Instance
@@ -26,47 +25,18 @@ public class SettingsHelper
                 {
                     _instance = new SettingsHelper();
                 }
+
                 return _instance;
             }
         }
     }
 
-    public void PopulateSettings()
+    private void LoadSettingsFromFile()
     {
-        if (File.Exists(settingsPath))
-        {
-            _settings = JsonSerializer.Deserialize<SettingsClass>(File.ReadAllText(settingsPath));
-        }
-        else
-        {
-            var settings = new SettingsClass
-            {
-                FirstRun = true,
-                AppSettings = new AppSettingsClass
-                {
-                    StartLocation = new StartLocationClass()
-                    {
-                        X = 0,
-                        Y = 0
-                    },
-                    StartSize = new StartSizeClass
-                    {
-                        Width = 0,
-                        Height = 0
-                    },
-                    CloseToTray = false
-                },
-                DebugSettings = new DebugSettingsClass
-                {
-                    DebugLocation = false
-                }
-            };
-            
-            File.WriteAllText(settingsPath, JsonSerializer.Serialize(settings));
-            _settings = settings;
-        }
+        _settings = JsonSerializer.Deserialize<SettingsClass>(
+            File.ReadAllText(Path.Combine(Main.AppPath, "settings.json")));
     }
-    
+
     public SettingsClass GetSettings()
     {
         return _settings;
@@ -74,7 +44,7 @@ public class SettingsHelper
 
     public void SaveSettings()
     {
-        File.WriteAllText(settingsPath, JsonSerializer.Serialize(_settings));
+        File.WriteAllText(Path.Combine(Main.AppPath, "settings.json"), JsonSerializer.Serialize(_settings));
     }
 
     public void SetClientSizeSettings(int height, int width)
