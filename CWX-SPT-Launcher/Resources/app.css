@@ -175,3 +175,38 @@ input:checked + .slider:before {
     flex-direction: column;
     justify-content: center;
 }
+
+.server-modal-overlay {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 11;
+    top: 0;
+    left: 0;
+    backdrop-filter: blur(2px);
+}
+
+.server-add-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background-color: #242424;
+    color: #c8c8c7;
+    width: 50vw;
+    height: 50vh;
+    transform: translate(-50%, -50%);
+    z-index: 12;
+    border-radius: 5px;
+    border: 2px solid #242424;
+    padding: 0.7rem 1.2rem 0.7rem 0.7rem;
+    max-height: 200px;
+    max-width: 400px;
+    overflow: auto;
+    transition: height 0.5s;
+}
+
+.server-add-modal form {
+    display: flex;
+    flex-direction: column;
+}

@@ -1,49 +1,68 @@
 ﻿@page "/"
 
 <div class="server-add-container">
-    <a @onclick="() => OnServerAddClick()"><ServerAddCard/></a>
+    <a @onclick="() => OnServerAddClick()">
+        <ServerAddCard/>
+    </a>
 </div>
 <div class="server-container">
     @foreach (var server in _servers)
     {
-        <a href="asdasdasdas">
-            <ServerCard server="@server"/>
-        </a>
+        <div class="server-card">
+            <ServerCard server="@server" />
+            <button @onclick="() => TryServerConnect(server)">--TryConnect--</button>
+            <button @onclick="() => RemoveServerFromList(server)">--Remove--</button>
+        </div>
     }
 </div>
 
 @if (ShowModal)
 {
     <div class="server-modal-overlay" @onclick="() => OnCloseServerAdd()"></div>
-    
+    <ServerAddModal />
 }
 
 @code {
-    private List<ServersClass> _servers = SettingsHelper.Instance.GetSettings().Servers;
+    private static List<ServersClass> _servers = RefreshServerList();
+    private bool _showModal = false;
 
-    private bool ShowModal { get; set; } = false;
-    private ServersClass newServerClass { get; set; } = null;
+    public bool ShowModal
+    {
+        get
+        {
+            return _showModal;
+        }
+        set
+        {
+            _showModal = value;
+            Console.WriteLine($"ShowModal set to: {_showModal}");
+        }
+    }
 
     private async void OnServerAddClick()
     {
-        if (newServerClass == null)
-        {
-            newServerClass = new ServersClass();
-        }
         ShowModal = true;
     }
 
-    private async void OnCloseServerAdd()
+    public async void OnCloseServerAdd()
     {
         ShowModal = false;
+        Home.RefreshServerList();
     }
 
-    private async void OnServerAddSave()
+    private async void RemoveServerFromList(ServersClass server)
     {
-        // check that class properties are complete
-        // if not show error
-        // else add to _servers
-        // save to settings.json
+        SettingsHelper.Instance.RemoveServerFromServerList(server);
+        Home.RefreshServerList();
     }
 
+    public static List<ServersClass> RefreshServerList()
+    {
+        return SettingsHelper.Instance.GetSettings().Servers;
+    }
+
+    private async void TryServerConnect(ServersClass server)
+    {
+        
+    }
 }

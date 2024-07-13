@@ -64,6 +64,18 @@ public class SettingsHelper
         _settings.FirstRun = firstRun;
     }
 
+    public void AddServerToServerList(ServersClass server)
+    {
+        _settings.Servers.Add(server);
+        SaveSettings();
+    }
+
+    public void RemoveServerFromServerList(ServersClass server)
+    {
+        _settings.Servers.Remove(server);
+        SaveSettings();
+    }
+
     public void SetCloseToTray(bool closeToTray)
     {
         _settings.AppSettings.CloseToTray = closeToTray;
