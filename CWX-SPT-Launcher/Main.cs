@@ -1,6 +1,9 @@
 using CWX_SPT_Launcher.Helpers;
 using Microsoft.AspNetCore.Components.WebView.WindowsForms;
 using Microsoft.Extensions.DependencyInjection;
+using MudBlazor;
+using MudBlazor.Services;
+using Size = System.Drawing.Size;
 
 namespace CWX_SPT_Launcher;
 
@@ -101,6 +104,14 @@ public partial class Main : Form
         var services = new ServiceCollection();
         services.AddWindowsFormsBlazorWebView();
         services.AddBlazorWebViewDeveloperTools();
+        services.AddMudServices(config =>
+        {
+            config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopCenter;
+            config.SnackbarConfiguration.PreventDuplicates = false;
+            config.SnackbarConfiguration.VisibleStateDuration = 2000;
+            config.SnackbarConfiguration.ShowTransitionDuration = 100;
+            config.SnackbarConfiguration.HideTransitionDuration = 100;
+        });
 
         var blazorWebView = new BlazorWebView()
         {

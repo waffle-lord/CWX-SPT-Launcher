@@ -1,28 +1,40 @@
 ﻿@page "/"
+@inject ISnackbar Snackbar
 
-<div class="server-add-container">
-    <a @onclick="() => OnServerAddClick()">
-        <ServerAddCard/>
-    </a>
-</div>
-<div class="server-container">
-    @foreach (var server in _servers)
-    {
-        <div class="server-card">
-            <ServerCard server="@server" />
-            <button @onclick="() => TryServerConnect(server)">--TryConnect--</button>
-            <button @onclick="() => RemoveServerFromList(server)">--Remove--</button>
-        </div>
-    }
-</div>
-
-@if (ShowModal)
-{
-    <div class="server-modal-overlay" @onclick="() => OnCloseServerAdd()"></div>
-    <ServerAddModal />
-}
+<MudContainer Class="mt-8 px-8" MaxWidth="MaxWidth.Large">
+    <MudGrid >
+        @foreach (var server in @_servers)
+        {
+            <ServerCard Server="@server"/>
+        }
+        <ServerCardAdd />
+    </MudGrid>
+</MudContainer>
+@* *@
+@* <div class="server-add-container"> *@
+@*     <a @onclick="() => OnServerAddClick()"> *@
+@*         <ServerAddCard/> *@
+@*     </a> *@
+@* </div> *@
+@* <div class="server-container"> *@
+@*     @foreach (var server in _servers) *@
+@*     { *@
+@*         <div class="server-card"> *@
+@*             <ServerCard server="@server" /> *@
+@*             <button @onclick="() => TryServerConnect(server)">--TryConnect--</button> *@
+@*             <button @onclick="() => RemoveServerFromList(server)">--Remove--</button> *@
+@*         </div> *@
+@*     } *@
+@* </div> *@
+@* *@
+@* @if (ShowModal) *@
+@* { *@
+@*     <div class="server-modal-overlay" @onclick="() => OnCloseServerAdd()"></div> *@
+@*     <ServerAddModal /> *@
+@* } *@
 
 @code {
+
     private static List<ServersClass> _servers = RefreshServerList();
     private bool _showModal = false;
 
@@ -44,20 +56,17 @@
         ShowModal = true;
     }
 
-    public async void OnCloseServerAdd()
-    {
-        ShowModal = false;
-        Home.RefreshServerList();
-    }
-
     private async void RemoveServerFromList(ServersClass server)
     {
         SettingsHelper.Instance.RemoveServerFromServerList(server);
+        Console.WriteLine("ping");
         Home.RefreshServerList();
     }
 
     public static List<ServersClass> RefreshServerList()
     {
+        Console.WriteLine("refresh!");
+
         return SettingsHelper.Instance.GetSettings().Servers;
     }
 

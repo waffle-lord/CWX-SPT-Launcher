@@ -1,11 +1,29 @@
 ﻿@inherits LayoutComponentBase
 
-<BlazoredToasts />
+<MudThemeProvider IsDarkMode="true"/>
+<MudPopoverProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
 
-<div class="topbar">
-    <NavMenu />
-</div>
+<MudLayout>
+    @* <MudAppBar Color="Color.Primary" Fixed="true" Dense="true" Elevation="0"> *@
+    @*     <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" /> *@
+    @*     <MudSpacer /> *@
+    @*     <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" /> *@
+    @* </MudAppBar> *@
+    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Never" Elevation="5" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Breakpoint="Breakpoint.None">
+        <NavMenu/>
+    </MudDrawer>
+    <MudMainContent Class="pt-1">
+        @Body
+    </MudMainContent>
+</MudLayout>
 
-<main id="main">
-    @Body
-</main>
+@code {
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}
