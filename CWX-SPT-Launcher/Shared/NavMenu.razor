@@ -1,27 +1,5 @@
 ﻿@inject ISnackbar Snackbar
 
-@* $1$ https://fonts.google.com/icons #1# *@
-@* *@
-@* <div class="nav-left"> *@
-@*     <NavLink class="nav-link" href="" Match="NavLinkMatch.All"> *@
-@*         <span class="material-symbols-outlined" aria-hidden="true">home</span> *@
-@*     </NavLink> *@
-@* *@
-@*     $1$ <NavLink class="nav-link" href="Quests"> #1# *@
-@*     $1$     <span class="material-symbols-outlined" aria-hidden="true">indeterminate_question_box</span> #1# *@
-@*     $1$ </NavLink> #1# *@
-@*     $1$ #1# *@
-@*     $1$ <NavLink class="nav-link" href="Items"> #1# *@
-@*     $1$     <span class="material-symbols-outlined" aria-hidden="true">category</span> #1# *@
-@*     $1$ </NavLink> #1# *@
-@* </div> *@
-@* *@
-@* <div class="nav-right"> *@
-@*     <NavLink class="nav-link" href="Settings"> *@
-@*         <span class="material-symbols-outlined" aria-hidden="true">settings</span> *@
-@*     </NavLink> *@
-@* </div> *@
-
 <MudNavMenu>
     <MudNavLink Icon="@Icons.Material.Filled.Store" Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>
     <MudNavLink Icon="@Icons.Material.Filled.Store" Href="/Servers" Match="NavLinkMatch.Prefix">Servers</MudNavLink>

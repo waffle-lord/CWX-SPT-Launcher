@@ -1,0 +1,29 @@
+﻿@inject ISnackbar Snackbar
+
+<MudDialog Class="pt-4 pb-2">
+    <DialogContent>
+        <MudText>Do you really want to delete this server? This process cannot be undone.</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Class="ml-auto" @onclick="() => Submit()">Confirm</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="() => Cancel()">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private bool success;
+    
+    [CascadingParameter] 
+    private MudDialogInstance MudDialog { get; set; }
+
+    private async void Submit()
+    {
+        MudDialog.Close(DialogResult.Ok(true));
+        Snackbar.Add("Removed!");
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}

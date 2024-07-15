@@ -16,3 +16,7 @@
     right: 0.75rem;
     top: 0.5rem;
 }
+
+.dialog-backdrop-class {
+    backdrop-filter: blur(10px);
+}

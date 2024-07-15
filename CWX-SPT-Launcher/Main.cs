@@ -119,7 +119,6 @@ public partial class Main : Form
             HostPage = Path.Combine(AppPath, "index.html"),
             Services = services.BuildServiceProvider()
         };
-
         blazorWebView.RootComponents.Add<BlazorApp>("#app");
         Controls.Add(blazorWebView);
     }

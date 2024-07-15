@@ -1,35 +1,29 @@
 ﻿@inject ISnackbar Snackbar
 
-<MudDialog>
-    <TitleContent>
-        Add New Server
-    </TitleContent>
+<MudDialog Class="pt-4 pb-2">
     <DialogContent>
-        <MudForm Model="@_server" @ref="form" @bind-IsValid="@success" Class="gap-2">
-            <MudTextField @bind-Value="_server.Ip" Label="IP" Required="true" RequiredError="IP is required!"/>
-            <MudTextField T="string" @bind-value="_server.Password" Label="Password"/>
+        <MudForm Model="@_server" @bind-IsValid="@success" Class="gap-2 mt-3">
+            <MudTextField Immediate="true" @bind-Value="_server.Ip" Label="IP" Required="true" RequiredError="IP is required!" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+            <MudTextField Immediate="true" @bind-Value="_server.Password" Label="Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
             <MudSwitch @bind-Value="_server.RemoteServer" Label="IsLocal" ThumbIcon="@(_server.RemoteServer ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(_server.RemoteServer ? Color.Success : Color.Error)"/>
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" @onclick="() => Submit(form)">Register</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" @onclick="() => Submit()">Add</MudButton>
     </DialogActions>
 </MudDialog>
 
 @code {
     private bool success;
-    private MudForm form;
     private ServersClass _server = new ServersClass();
     
     [CascadingParameter] 
     private MudDialogInstance MudDialog { get; set; }
 
-    private async void Submit(MudForm form)
+    private async void Submit()
     {
-        MudDialog.Close(DialogResult.Ok(true));
-        SettingsHelper.Instance.AddServerToServerList(_server);
+        MudDialog.Close(DialogResult.Ok(_server));
         Snackbar.Add("Added!");
-        Home.RefreshServerList();
     }
 
     private void Cancel()

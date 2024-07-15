@@ -9,7 +9,8 @@
       "Width": 0,
       "Height": 0
     },
-    "CloseToTray": false
+    "CloseToTray": false,
+    "HomePageDenseMode": false
   },
   "Servers": [
     {
