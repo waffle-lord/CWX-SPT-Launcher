@@ -99,7 +99,7 @@
         {
             ServerHelper.Instance.LogoutAndDispose();
         }
-        
+
         var dialog = await DialogService.ShowAsync<ServerRemoveDialog>("ServerRemoveDialog", SettingsHelper.Instance.DialogOptions);
         var result = await dialog.Result;
 
@@ -115,7 +115,7 @@
         {
             ServerHelper.Instance.LogoutAndDispose();
         }
-        
+
         var param = new DialogParameters();
         param.Add("Server", server);
 
@@ -136,7 +136,7 @@
             ServerHelper.Instance.LogoutAndDispose();
             return;
         }
-        
+
         // wanting to connect to server
         var param = new DialogParameters();
         param.Add("Server", server);

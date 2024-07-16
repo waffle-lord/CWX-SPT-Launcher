@@ -1,0 +1,26 @@
+﻿@inject ISnackbar Snackbar
+
+<MudDialog Class="pt-4 pb-2">
+    <DialogContent>
+        Server: @Server.Ip - @Server.Name
+        Profile: @Profile.Id - @Profile.Name - @Profile.Level
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" @onclick="() => Cancel()">Start Game</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="() => Cancel()">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Parameter]
+    public ServersClass Server { get; set; }
+    [Parameter]
+    public SptProfileClass Profile { get; set; }
+    [CascadingParameter] 
+    private MudDialogInstance MudDialog { get; set; }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}

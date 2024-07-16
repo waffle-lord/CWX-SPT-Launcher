@@ -5,7 +5,7 @@
 <MudContainer Class="px-8 my-8" MaxWidth="MaxWidth.Large">
     <MudContainer Class="mt-n6 mb-3 pa-0 d-flex justify-space-between">
         <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.PersonAdd" Size="Size.Large" @onclick="() => RunAddTask()" Variant="Variant.Filled">Create New Profile</MudButton>
-        <MudButton Class="ml-2" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Login" Size="Size.Large" Variant="Variant.Filled">Login with details</MudButton>
+        <MudButton Class="ml-2" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Login" Size="Size.Large" Variant="Variant.Outlined">Login with details</MudButton>
         <MudSpacer/>
         <MudIconButton Icon="@((denseMode) ? @Icons.Material.Filled.ViewModule : @Icons.Material.Filled.ViewHeadline)" Variant="Variant.Filled" Color="Color.Tertiary" Size="Size.Large" OnClick="() => ChangeDenseMode()" Disabled="true"/>
     </MudContainer>
@@ -23,7 +23,6 @@
                         <MudTextField ShrinkLabel @bind-Value="profile.Side" Label="Side" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
                         <MudContainer Class="justify-end d-flex mt-n10 pa-0">
                             <MudIconButton Class="mr-1" Color="Color.Default" Icon="@Icons.Material.Filled.Login" Size="Size.Small" @onclick="() => RunStartGameTask(profile)"/>
-                            @* <MudIconButton Color="Color.Default" Icon="@Icons.Material.Filled.Build" Size="Size.Small" @onclick="() => RunEditTask(profile)"/> *@
                             <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" @onclick="() => RunDeleteTask(profile)"/>
                         </MudContainer>
                     </MudPaper>
@@ -40,10 +39,8 @@
                         <MudTextField ShrinkLabel @bind-Value="profile.Name" Label="Name" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
                         <MudTextField ShrinkLabel @bind-Value="profile.Level" Label="Level" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
                         <MudTextField ShrinkLabel @bind-Value="profile.Side" Label="Side" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                        @* <MudTextField ShrinkLabel @bind-Value="profile.Password" Label="Password" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/> *@
                         <MudContainer Class="justify-end d-flex flex-1 pa-0 ml-2">
                             <MudIconButton Class="mr-1" Color="Color.Default" Icon="@Icons.Material.Filled.Login" Size="Size.Small" @onclick="() => RunStartGameTask(profile)"/>
-                            @* <MudIconButton Color="Color.Default" Icon="@Icons.Material.Filled.Build" Size="Size.Small" @onclick="() => RunEditTask(profile)"/> *@
                             <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" @onclick="() => RunDeleteTask(profile)"/>
                         </MudContainer>
                     </MudPaper>
@@ -102,14 +99,31 @@
 
     private async Task RunStartGameTask(SptProfileClass profile)
     {
-        // start game
-        throw new NotImplementedException();
-    }
+        var server = SettingsHelper.Instance.GetSettings().Servers.FirstOrDefault(x => x.ServerId == ServerHelper.Instance.ConnectedServerId);
+        var dialogParams = new DialogParameters();
+        dialogParams.Add("Server", server);
+        dialogParams.Add("Profile", profile);
 
-    // private async Task RunEditTask(SptProfileClass profile)
-    // {
-    //     throw new NotImplementedException();
-    // }
+        if (server == null || dialogParams == null)
+        {
+            return;
+        }
+
+        var DialogOptions = new DialogOptions
+        {
+            Position = DialogPosition.Center,
+            MaxWidth = MaxWidth.False,
+            BackdropClick = true,
+            CloseOnEscapeKey = true,
+            NoHeader = true,
+            CloseButton = true,
+            FullScreen = true,
+            FullWidth = true,
+            BackgroundClass = "dialog-backdrop-class"
+        };
+
+        DialogService.ShowAsync<ProfileLoginDialog>("ProfileLoginDialog", dialogParams, DialogOptions);
+    }
 
     private async Task RunDeleteTask(SptProfileClass profile)
     {

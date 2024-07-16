@@ -1,26 +1,37 @@
 ﻿@page "/Settings"
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
 
-<h1>Settings Page</h1>
+<MudContainer Class="px-8 my-8" MaxWidth="MaxWidth.Large">
+    <MudContainer Class="mt-n6 mb-3 pa-0 d-flex justify-center gap-2">
+        <MudButton Color="Color.Default" Size="Size.Medium" Variant="Variant.Filled">Remove Registy Keys</MudButton>
+        <MudButton Color="Color.Default" Size="Size.Medium" Variant="Variant.Filled">Load Live Settings</MudButton>
+        <MudButton Color="Color.Default" Size="Size.Medium" Variant="Variant.Filled">Clear Game Settings</MudButton>
+        <MudButton Color="Color.Default" Size="Size.Medium" Variant="Variant.Filled">Clean Temp Files</MudButton>
+    </MudContainer>
+    <MudGrid>
+        <MudItem sm="6">
+            <MudPaper Class="pa-5 mr-1 gap-2 d-flex flex-column" Elevation="3">
+                <MudSelect T="string" Label="Language" Variant="Variant.Outlined" AnchorOrigin="Origin.CenterRight">
+                    <MudSelectItem T="string" Value="@("English")"/>
+                    <MudSelectItem T="string" Value="@("Dutch")"/>
+                    <MudSelectItem T="string" Value="@("Pirate")"/>
+                    <MudSelectItem T="string" Value="@("French")"/>
+                </MudSelect>
+                <MudSwitch @bind-Value="switchopt" Color="Color.Primary">Close To Tray</MudSwitch>
+            </MudPaper>
+        </MudItem>
+        <MudItem sm="6">
+            <MudPaper Class="pa-5 ml-1 gap-1 d-flex flex-column" Elevation="3">
+                <MudSwitch @bind-Value="switchopt" Color="Color.Primary">Advanced User</MudSwitch>
+                <MudTextField @bind-Value="Path" Variant="Variant.Outlined" Label="Spt Game Path" Disabled="!switchopt"/>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
 
-
-@* <div class="settingscontainer"> *@
-@*     <div class="setting"> *@
-@*         <p>Close To Tray</p> *@
-@*         <label class="switch"> *@
-@*             <input @onclick="() => SetCloseToTray()" type="checkbox" checked="@_settingsHelper.GetSettings().AppSettings.CloseToTray"> *@
-@*             <span class="slider round"></span> *@
-@*         </label> *@
-@*     </div> *@
-@* </div> *@
-
-
-@* @code { *@
-@*     private SettingsHelper _settingsHelper { get; set; } = SettingsHelper.Instance; *@
-@* *@
-@*     private void SetCloseToTray() *@
-@*     { *@
-@*         _settingsHelper.SetCloseToTray(!_settingsHelper.GetSettings().AppSettings.CloseToTray); *@
-@*         _settingsHelper.SaveSettings(); *@
-@*     } *@
-@* *@
-@* } *@
+@code
+{
+    private bool switchopt { get; set; } = true;
+    private string Path { get; set; } = "C:\\SPT\\spt390";
+}

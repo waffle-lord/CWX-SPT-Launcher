@@ -6,5 +6,5 @@ public class ServersClass
 {
     [Required] public string Ip { get; set; } = "";
     public string Name { get; set; } = "";
-    public string ServerId { get; private set; } = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(); // just a unix timestamp
+    public string ServerId { get; set; } // just a unix timestamp
 }

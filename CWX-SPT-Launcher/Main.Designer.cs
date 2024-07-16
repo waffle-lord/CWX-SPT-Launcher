@@ -32,7 +32,7 @@ partial class Main
         BackColor = Color.FromArgb(36, 36, 36);
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        MinimumSize = new Size(1040, 550);
+        MinimumSize = new Size(1070, 550);
 			
         if (settings.FirstRun)
         {
