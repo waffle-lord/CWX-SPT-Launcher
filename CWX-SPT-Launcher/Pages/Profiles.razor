@@ -7,7 +7,7 @@
         <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.PersonAdd" Size="Size.Large" @onclick="() => RunAddTask()" Variant="Variant.Filled">Create New Profile</MudButton>
         <MudButton Class="ml-2" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Login" Size="Size.Large" Variant="Variant.Outlined">Login with details</MudButton>
         <MudSpacer/>
-        <MudIconButton Icon="@((denseMode) ? @Icons.Material.Filled.ViewModule : @Icons.Material.Filled.ViewHeadline)" Variant="Variant.Filled" Color="Color.Tertiary" Size="Size.Large" OnClick="() => ChangeDenseMode()" Disabled="true"/>
+        <MudIconButton Icon="@((denseMode) ? @Icons.Material.Filled.ViewModule : @Icons.Material.Filled.ViewHeadline)" Variant="Variant.Filled" Color="Color.Tertiary" Size="Size.Large" OnClick="() => ChangeDenseMode()"/>
     </MudContainer>
     <MudGrid>
         @if (!denseMode)
@@ -19,9 +19,8 @@
                         <MudTextField ShrinkLabel @bind-Value="profile.Id" Label="Id" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
                         <MudTextField ShrinkLabel @bind-Value="profile.Name" Label="Name" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
                         <MudTextField ShrinkLabel @bind-Value="profile.Level" Label="Level" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                        <MudTextField ShrinkLabel @bind-Value="profile.Password" Label="Password" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
                         <MudTextField ShrinkLabel @bind-Value="profile.Side" Label="Side" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                        <MudContainer Class="justify-end d-flex mt-n10 pa-0">
+                        <MudContainer Class="justify-end d-flex pa-0">
                             <MudIconButton Class="mr-1" Color="Color.Default" Icon="@Icons.Material.Filled.Login" Size="Size.Small" @onclick="() => RunStartGameTask(profile)"/>
                             <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" @onclick="() => RunDeleteTask(profile)"/>
                         </MudContainer>
@@ -106,18 +105,19 @@
 
         if (server == null || dialogParams == null)
         {
+            Snackbar.Add("Connect to a server first!", Severity.Warning);
             return;
         }
 
         var DialogOptions = new DialogOptions
         {
             Position = DialogPosition.Center,
-            MaxWidth = MaxWidth.False,
-            BackdropClick = true,
-            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Medium,
+            BackdropClick = false,
+            CloseOnEscapeKey = false,
             NoHeader = true,
-            CloseButton = true,
-            FullScreen = true,
+            CloseButton = false,
+            FullScreen = false,
             FullWidth = true,
             BackgroundClass = "dialog-backdrop-class"
         };
