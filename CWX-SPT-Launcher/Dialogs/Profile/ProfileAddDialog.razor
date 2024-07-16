@@ -1,0 +1,32 @@
+﻿@inject ISnackbar Snackbar
+
+<MudDialog Class="pt-4 pb-2">
+    <DialogContent>
+        <MudForm Model="Profile" @bind-IsValid="@success" Class="gap-2 mt-3">
+            <MudTextField Immediate="true" @bind-Value="Profile.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Required="true"/>
+            <MudTextField Immediate="true" @bind-Value="Profile.Password" Label="Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" @onclick="() => Submit()">Add</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private bool success;
+    public SptProfileClass Profile = new SptProfileClass();
+    
+    [CascadingParameter] 
+    private MudDialogInstance MudDialog { get; set; }
+
+    private async void Submit()
+    {
+        MudDialog.Close(DialogResult.Ok(Profile));
+        Snackbar.Add("Added Profile!", Severity.Success);
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}

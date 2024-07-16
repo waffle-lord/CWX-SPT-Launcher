@@ -6,4 +6,5 @@ public class AppSettingsClass
     public StartSizeClass StartSize { get; set; }
     public bool CloseToTray { get; set; }
     public bool HomePageDenseMode { get; set; }
+    public bool ProfilePageDenseMode { get; set; }
 }

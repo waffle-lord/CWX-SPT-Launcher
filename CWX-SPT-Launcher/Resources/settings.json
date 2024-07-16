@@ -10,20 +10,19 @@
       "Height": 0
     },
     "CloseToTray": false,
-    "HomePageDenseMode": false
+    "HomePageDenseMode": true,
+    "ProfilePageDenseMode": true
   },
   "Servers": [
     {
-      "Ip": "127.0.0.1:6969",
-      "DefaultProfile": "MongoID",
-      "RemoteServer": false,
-      "Password": ""
+      "Ip": "111.111.111.111:11111",
+      "Name": "asd",
+      "ServerId": "1721162719"
     },
     {
-      "Ip": "74.124.420.69:6969",
-      "DefaultProfile": "MongoID",
-      "RemoteServer": true,
-      "Password": ""
+      "Ip": "111.111.111.111:11111",
+      "Name": "qwe",
+      "ServerId": "1721162722"
     }
   ],
   "DebugSettings": {

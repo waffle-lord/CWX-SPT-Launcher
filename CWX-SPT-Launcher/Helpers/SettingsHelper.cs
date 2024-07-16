@@ -8,7 +8,7 @@ namespace CWX_SPT_Launcher.Helpers;
 public class SettingsHelper
 {
     private static SettingsHelper _instance = null;
-    private static readonly object _lock = new object();
+    private static readonly object Lock = new object();
     private SettingsClass _settings = null;
 
     public DialogOptions DialogOptions = new DialogOptions
@@ -31,14 +31,9 @@ public class SettingsHelper
     {
         get
         {
-            lock (_lock)
+            lock (Lock)
             {
-                if (_instance == null)
-                {
-                    _instance = new SettingsHelper();
-                }
-
-                return _instance;
+                return _instance ??= new SettingsHelper();
             }
         }
     }
@@ -94,6 +89,12 @@ public class SettingsHelper
     public void SetHomePageDenseMode(bool mode)
     {
         _settings.AppSettings.HomePageDenseMode = mode;
+        SaveSettings();
+    }
+    
+    public void SetProfilePageDenseMode(bool mode)
+    {
+        _settings.AppSettings.ProfilePageDenseMode = mode;
         SaveSettings();
     }
 }

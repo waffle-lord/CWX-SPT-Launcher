@@ -8,6 +8,8 @@
     position: fixed;
     width: 100%;
     z-index: 1000;
+    color: red;
+    margin-left: 3rem;
 }
 
 #blazor-error-ui .dismiss {
