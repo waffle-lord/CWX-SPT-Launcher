@@ -4,49 +4,15 @@
 
 <MudContainer Class="px-8 my-8" MaxWidth="MaxWidth.Large">
     <MudContainer Class="mt-n6 mb-3 pa-0 d-flex justify-space-between">
-        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.PersonAdd" Size="Size.Large" @onclick="() => RunAddTask()" Variant="Variant.Filled">Create New Profile</MudButton>
+        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.PersonAdd" Size="Size.Large" @onclick="() => RunAddTask()" Variant="Variant.Outlined">Create New Profile</MudButton>
         <MudButton Class="ml-2" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Login" Size="Size.Large" Variant="Variant.Outlined">Login with details</MudButton>
-        <MudSpacer/>
-        <MudIconButton Icon="@((denseMode) ? @Icons.Material.Filled.ViewModule : @Icons.Material.Filled.ViewHeadline)" Variant="Variant.Filled" Color="Color.Tertiary" Size="Size.Large" OnClick="() => ChangeDenseMode()"/>
     </MudContainer>
     <MudGrid>
-        @if (!denseMode)
+        @foreach (var profile in ProfilesList)
         {
-            @foreach (var profile in _profiles)
-            {
-                <MudItem sm="12" md="4">
-                    <MudPaper Elevation="2" Class="pa-4 d-flex flex-column flex-grow-1 gap-2">
-                        <MudTextField ShrinkLabel @bind-Value="profile.Id" Label="Id" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                        <MudTextField ShrinkLabel @bind-Value="profile.Name" Label="Name" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                        <MudTextField ShrinkLabel @bind-Value="profile.Level" Label="Level" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                        <MudTextField ShrinkLabel @bind-Value="profile.Side" Label="Side" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                        <MudContainer Class="justify-end d-flex pa-0">
-                            <MudIconButton Class="mr-1" Color="Color.Default" Icon="@Icons.Material.Filled.Login" Size="Size.Small" @onclick="() => RunStartGameTask(profile)"/>
-                            <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" @onclick="() => RunDeleteTask(profile)"/>
-                        </MudContainer>
-                    </MudPaper>
-                </MudItem>
-            }
+            <ProfileCardComponent Profile="@profile" @bind-ProfileList="ProfilesList" />
         }
-        else if (denseMode)
-        {
-            @foreach (var profile in _profiles)
-            {
-                <MudItem sm="12">
-                    <MudPaper Elevation="2" Class="pa-4 d-flex flex-row flex-grow-1 gap-4">
-                        <MudTextField ShrinkLabel @bind-Value="profile.Id" Label="Id" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                        <MudTextField ShrinkLabel @bind-Value="profile.Name" Label="Name" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                        <MudTextField ShrinkLabel @bind-Value="profile.Level" Label="Level" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                        <MudTextField ShrinkLabel @bind-Value="profile.Side" Label="Side" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                        <MudContainer Class="justify-end d-flex flex-1 pa-0 ml-2">
-                            <MudIconButton Class="mr-1" Color="Color.Default" Icon="@Icons.Material.Filled.Login" Size="Size.Small" @onclick="() => RunStartGameTask(profile)"/>
-                            <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" @onclick="() => RunDeleteTask(profile)"/>
-                        </MudContainer>
-                    </MudPaper>
-                </MudItem>
-            }
-        }
-        @if (_profiles.Count == 0)
+        @if (ProfilesList.Count == 0)
         {
             <MudItem sm="12">
                 <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">If you are connected to a server, please use the above "Login with details" button.</MudAlert>
@@ -56,33 +22,55 @@
 </MudContainer>
 
 @code {
-    private bool denseMode = SettingsHelper.Instance.GetSettings().AppSettings.ProfilePageDenseMode;
 
-    private List<SptProfileClass> _profiles = new List<SptProfileClass>()
+    public List<SptProfileClass> ProfilesList = new List<SptProfileClass>()
     {
         new SptProfileClass
         {
-            Id = "1",
+            Id = "122222222222222222222",
             Name = "CWX",
             Password = "",
             Side = "BEAR",
-            Level = "69"
+            Level = "69",
+            Edition = "The Unheard Edition"
         },
         new SptProfileClass
         {
-            Id = "2",
+            Id = "222222222222222222222",
             Name = "Waffle",
             Password = "Waffle",
             Side = "USEC",
-            Level = "420"
+            Level = "420",
+            Edition = "Edge Of Darkness"
+        },
+        new SptProfileClass
+        {
+            Id = "122222222222222222222",
+            Name = "CWX",
+            Password = "",
+            Side = "BEAR",
+            Level = "69",
+            Edition = "The Unheard Edition"
+        },
+        new SptProfileClass
+        {
+            Id = "222222222222222222222",
+            Name = "Waffle",
+            Password = "Waffle",
+            Side = "USEC",
+            Level = "420",
+            Edition = "Edge Of Darkness"
+        },
+        new SptProfileClass
+        {
+            Id = "333333333333333333333",
+            Name = "Noob",
+            Password = "Waffle",
+            Side = "USEC",
+            Level = "1",
+            Edition = "Standard Edition"
         }
     };
-
-    private async void ChangeDenseMode()
-    {
-        denseMode = !denseMode;
-        SettingsHelper.Instance.SetProfilePageDenseMode(denseMode);
-    }
 
     private async Task RunAddTask()
     {
@@ -92,48 +80,7 @@
         if (!result.Canceled)
         {
             // call server and add new empty profile
-            _profiles.Add(result.Data as SptProfileClass);
-        }
-    }
-
-    private async Task RunStartGameTask(SptProfileClass profile)
-    {
-        var server = SettingsHelper.Instance.GetSettings().Servers.FirstOrDefault(x => x.ServerId == ServerHelper.Instance.ConnectedServerId);
-        var dialogParams = new DialogParameters();
-        dialogParams.Add("Server", server);
-        dialogParams.Add("Profile", profile);
-
-        if (server == null || dialogParams == null)
-        {
-            Snackbar.Add("Connect to a server first!", Severity.Warning);
-            return;
-        }
-
-        var DialogOptions = new DialogOptions
-        {
-            Position = DialogPosition.Center,
-            MaxWidth = MaxWidth.Medium,
-            BackdropClick = false,
-            CloseOnEscapeKey = false,
-            NoHeader = true,
-            CloseButton = false,
-            FullScreen = false,
-            FullWidth = true,
-            BackgroundClass = "dialog-backdrop-class"
-        };
-
-        DialogService.ShowAsync<ProfileLoginDialog>("ProfileLoginDialog", dialogParams, DialogOptions);
-    }
-
-    private async Task RunDeleteTask(SptProfileClass profile)
-    {
-        var dialog = await DialogService.ShowAsync<ProfileRemoveDialog>("ProfileRemoveDialog", SettingsHelper.Instance.DialogOptions);
-        var result = await dialog.Result;
-        
-        if (!result.Canceled)
-        {
-            // call server and remove profile
-            _profiles.Remove(profile);
+            ProfilesList.Add(result.Data as SptProfileClass);
         }
     }
 }

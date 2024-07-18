@@ -7,4 +7,5 @@ public class SptProfileClass
     public string Password { get; set; } = "";
     public string Side { get; set; } = "";
     public string Level { get; set; } = "";
+    public string Edition { get; set; } = "";
 }

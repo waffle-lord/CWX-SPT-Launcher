@@ -1,28 +1,31 @@
 ﻿@using CWX_SPT_Launcher.Enums
 @inject ISnackbar Snackbar
 
-<MudDialog Class="pt-4 pb-2">
+<MudDialog>
     <DialogContent>
-        <MudContainer Class="d-flex flex-column align-center gap-4">
-            @if (Tasks <= ELoginTaskResults.Fake3)
-            {
-                <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large"/>
-            }
-            else if (Tasks == ELoginTaskResults.Success)
-            {
-            }
-            else if (Tasks == ELoginTaskResults.Failed)
-            {
-            }
-            else if (Tasks == ELoginTaskResults.Aborted)
-            {
-            }
-            <MudText>@TaskText</MudText>
+        <MudContainer Class="py-4 card-overflow">
+            <MudImage Src="cogs.png" Alt="Bear Logo" Elevation="0" Class="background-image-settings no-pointers"/>
+            <MudContainer Class="d-flex flex-column align-center gap-4">
+                @if (Tasks <= ELoginTaskResults.Fake3)
+                {
+                    <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large"/>
+                }
+                else if (Tasks == ELoginTaskResults.Success)
+                {
+                }
+                else if (Tasks == ELoginTaskResults.Failed)
+                {
+                }
+                else if (Tasks == ELoginTaskResults.Aborted)
+                {
+                }
+                <MudText>@TaskText</MudText>
+            </MudContainer>
+            <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
+                <MudButton Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" @onclick="() => Cancel()">Cancel</MudButton>
+            </MudContainer>
         </MudContainer>
     </DialogContent>
-    <DialogActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" @onclick="() => Cancel()">Cancel</MudButton>
-    </DialogActions>
 </MudDialog>
 
 @code {
@@ -108,7 +111,7 @@
         
         // move to profile screen
         Tasks = ELoginTaskResults.Success;
-        TaskText = "Moving to Profile Page!";
+        TaskText = "Check the Profiles in the NavMenu!";
         StateHasChanged();
         Submit();
     }
@@ -116,7 +119,7 @@
     private async void Submit()
     {
         MudDialog.Close(DialogResult.Ok(Server));
-        Snackbar.Add("Logged In!", Severity.Success);
+        Snackbar.Add("Logged In. Visit Profiles Page!", Severity.Success);
     }
 
     private void Cancel()

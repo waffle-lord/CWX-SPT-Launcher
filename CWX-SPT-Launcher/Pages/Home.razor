@@ -5,82 +5,18 @@
 
 <MudContainer Class="px-8 my-8" MaxWidth="MaxWidth.Large">
     <MudContainer Class="mt-n6 mb-3 pa-0 d-flex justify-space-between">
-        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.AddToQueue" Size="Size.Large" @onclick="() => RunAddTask()" Variant="Variant.Filled">Add New Server</MudButton>
-        <MudIconButton Icon="@((denseMode) ? @Icons.Material.Filled.ViewModule : @Icons.Material.Filled.ViewHeadline)" Variant="Variant.Filled" Color="Color.Tertiary" Size="Size.Large" OnClick="() => ChangeDenseMode()"/>
+        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.AddToQueue" Size="Size.Large" @onclick="() => RunAddTask()" Variant="Variant.Outlined">Add New Server</MudButton>
     </MudContainer>
     <MudGrid>
-        @if (!denseMode)
+        @foreach (var server in ServerList)
         {
-            @foreach (var server in _servers)
-            {
-                <MudItem sm="12" md="4">
-                    <MudBadge Style="width: 100%" Origin="Origin.TopRight" Overlap="true" Color="@((ServerHelper.Instance.ConnectedServerId == server.ServerId) ? @Color.Success : @Color.Error)">
-                        <MudPaper Elevation="2" Class="pa-4 d-flex flex-column flex-grow-1 gap-2">
-                            <MudTextField ShrinkLabel @bind-Value="server.Name" Label="Name" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                            <MudTextField ShrinkLabel @bind-Value="server.Ip" Label="IP" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                            <MudContainer Class="justify-end d-flex pa-0">
-                                <MudIconButton Class="mr-1" Color="Color.Default" Icon="@((ServerHelper.Instance.ConnectedServerId == server.ServerId) ? @Icons.Material.Filled.Login : @Icons.Material.Filled.Logout)" Size="Size.Small" @onclick="() => RunLoginTask(server)"/>
-                                <MudIconButton Color="Color.Default" Icon="@Icons.Material.Filled.Build" Size="Size.Small" @onclick="() => RunEditTask(server)"/>
-                                <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" @onclick="() => RunDeleteTask(server)"/>
-                            </MudContainer>
-                        </MudPaper>
-                    </MudBadge>
-                </MudItem>
-            }
-        }
-        else
-        {
-            @foreach (var server in _servers)
-            {
-                <MudItem sm="12">
-                    <MudBadge Style="width: 100%" Origin="Origin.TopRight" Overlap="true" Color="@((ServerHelper.Instance.ConnectedServerId == server.ServerId) ? @Color.Success : @Color.Error)">
-                        <MudPaper Elevation="2" Class="pa-4 d-flex flex-row flex-grow-1 gap-4">
-                            <MudTextField ShrinkLabel @bind-Value="server.Name" Label="Name" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                            <MudTextField ShrinkLabel @bind-Value="server.Ip" Label="IP" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                            <MudContainer Class="justify-end d-flex flex-1 pa-0 ml-2">
-                                <MudIconButton Class="mr-1" Color="Color.Default" Icon="@((ServerHelper.Instance.ConnectedServerId == server.ServerId) ? @Icons.Material.Filled.Login : @Icons.Material.Filled.Logout)" Size="Size.Small" @onclick="() => RunLoginTask(server)"/>
-                                <MudIconButton Color="Color.Default" Icon="@Icons.Material.Filled.Build" Size="Size.Small" @onclick="() => RunEditTask(server)"/>
-                                <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" @onclick="() => RunDeleteTask(server)"/>
-                            </MudContainer>
-                        </MudPaper>
-                    </MudBadge>
-                </MudItem>
-            }
+            <ServerCardComponent Server="@server" @bind-ServerList="ServerList" />
         }
     </MudGrid>
 </MudContainer>
 
 @code {
-    private bool denseMode = SettingsHelper.Instance.GetSettings().AppSettings.HomePageDenseMode;
-    private List<ServersClass> _servers = SettingsHelper.Instance.GetSettings().Servers;
-
-    private async void ChangeDenseMode()
-    {
-        denseMode = !denseMode;
-        SettingsHelper.Instance.SetHomePageDenseMode(denseMode);
-    }
-
-    private async void RemoveServerFromList(ServersClass server)
-    {
-        _servers.Remove(server);
-        SettingsHelper.Instance.SetServerSettings(_servers);
-    }
-
-    private async void AddServerToList(ServersClass server)
-    {
-        _servers.Add(server);
-        SettingsHelper.Instance.SetServerSettings(_servers);
-    }
-
-    private async void EditServerFromList(ServersClass server)
-    {
-        var serverToChange = _servers.FirstOrDefault(x => x.ServerId == server.ServerId);
-        serverToChange.Name = server.Name;
-        serverToChange.Ip = server.Ip;
-        StateHasChanged();
-
-        SettingsHelper.Instance.SetServerSettings(_servers);
-    }
+    private List<ServersClass> ServerList = SettingsHelper.Instance.GetSettings().Servers;
 
     private async Task RunAddTask()
     {
@@ -89,66 +25,8 @@
 
         if (!result.Canceled)
         {
-            AddServerToList(result.Data as ServersClass);
+            ServerList.Add(result.Data as ServersClass);
+            SettingsHelper.Instance.SetServerSettings(ServerList);
         }
     }
-
-    private async Task RunDeleteTask(ServersClass server)
-    {
-        if (ServerHelper.Instance.ConnectedServerId == server.ServerId)
-        {
-            ServerHelper.Instance.LogoutAndDispose();
-        }
-
-        var dialog = await DialogService.ShowAsync<ServerRemoveDialog>("ServerRemoveDialog", SettingsHelper.Instance.DialogOptions);
-        var result = await dialog.Result;
-
-        if (!result.Canceled)
-        {
-            RemoveServerFromList(server);
-        }
-    }
-
-    private async Task RunEditTask(ServersClass server)
-    {
-        if (ServerHelper.Instance.ConnectedServerId == server.ServerId)
-        {
-            ServerHelper.Instance.LogoutAndDispose();
-        }
-
-        var param = new DialogParameters();
-        param.Add("Server", server);
-
-        var dialog = await DialogService.ShowAsync<ServerEditDialog>("ServerEditDialog", param, SettingsHelper.Instance.DialogOptions);
-        var result = await dialog.Result;
-
-        if (!result.Canceled)
-        {
-            EditServerFromList(server);
-        }
-    }
-
-    private async Task RunLoginTask(ServersClass server)
-    {
-        // if connected comes in as true, we "logout" instead
-        if (ServerHelper.Instance.ConnectedServerId != "" && ServerHelper.Instance.ConnectedServerId == server.ServerId)
-        {
-            ServerHelper.Instance.LogoutAndDispose();
-            return;
-        }
-
-        // wanting to connect to server
-        var param = new DialogParameters();
-        param.Add("Server", server);
-
-        var dialog = await DialogService.ShowAsync<ServerLoginDialog>("ServerLoginDialog", param, SettingsHelper.Instance.DialogOptions);
-        var result = await dialog.Result;
-
-        if (!result.Canceled)
-        {
-            ServerHelper.Instance.Login(server.ServerId);
-            NaviMan.NavigateTo("/Profiles");
-        }
-    }
-
 }

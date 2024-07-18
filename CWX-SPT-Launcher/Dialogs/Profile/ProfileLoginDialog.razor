@@ -1,14 +1,17 @@
 ﻿@inject ISnackbar Snackbar
 
-<MudDialog Class="pt-4 pb-2">
+<MudDialog>
     <DialogContent>
-        Server: @Server.Ip - @Server.Name
-        Profile: @Profile.Id - @Profile.Name - @Profile.Level
+        <MudContainer Class="py-4 card-overflow">
+            <MudImage Src="cogs.png" Alt="Bear Logo" Elevation="0" Class="background-image-settings no-pointers"/>
+            <MudText>Server: @Server.Ip - @Server.Name</MudText>
+            <MudText>Profile: @Profile.Id - @Profile.Name - @Profile.Level</MudText>
+            <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" @onclick="() => Cancel()">Start Game</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="() => Cancel()">Close</MudButton>
+            </MudContainer>
+        </MudContainer>
     </DialogContent>
-    <DialogActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" @onclick="() => Cancel()">Start Game</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="() => Cancel()">Close</MudButton>
-    </DialogActions>
 </MudDialog>
 
 @code {

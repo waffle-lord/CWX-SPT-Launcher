@@ -22,3 +22,77 @@
 .dialog-backdrop-class {
     backdrop-filter: blur(10px);
 }
+
+.background-image-bear {
+    position: absolute;
+    width: 370px;
+    opacity: 2%;
+    top: -80px;
+    left: -60px;
+    rotate: -25deg;
+}
+
+.background-image-server {
+    position: absolute;
+    width: 370px;
+    opacity: 2%;
+    top: -50px;
+    left: -60px;
+    rotate: -25deg;
+}
+
+.background-image-usec {
+    position: absolute;
+    width: 330px;
+    opacity: 2%;
+    top: -10px;
+    left: -18px;
+    rotate: -25deg;
+}
+
+.background-image-settings {
+    position: absolute;
+    width: 512px;
+    opacity: 2%;
+    top: -10px;
+    left: -40px;
+    rotate: 165deg;
+}
+
+.card-overflow {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-glow {
+    position: absolute;
+    top: -200px;
+    left: -250px;
+    transform: translate(-50%, 0%);
+    width: 800px;
+    height: 800px;
+    border-radius: 50% 22% 40% 80%;
+    filter: blur(100px);
+    opacity: 0.2;
+}
+
+.glow-tue {
+    background: radial-gradient(circle at 50% 50%,rgba(76, 0, 255, 1), rgba(76, 0, 255, 0));
+}
+
+.glow-eod {
+    background: radial-gradient(circle at 50% 50%, rgb(208, 154, 36, 1), rgba(208, 154, 36, 0));
+}
+
+.glow-std {
+    background: radial-gradient(circle at 50% 50%, rgb(200, 200, 200, 1), rgba(200, 200, 200, 0.4));
+}
+
+.no-pointers {
+    pointer-events: none;
+}
+
+.mud-dialog-content {
+    margin: 0 !important;
+    padding: 0 !important;
+}

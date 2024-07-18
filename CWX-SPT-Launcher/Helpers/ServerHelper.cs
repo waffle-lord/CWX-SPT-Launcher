@@ -23,34 +23,34 @@ public class ServerHelper
 
     public async Task<bool> IsServerReachable(ServersClass server)
     {
-        await Task.Delay(1000);
+        await Task.Delay(500);
         return true;
     }
     
     public async Task<bool> GetServerProfiles(ServersClass server)
     {
-        await Task.Delay(1000);
+        await Task.Delay(500);
         return true;
     }
     
     // TODO: Remove
     public async Task<bool> GetFakeMessage1(ServersClass server)
     {
-        await Task.Delay(1000);
+        await Task.Delay(500);
         return true;
     }
     
     // TODO: Remove
     public async Task<bool> GetFakeMessage2(ServersClass server)
     {
-        await Task.Delay(1000);
+        await Task.Delay(500);
         return true;
     }
     
     // TODO: Remove
     public async Task<bool> GetFakeMessage3(ServersClass server)
     {
-        await Task.Delay(1000);
+        await Task.Delay(500);
         return true;
     }
 

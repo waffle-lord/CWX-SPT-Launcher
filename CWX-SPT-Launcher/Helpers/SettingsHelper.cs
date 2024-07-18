@@ -85,16 +85,4 @@ public class SettingsHelper
         _settings.AppSettings.CloseToTray = closeToTray;
         SaveSettings();
     }
-
-    public void SetHomePageDenseMode(bool mode)
-    {
-        _settings.AppSettings.HomePageDenseMode = mode;
-        SaveSettings();
-    }
-    
-    public void SetProfilePageDenseMode(bool mode)
-    {
-        _settings.AppSettings.ProfilePageDenseMode = mode;
-        SaveSettings();
-    }
 }

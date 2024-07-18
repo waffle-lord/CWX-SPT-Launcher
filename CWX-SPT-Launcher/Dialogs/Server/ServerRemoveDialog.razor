@@ -1,13 +1,16 @@
 ﻿@inject ISnackbar Snackbar
 
-<MudDialog Class="pt-4 pb-2">
+<MudDialog>
     <DialogContent>
-        <MudText>Do you really want to delete this server? This process cannot be undone.</MudText>
+        <MudContainer Class="py-4 card-overflow">
+            <MudImage Src="cogs.png" Alt="Bear Logo" Elevation="0" Class="background-image-settings no-pointers"/>
+            <MudText>Do you really want to delete this server? This process cannot be undone.</MudText>
+            <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
+                <MudButton Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" @onclick="() => Submit()">Delete</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="() => Cancel()">Cancel</MudButton>
+            </MudContainer>
+        </MudContainer>
     </DialogContent>
-    <DialogActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" @onclick="() => Submit()">Delete</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="() => Cancel()">Cancel</MudButton>
-    </DialogActions>
 </MudDialog>
 
 @code {

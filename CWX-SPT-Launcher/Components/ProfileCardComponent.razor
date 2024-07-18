@@ -1,0 +1,109 @@
+﻿@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<MudItem sm="12" md="4">
+    <MudPaper Elevation="2" Class="pa-4 d-flex flex-column flex-none gap-2 card-overflow">
+        <MudImage Src=@(ImageName()) Elevation="0" Class=@(ImageClassNames())/>
+        <MudPaper Elevation="0" Class=@(GlowClassNames())/>
+        <MudText Class="mb-n4 no-pointers" Typo="Typo.caption">Name:</MudText>
+        <MudText Typo="Typo.h6">@Profile.Name</MudText>
+        <MudDivider DividerType="DividerType.Middle"/>
+        <MudText Class="mb-n4 no-pointers" Typo="Typo.caption">Level:</MudText>
+        <MudText Typo="Typo.h6">@Profile.Level</MudText>
+        <MudDivider DividerType="DividerType.Middle"/>
+        <MudText Class="mb-n4 no-pointers" Typo="Typo.caption">Edition:</MudText>
+        <MudText Typo="Typo.h6">@Profile.Edition</MudText>
+        <MudDivider DividerType="DividerType.Middle"/>
+        <MudText Class="mb-n3 no-pointers" Typo="Typo.caption">ID:</MudText>
+        <MudText Typo="Typo.body1">@Profile.Id</MudText>
+        <MudContainer Class="justify-end d-flex pa-0">
+            <MudIconButton Class="mr-1" Color="Color.Default" Icon="@Icons.Material.Filled.Login" Size="Size.Small" @onclick="() => RunStartGameTask()"/>
+            <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" @onclick="() => RunDeleteTask()"/>
+        </MudContainer>
+    </MudPaper>
+</MudItem>
+
+@code {
+    [Parameter] public SptProfileClass Profile { get; set; }
+    [Parameter] public List<SptProfileClass> ProfileList { get; set; }
+    [Parameter] public EventCallback<List<SptProfileClass>> ProfileListChanged { get; set; }
+    private string glowClass { get; set; }
+    private string sideClass { get; set; }
+
+    public string GlowClassNames()
+    {
+        return $"card-glow no-pointers {glowClass}";
+    }
+
+    public string ImageClassNames()
+    {
+        return $"no-pointers background-image-{((Profile.Side.ToLower() != "") ? Profile.Side.ToLower() : "usec")}";
+    }
+
+    public string ImageName()
+    {
+        return $"side_{((Profile.Side.ToLower() != "") ? Profile.Side.ToLower() : "usec")}.png";
+    }
+
+    protected override void OnInitialized()
+    {
+        switch (Profile.Edition.ToLower())
+        {
+            case "edge of darkness":
+                glowClass = "glow-eod";
+                break;
+            case "the unheard edition":
+                glowClass = "glow-tue";
+                break;
+            case "standard edition":
+            default:
+                glowClass = "glow-std";
+                break;
+        }
+
+        base.OnInitialized();
+    }
+
+    private async Task RunStartGameTask()
+    {
+        var server = SettingsHelper.Instance.GetSettings().Servers.FirstOrDefault(x => x.ServerId == ServerHelper.Instance.ConnectedServerId);
+        var dialogParams = new DialogParameters();
+        dialogParams.Add("Server", server);
+        dialogParams.Add("Profile", Profile);
+
+        if (server == null || dialogParams == null)
+        {
+            Snackbar.Add("Connect to a server first!", Severity.Warning);
+            return;
+        }
+
+        var DialogOptions = new DialogOptions
+        {
+            Position = DialogPosition.Center,
+            MaxWidth = MaxWidth.Medium,
+            BackdropClick = false,
+            CloseOnEscapeKey = false,
+            NoHeader = true,
+            CloseButton = false,
+            FullScreen = false,
+            FullWidth = true,
+            BackgroundClass = "dialog-backdrop-class"
+        };
+
+        DialogService.ShowAsync<ProfileLoginDialog>("ProfileLoginDialog", dialogParams, DialogOptions);
+    }
+
+    private async Task RunDeleteTask()
+    {
+        var dialog = await DialogService.ShowAsync<ProfileRemoveDialog>("ProfileRemoveDialog", SettingsHelper.Instance.DialogOptions);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            // call server and remove profile
+            ProfileList.Remove(Profile);
+            await ProfileListChanged.InvokeAsync(ProfileList);
+        }
+    }
+
+}
