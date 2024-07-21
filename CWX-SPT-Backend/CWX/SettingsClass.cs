@@ -1,4 +1,4 @@
-﻿namespace CWX_SPT_Frontend.Models;
+﻿namespace CWX_SPT_Backend.CWX;
 
 public class SettingsClass
 {

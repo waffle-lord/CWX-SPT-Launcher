@@ -1,4 +1,4 @@
-﻿namespace CWX_SPT_Frontend.Enums;
+﻿namespace CWX_SPT_Backend.CWX.Enums;
 
 public enum ELoginTaskResults
 {

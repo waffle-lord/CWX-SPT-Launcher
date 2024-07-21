@@ -1,4 +1,4 @@
-﻿using CWX_SPT_Frontend.Models;
+﻿using CWX_SPT_Backend.CWX;
 
 namespace CWX_SPT_Frontend.Helpers;
 

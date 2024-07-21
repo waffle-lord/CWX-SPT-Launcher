@@ -27,4 +27,8 @@
         <PackageReference Include="MudBlazor" Version="7.3.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\CWX-SPT-Backend\CWX-SPT-Backend.csproj" />
+    </ItemGroup>
+
 </Project>

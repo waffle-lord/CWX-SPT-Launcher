@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using System.Text.Json;
-using CWX_SPT_Frontend.Models;
+using CWX_SPT_Backend.CWX;
 using MudBlazor;
 
 namespace CWX_SPT_Frontend.Helpers;
