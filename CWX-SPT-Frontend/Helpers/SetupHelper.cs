@@ -57,36 +57,36 @@ public class SetupHelper
     {
         if (debugMode)
         {
-            _resourcePathing.Add("CWX_SPT_Launcher.Resources.index.html", "index.html");
-            _resourcePathing.Add("CWX_SPT_Launcher.Resources.app.js", "app.js");
-            _resourcePathing.Add("CWX_SPT_Launcher.Resources.app.css", "app.css");
-            _resourcePathing.Add("CWX_SPT_Launcher.Resources.app.ico", "app.ico");
+            _resourcePathing.Add("CWX_SPT_Frontend.Resources.index.html", "index.html");
+            _resourcePathing.Add("CWX_SPT_Frontend.Resources.app.js", "app.js");
+            _resourcePathing.Add("CWX_SPT_Frontend.Resources.app.css", "app.css");
+            _resourcePathing.Add("CWX_SPT_Frontend.Resources.app.ico", "app.ico");
         }
         else
         {
             if (!File.Exists(Path.Combine(Main.AppPath, "index.html")))
             {
-                _resourcePathing.Add("CWX_SPT_Launcher.Resources.index.html", "index.html");
+                _resourcePathing.Add("CWX_SPT_Frontend.Resources.index.html", "index.html");
             }
 
             if (!File.Exists(Path.Combine(Main.AppPath, "app.js")))
             {
-                _resourcePathing.Add("CWX_SPT_Launcher.Resources.app.js", "app.js");
+                _resourcePathing.Add("CWX_SPT_Frontend.Resources.app.js", "app.js");
             }
 
             if (!File.Exists(Path.Combine(Main.AppPath, "app.css")))
             {
-                _resourcePathing.Add("CWX_SPT_Launcher.Resources.app.css", "app.css");
+                _resourcePathing.Add("CWX_SPT_Frontend.Resources.app.css", "app.css");
             }
 
             if (!File.Exists(Path.Combine(Main.AppPath, "app.ico")))
             {
-                _resourcePathing.Add("CWX_SPT_Launcher.Resources.app.ico", "app.ico");
+                _resourcePathing.Add("CWX_SPT_Frontend.Resources.app.ico", "app.ico");
             }
 
             if (!File.Exists(Path.Combine(Main.AppPath, "settings.json")))
             {
-                _resourcePathing.Add("CWX_SPT_Launcher.Resources.settings.json", "settings.json");
+                _resourcePathing.Add("CWX_SPT_Frontend.Resources.settings.json", "settings.json");
             }
         }
     }
