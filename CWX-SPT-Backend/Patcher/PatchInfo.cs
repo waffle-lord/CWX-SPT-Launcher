@@ -20,7 +20,10 @@ public class PatchInfo
 
     public static PatchInfo FromBytes(byte[] bytes)
     {
-        if (bytes.Length < 82) throw new Exception("Input data too short, cannot be a valid patch");
+        if (bytes.Length < 82)
+        {
+            throw new Exception("Input data too short, cannot be a valid patch");
+        }
 
         PatchInfo pi = new PatchInfo();
 
@@ -30,10 +33,20 @@ public class PatchInfo
             byte[] buf = null;
 
             buf = br.ReadBytes(4);
-            if (Encoding.ASCII.GetString(buf) != BYBA) throw new Exception("Invalid identifier");
+            if (Encoding.ASCII.GetString(buf) != BYBA)
+            {
+                throw new Exception("Invalid identifier");
+            }
 
-            if (br.ReadByte() != 1) throw new Exception("Invalid major file version (1 expected)");
-            if (br.ReadByte() != 0) throw new Exception("Invalid minor file version (0 expected)");
+            if (br.ReadByte() != 1)
+            {
+                throw new Exception("Invalid major file version (1 expected)");
+            }
+
+            if (br.ReadByte() != 0)
+            {
+                throw new Exception("Invalid minor file version (0 expected)");
+            }
 
             pi.OriginalLength = br.ReadInt32();
             pi.OriginalChecksum = br.ReadBytes(32);
@@ -44,7 +57,9 @@ public class PatchInfo
 
             List<PatchItem> items = new List<PatchItem>();
             for (int i = 0; i < itemCount; i++)
+            {
                 items.Add(PatchItem.FromReader(br));
+            }
             pi.Items = items.ToArray();
         }
 
@@ -84,7 +99,9 @@ public class PatchInfo
 
                 // data
                 foreach (PatchItem pi in Items)
+                {
                     pi.ToWriter(bw);
+                }
             }
 
             data = new byte[ms.Length];

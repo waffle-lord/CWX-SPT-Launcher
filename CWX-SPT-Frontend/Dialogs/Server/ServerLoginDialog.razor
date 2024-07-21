@@ -36,7 +36,7 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        StartLoginTasks();
+        _ = StartLoginTasks();
     }
 
     // look into Task cancellations
@@ -112,13 +112,13 @@
         Submit();
     }
     
-    private async Task Submit()
+    private void Submit()
     {
         MudDialog.Close(DialogResult.Ok(Server));
         Snackbar.Add("Logged In. Visit Profiles Page!", Severity.Success);
     }
 
-    private async Task Cancel()
+    private void Cancel()
     {
         MudDialog.Cancel();
     }

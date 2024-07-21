@@ -17,13 +17,13 @@
     private bool advancedUserSwitch { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.AdvancedUser;
     private string Path { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.SptPath;
 
-    private async Task SetAdvUser()
+    private void SetAdvUser()
     {
         advancedUserSwitch = !advancedUserSwitch;
         SettingsHelper.Instance.SetAdvancedUser(advancedUserSwitch);
     }
 
-    private async Task SetPath()
+    private void SetPath()
     {
         // TODO: make it so the path can be set
     }

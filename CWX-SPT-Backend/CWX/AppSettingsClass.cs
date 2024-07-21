@@ -12,5 +12,5 @@ public class AppSettingsClass
     
     // Advanced panel options
     public bool AdvancedUser { get; set; }
-    public string? SptPath { get; set; }
+    public string SptPath { get; set; }
 }

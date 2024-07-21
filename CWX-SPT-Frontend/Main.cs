@@ -9,7 +9,7 @@ namespace CWX_SPT_Frontend;
 
 public partial class Main : Form
 {
-    private SettingsHelper? _settingsHelper = null;
+    private SettingsHelper _settingsHelper = null;
     private bool closeWhenIMeanIt = false;
     public static readonly string AppPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "CWX-SPT-Launcher\\Resources");
@@ -80,7 +80,7 @@ public partial class Main : Form
         // });
     }
     
-    private void NotifyIconOnClick(object? sender, MouseEventArgs e)
+    private void NotifyIconOnClick(object sender, MouseEventArgs e)
     {
         if (e.Button == MouseButtons.Left)
         {
@@ -89,7 +89,7 @@ public partial class Main : Form
         }
     }
 
-    private void Main_FormClosing(object? sender, FormClosingEventArgs e)
+    private void Main_FormClosing(object sender, FormClosingEventArgs e)
     {
         if (_settingsHelper.GetSettings().AppSettings.CloseToTray && !closeWhenIMeanIt)
         {

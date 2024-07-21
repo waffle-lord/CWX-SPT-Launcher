@@ -18,7 +18,7 @@
     [Parameter] public SptProfileClass Profile { get; set; }
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
 
-    private async Task Cancel()
+    private void Cancel()
     {
         MudDialog.Cancel();
     }

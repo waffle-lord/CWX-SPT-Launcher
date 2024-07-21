@@ -15,13 +15,13 @@
 @code {
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
 
-    private async Task Submit()
+    private void Submit()
     {
         MudDialog.Close(DialogResult.Ok(true));
         Snackbar.Add("Removed!");
     }
 
-    private async Task Cancel()
+    private void Cancel()
     {
         MudDialog.Cancel();
     }

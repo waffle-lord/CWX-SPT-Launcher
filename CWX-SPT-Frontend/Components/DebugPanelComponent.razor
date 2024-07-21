@@ -24,7 +24,7 @@
     private bool debugTitleSwitch { get; set; } = false;
 
     // TODO: Saving should be done as the whole object
-    private async Task SetDebugUser()
+    private void SetDebugUser()
     {
         debugUserSwitch = !debugUserSwitch;
         SettingsHelper.Instance.SetDebugUser(debugUserSwitch);
@@ -37,7 +37,7 @@
         }
     }
 
-    private async Task SetDebugTitle()
+    private void SetDebugTitle()
     {
         if (!debugUserSwitch)
         {

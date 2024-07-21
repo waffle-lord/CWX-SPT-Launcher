@@ -20,13 +20,13 @@
     public SptProfileClass Profile = new SptProfileClass();
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
 
-    private async Task Submit()
+    private void Submit()
     {
         MudDialog.Close(DialogResult.Ok(Profile));
         Snackbar.Add("Added Profile!", Severity.Success);
     }
 
-    private async Task Cancel()
+    private void Cancel()
     {
         MudDialog.Cancel();
     }

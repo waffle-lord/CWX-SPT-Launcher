@@ -13,10 +13,8 @@ public enum EDiffResultType
     OriginalFilePathInvalid,
     OriginalFileNotFound,
     OriginalFileReadFailed,
-
     PatchedFilePathInvalid,
     PatchedFileNotFound,
     PatchedFileReadFailed,
-
     FilesMatch
 }

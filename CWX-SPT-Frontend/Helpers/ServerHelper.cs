@@ -54,7 +54,7 @@ public class ServerHelper
         return true;
     }
 
-    public async Task LogoutAndDispose()
+    public void LogoutAndDispose()
     {
         // null profiles
         _profiles = null;
@@ -62,7 +62,7 @@ public class ServerHelper
         SelectedProfile = false;
     }
 
-    public async Task Login(string serverId)
+    public void Login(string serverId)
     {
         ConnectedServerId = serverId;
     }
