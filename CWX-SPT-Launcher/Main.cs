@@ -13,23 +13,21 @@ public partial class Main : Form
     private bool closeWhenIMeanIt = false;
     public static readonly string AppPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "CWX-SPT-Launcher\\Resources");
+
+    public static Form MainForm = null;
+    public static Task DebugTitleTask = null;
     
     public Main()
     {
         _settingsHelper = SettingsHelper.Instance;
         
         SetUpNotificationIcon();
-        
         InitializeComponent(_settingsHelper.GetSettings());
-        
-        if (_settingsHelper.GetSettings().DebugSettings.DebugLocation)
-        {
-            SetLocationToName();
-        }
-        
+        SetLocationToName();
         SetUpBlazorWebView();
         
         this.FormClosing += (sender, args) => Main_FormClosing(sender, args);
+        MainForm = this;
     }
     
     private void SetUpNotificationIcon()
@@ -59,25 +57,27 @@ public partial class Main : Form
     
     private void SetLocationToName()
     {
-        Task.Factory.StartNew(async () =>
-        {
-            var historicLocationPoint = new Point(0, 0);
-            var historicSize = new Size(0, 0);
-
-            while (true)
-            {
-                await Task.Delay(3000);
-                var location = this.Location;
-                var size = this.Size;
-
-                if (location == historicLocationPoint && size == historicSize)
-                    continue;
-
-                historicLocationPoint = location;
-                historicSize = size;
-                this.Text = $"LOCATION: {historicLocationPoint.ToString()}, SIZE: {historicSize.ToString()}";
-            }
-        });
+        // DebugTitleTask = Task.Factory.StartNew(async () =>
+        // {
+        //     var historicLocationPoint = new Point(0, 0);
+        //     var historicSize = new Size(0, 0);
+        //
+        //     while (true)
+        //     {
+        //         await Task.Delay(3000);
+        //         var location = this.Location;
+        //         var size = this.Size;
+        //
+        //         if (location == historicLocationPoint && size == historicSize)
+        //         {
+        //             continue;
+        //         }
+        //
+        //         historicLocationPoint = location;
+        //         historicSize = size;
+        //         this.Text = $"LOCATION: {historicLocationPoint.ToString()}, SIZE: {historicSize.ToString()}";
+        //     }
+        // });
     }
     
     private void NotifyIconOnClick(object? sender, MouseEventArgs e)

@@ -10,8 +10,10 @@
       "Height": 0
     },
     "CloseToTray": false,
-    "HomePageDenseMode": true,
-    "ProfilePageDenseMode": true
+    "MinimizeOnLaunch": false,
+    "AlwaysTop": true,
+    "AdvancedUser": false,
+    "SptPath": "C:\\SPT\\spt390"
   },
   "Servers": [
     {
@@ -26,6 +28,7 @@
     }
   ],
   "DebugSettings": {
+    "DebugUser": false,
     "DebugLocation": false
   }
 }

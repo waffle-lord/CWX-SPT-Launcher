@@ -85,4 +85,42 @@ public class SettingsHelper
         _settings.AppSettings.CloseToTray = closeToTray;
         SaveSettings();
     }
+
+    public void SetMinimizeOnLaunch(bool minimizeOnLaunch)
+    {
+        _settings.AppSettings.MinimizeOnLaunch = minimizeOnLaunch;
+        SaveSettings();
+    }
+
+    public void SetAlwaysOnTop(bool alwaysOnTop)
+    {
+        _settings.AppSettings.AlwaysTop = alwaysOnTop;
+        SaveSettings();
+        Main.ChangeTopMostSetting(alwaysOnTop);
+    }
+
+    public void SetAdvancedUser(bool advancedUser)
+    {
+        _settings.AppSettings.AdvancedUser = advancedUser;
+        SaveSettings();
+    }
+
+    public void SetSptPath(string path)
+    {
+        _settings.AppSettings.SptPath = path;
+        SaveSettings();
+    }
+
+    public void SetDebugUser(bool debugUser)
+    {
+        _settings.DebugSettings.DebugUser = debugUser;
+        SaveSettings();
+    }
+
+    public void SetDebugTitle(bool debug)
+    {
+        // _settings.DebugSettings.DebugLocation = debug;
+        // SaveSettings();
+        // call to Main to set title
+    }
 }

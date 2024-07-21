@@ -4,12 +4,10 @@
 
 <MudItem md="4">
     <MudPaper Elevation="2" Class="pa-4 d-flex flex-column flex-none gap-2 card-overflow">
-        <MudImage Src="server.png" Alt="Bear Logo" Elevation="0" Class="background-image-server no-pointers"/>
-        @* <MudPaper Elevation="0" Class="card-glow no-pointers"/> *@
-        <MudText Class="mb-n4 no-pointers" Typo="Typo.caption">Name:</MudText>
+        <MudText Class="mb-n4 no-pointers no-select" Typo="Typo.caption">Name:</MudText>
         <MudText Typo="Typo.h6">@Server.Name</MudText>
         <MudDivider DividerType="DividerType.Middle"/>
-        <MudText Class="mb-n3 no-pointers" Typo="Typo.caption">IP:</MudText>
+        <MudText Class="mb-n3 no-pointers no-select" Typo="Typo.caption">IP:</MudText>
         <MudText Typo="Typo.body1">@Server.Ip</MudText>
         <MudContainer Class="pa-0 d-flex mt-2">
             <MudTooltip Text="@((IsConnectedServer) ? "Connected" : "Disconnected")" Arrow="true" Placement="Placement.Right">
@@ -17,7 +15,7 @@
             </MudTooltip>
             <MudSpacer/>
             <MudTooltip Text="@((!IsConnectedServer) ? "Login" : "Logout")" Arrow="true" Placement="Placement.Left">
-                <MudIconButton Class="mr-1" Color="Color.Default" Icon="@((!IsConnectedServer) ? @Icons.Material.Filled.Login : @Icons.Material.Filled.Logout)" Size="Size.Small" @onclick="() => RunLoginTask()"/>
+                <MudIconButton Class="mr-1 mb-n2" Color="Color.Default" Icon="@((!IsConnectedServer) ? @Icons.Material.Filled.Login : @Icons.Material.Filled.Logout)" Size="Size.Small" @onclick="() => RunLoginTask()"/>
             </MudTooltip>
             <MudIconButton Color="Color.Default" Icon="@Icons.Material.Filled.Build" Size="Size.Small" @onclick="() => RunEditTask()"/>
             <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" @onclick="() => RunDeleteTask()"/>

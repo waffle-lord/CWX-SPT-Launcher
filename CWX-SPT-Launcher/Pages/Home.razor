@@ -8,9 +8,18 @@
         <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.AddToQueue" Size="Size.Large" @onclick="() => RunAddTask()" Variant="Variant.Outlined">Add New Server</MudButton>
     </MudContainer>
     <MudGrid>
-        @foreach (var server in ServerList)
+        @if (ServerList.Count > 0)
         {
-            <ServerCardComponent Server="@server" @bind-ServerList="ServerList" />
+            @foreach (var server in ServerList)
+            {
+                <ServerCardComponent Server="@server" @bind-ServerList="ServerList"/>
+            }
+        }
+        else
+        {
+            <MudItem sm="12">
+                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">Please Add a server using the "Add New Server" button above.</MudAlert>
+            </MudItem>
         }
     </MudGrid>
 </MudContainer>
@@ -29,4 +38,5 @@
             SettingsHelper.Instance.SetServerSettings(ServerList);
         }
     }
+
 }

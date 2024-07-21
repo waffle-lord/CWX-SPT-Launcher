@@ -28,7 +28,7 @@ partial class Main
     {
         SuspendLayout();
 
-        TopMost = true; // TODO: change to a setting later on
+        TopMost = _settingsHelper.GetSettings().AppSettings.AlwaysTop;
         BackColor = Color.FromArgb(36, 36, 36);
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
@@ -57,5 +57,10 @@ partial class Main
         }
            
         ResumeLayout(false);
+    }
+
+    public static void ChangeTopMostSetting(bool setting)
+    {
+        MainForm.TopMost = setting;
     }
 }

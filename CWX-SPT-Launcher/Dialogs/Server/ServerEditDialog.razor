@@ -3,7 +3,6 @@
 <MudDialog>
     <DialogContent>
         <MudContainer Class="py-4 card-overflow">
-            <MudImage Src="cogs.png" Alt="Bear Logo" Elevation="0" Class="background-image-settings no-pointers"/>
             <MudForm Model="Server" @bind-IsValid="@success" Class="gap-2 mt-3">
                 <MudTextField Immediate="true" @bind-Value="Server.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense"/>
                 <MudTextField Immediate="true" @bind-Value="Server.Ip" Label="IP" Required="true" RequiredError="IP is required!" Variant="Variant.Outlined" Margin="Margin.Dense"/>

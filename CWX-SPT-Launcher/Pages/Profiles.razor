@@ -3,9 +3,9 @@
 @inject IDialogService DialogService
 
 <MudContainer Class="px-8 my-8" MaxWidth="MaxWidth.Large">
-    <MudContainer Class="mt-n6 mb-3 pa-0 d-flex justify-space-between">
+    <MudContainer Class="mt-n6 mb-3 pa-0 d-flex justify-start gap-2">
         <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.PersonAdd" Size="Size.Large" @onclick="() => RunAddTask()" Variant="Variant.Outlined">Create New Profile</MudButton>
-        <MudButton Class="ml-2" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Login" Size="Size.Large" Variant="Variant.Outlined">Login with details</MudButton>
+        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.Login" Size="Size.Large" Variant="Variant.Outlined">Login with details</MudButton>
     </MudContainer>
     <MudGrid>
         @foreach (var profile in ProfilesList)

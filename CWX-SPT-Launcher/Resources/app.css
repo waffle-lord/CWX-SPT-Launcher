@@ -96,3 +96,12 @@
     margin: 0 !important;
     padding: 0 !important;
 }
+
+a.setting-on-hover:hover {
+    background-color: rgba(170, 170, 170, 0.2);
+    border-radius: 5px;
+}
+
+.no-select {
+    user-select: none;
+}

@@ -1,18 +1,30 @@
 ﻿<MudItem sm="12">
-    <MudPaper Class="pa-5 ml-1 gap-1 d-flex flex-column card-overflow" Elevation="3">
-        <MudImage Src="cogs.png" Alt="Bear Logo" Elevation="0" Class="background-image-settings no-pointers"/>
-        <MudContainer Class="pa-0 d-flex justify-center align-center">
-            <MudText>Advanced user</MudText>
-            <MudSpacer/>
-            <MudSwitch @bind-Value="advancedUserSwitch" Color="Color.Tertiary"/>
+    <MudPaper Class="pa-5 ml-1 gap-2 d-flex flex-column card-overflow" Elevation="3">
+        <MudContainer Class="pa-0">
+            <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="() => SetAdvUser()">
+                <MudText Class="no-select">Advanced user</MudText>
+                <MudSpacer/>
+                <MudSwitch @bind-Value="advancedUserSwitch" Color="Color.Tertiary"/>
+            </a>
         </MudContainer>
-        <MudDivider DividerType="DividerType.Middle" Class="my-2"/>
+        <MudDivider DividerType="DividerType.Middle" Class="ma-0"/>
         <MudTextField @bind-Value="Path" Variant="Variant.Outlined" Label="Spt Game Path" Disabled="!advancedUserSwitch"/>
     </MudPaper>
 </MudItem>
 
 @code
 {
-    private bool advancedUserSwitch { get; set; } = false;
-    private string Path { get; set; } = "C:\\SPT\\spt390";
+    private bool advancedUserSwitch { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.AdvancedUser;
+    private string Path { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.SptPath;
+
+    private async Task SetAdvUser()
+    {
+        advancedUserSwitch = !advancedUserSwitch;
+        SettingsHelper.Instance.SetAdvancedUser(advancedUserSwitch);
+    }
+
+    private async Task SetPath()
+    {
+        // TODO: make it so the path can be set
+    }
 }

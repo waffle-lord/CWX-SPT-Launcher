@@ -2,5 +2,6 @@
 
 public class DebugSettingsClass
 {
+    public bool DebugUser { get; set; }
     public bool DebugLocation { get; set; }
 }

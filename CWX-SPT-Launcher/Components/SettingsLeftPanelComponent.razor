@@ -1,29 +1,55 @@
 ﻿<MudItem sm="6">
     <MudPaper Class="pa-5 mr-1 gap-2 d-flex flex-column card-overflow" Elevation="3">
-        <MudImage Src="cogs.png" Alt="Bear Logo" Elevation="0" Class="background-image-settings no-pointers"/>
-        <MudSelect  T="string" Label="Language" Variant="Variant.Outlined" AnchorOrigin="Origin.CenterRight">
-            <MudSelectItem T="string" Value="@("English")"/>
-            <MudSelectItem T="string" Value="@("Dutch")"/>
-            <MudSelectItem T="string" Value="@("Pirate")"/>
-            <MudSelectItem T="string" Value="@("French")"/>
-        </MudSelect>
-        <MudDivider DividerType="DividerType.Middle" Class="my-2"/>
-        <MudContainer Class="pa-0 d-flex justify-center align-center relative">
-            <MudSwitch @bind-Value="traySwtich" Color="Color.Tertiary" LabelPosition="LabelPosition.Start">
-                <MudText>Close to tray</MudText>
-            </MudSwitch>
+        <MudContainer Class="pa-0">
+            <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="() => SetCloseToTray()">
+                <MudText Class="no-select">Close to tray</MudText>
+                <MudSpacer/>
+                <MudSwitch @bind-Value="closeToTraySwitch" Color="Color.Tertiary" Class="pr-0"/>
+            </a>
         </MudContainer>
-        <MudDivider DividerType="DividerType.Middle" Class="my-2"/>
-        <MudContainer Class="pa-0 d-flex justify-center align-center">
-            <MudText>Minimize on game start</MudText>
-            <MudSpacer/>
-            <MudSwitch @bind-Value="minimizeSwitch" Color="Color.Tertiary"/>
+        <MudDivider DividerType="DividerType.Middle" Class="ma-0"/>
+        <MudContainer Class="pa-0">
+            <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="() => SetMinimizeOnLaunch()">
+                <MudText Class="no-select">Minimize on game start</MudText>
+                <MudSpacer/>
+                <MudSwitch @bind-Value="minimizeOnLaunchSwitch" Color="Color.Tertiary" Class="pr-0"/>
+            </a>
+        </MudContainer>
+        <MudDivider DividerType="DividerType.Middle" Class="ma-0"/>
+        <MudContainer Class="pa-0">
+            <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="() => SetAlwaysOnTop()">
+                <MudText Class="no-select">Always on top</MudText>
+                <MudSpacer/>
+                <MudSwitch @bind-Value="AlwaysOnTopSwitch" Color="Color.Tertiary" Class="pr-0"/>
+            </a>
         </MudContainer>
     </MudPaper>
 </MudItem>
 
 @code
 {
-    private bool traySwtich { get; set; } = false;
-    private bool minimizeSwitch { get; set; } = false;
+    private bool closeToTraySwitch { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.CloseToTray;
+    private bool minimizeOnLaunchSwitch { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.MinimizeOnLaunch;
+    private bool AlwaysOnTopSwitch { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.AlwaysTop;
+
+    private async Task SetCloseToTray()
+    {
+        closeToTraySwitch = !closeToTraySwitch;
+        SettingsHelper.Instance.SetCloseToTray(closeToTraySwitch);
+        // save settings
+    }
+
+    private async Task SetMinimizeOnLaunch()
+    {
+        minimizeOnLaunchSwitch = !minimizeOnLaunchSwitch;
+        SettingsHelper.Instance.SetMinimizeOnLaunch(minimizeOnLaunchSwitch);
+        // save settings
+    }
+
+    private async Task SetAlwaysOnTop()
+    {
+        AlwaysOnTopSwitch = !AlwaysOnTopSwitch;
+        SettingsHelper.Instance.SetAlwaysOnTop(AlwaysOnTopSwitch);
+        // save settings
+    }
 }
