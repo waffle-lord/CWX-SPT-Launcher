@@ -1,0 +1,125 @@
+﻿@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudContainer Class="py-4 card-overflow">
+            <MudContainer Class="d-flex flex-column align-center gap-4">
+                @if (Tasks <= ELoginTaskResults.Fake3)
+                {
+                    <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large"/>
+                }
+                else if (Tasks == ELoginTaskResults.Success)
+                {
+                }
+                else if (Tasks == ELoginTaskResults.Failed)
+                {
+                }
+                else if (Tasks == ELoginTaskResults.Aborted)
+                {
+                }
+                <MudText>@TaskText</MudText>
+            </MudContainer>
+            <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
+                <MudButton Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" @onclick="() => Cancel()">Cancel</MudButton>
+            </MudContainer>
+        </MudContainer>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    private ServerHelper serverHelper = ServerHelper.Instance;
+    private ELoginTaskResults Tasks = ELoginTaskResults.NotStarted;
+    private string TaskText = "";
+    [Parameter] public ServersClass Server { get; set; }
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        StartLoginTasks();
+    }
+
+    // look into Task cancellations
+    // and actually wire this up
+    private async Task StartLoginTasks()
+    {
+        Tasks = ELoginTaskResults.Started;
+        TaskText = "Starting login tasks";        
+        
+        // test connection
+        Tasks = ELoginTaskResults.Connection;
+        TaskText = "Checking connection to server";
+        var reach = await serverHelper.IsServerReachable(Server);
+        if (!reach)
+        {
+            // failed
+            return;
+        }
+        // passed
+        
+        // get profile data
+        Tasks = ELoginTaskResults.Profiles;
+        TaskText = "Getting profiles from server";
+        StateHasChanged();
+        var profiles = await serverHelper.GetServerProfiles(Server);
+        if (!profiles)
+        {
+            // failed
+            return;
+        }
+        // passed
+        
+        // get fake1
+        Tasks = ELoginTaskResults.Fake1;
+        TaskText = "Waffle Fucked Your Mum Last Night!";
+        StateHasChanged();
+        var mess1 = await serverHelper.GetFakeMessage1(Server);
+        if (!mess1)
+        {
+            // failed
+            return;
+        }
+        // passed
+        
+        // get fake2
+        Tasks = ELoginTaskResults.Fake2;
+        TaskText = "JK KEKW!";
+        StateHasChanged();
+        var mess2 = await serverHelper.GetFakeMessage2(Server);
+        if (!mess2)
+        {
+            // failed
+            return;
+        }
+        // passed
+        
+        // get fake3
+        Tasks = ELoginTaskResults.Fake3;
+        TaskText = "Or am i?";
+        StateHasChanged();
+        var mess3 = await serverHelper.GetFakeMessage3(Server);
+        if (!mess3)
+        {
+            // failed
+            return;
+        }
+        // passed
+        
+        // move to profile screen
+        Tasks = ELoginTaskResults.Success;
+        TaskText = "Check the Profiles in the NavMenu!";
+        StateHasChanged();
+        Submit();
+    }
+    
+    private async Task Submit()
+    {
+        MudDialog.Close(DialogResult.Ok(Server));
+        Snackbar.Add("Logged In. Visit Profiles Page!", Severity.Success);
+    }
+
+    private async Task Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}

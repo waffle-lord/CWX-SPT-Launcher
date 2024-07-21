@@ -1,0 +1,50 @@
+﻿<MudItem sm="12">
+    <MudPaper Class="pa-5 ml-1 gap-2 d-flex flex-column card-overflow" Elevation="3">
+        <MudContainer Class="pa-0">
+            <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="() => SetDebugUser()">
+                <MudText Class="no-select">Debug Options</MudText>
+                <MudSpacer/>
+                <MudSwitch @bind-Value="debugUserSwitch" Color="Color.Tertiary"/>
+            </a>
+        </MudContainer>
+        <MudDivider DividerType="DividerType.Middle" Class="ma-0"/>
+        <MudContainer Class="pa-0">
+            <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="() => SetDebugTitle()">
+                <MudText Class="no-select">Show location and size in title bar</MudText>
+                <MudSpacer/>
+                <MudSwitch @bind-Value="debugTitleSwitch" Color="Color.Tertiary" Disabled="!debugUserSwitch"/>
+            </a>
+        </MudContainer>
+    </MudPaper>
+</MudItem>
+
+@code
+{
+    private bool debugUserSwitch { get; set; } = false;
+    private bool debugTitleSwitch { get; set; } = false;
+
+    // TODO: Saving should be done as the whole object
+    private async Task SetDebugUser()
+    {
+        debugUserSwitch = !debugUserSwitch;
+        SettingsHelper.Instance.SetDebugUser(debugUserSwitch);
+        
+        // clean up later
+        if (!debugUserSwitch)
+        {
+            debugTitleSwitch = false;
+            // set all debug options to false
+        }
+    }
+
+    private async Task SetDebugTitle()
+    {
+        if (!debugUserSwitch)
+        {
+            return;
+        }
+
+        debugTitleSwitch = !debugTitleSwitch;
+        SettingsHelper.Instance.SetDebugTitle(debugTitleSwitch);
+    }
+}

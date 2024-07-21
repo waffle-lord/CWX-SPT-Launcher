@@ -1,0 +1,25 @@
+﻿@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudContainer Class="py-4 card-overflow">
+            <MudText>Server: @Server.Ip - @Server.Name</MudText>
+            <MudText>Profile: @Profile.Id - @Profile.Name - @Profile.Level</MudText>
+            <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" @onclick="() => Cancel()">Start Game</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="() => Cancel()">Close</MudButton>
+            </MudContainer>
+        </MudContainer>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [Parameter] public ServersClass Server { get; set; }
+    [Parameter] public SptProfileClass Profile { get; set; }
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
+
+    private async Task Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}
