@@ -20,7 +20,15 @@
             <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="() => SetAlwaysOnTop()">
                 <MudText Class="no-select">Always on top</MudText>
                 <MudSpacer/>
-                <MudSwitch @bind-Value="AlwaysOnTopSwitch" Color="Color.Tertiary" Class="pr-0"/>
+                <MudSwitch @bind-Value="alwaysOnTopSwitch" Color="Color.Tertiary" Class="pr-0"/>
+            </a>
+        </MudContainer>
+        <MudDivider DividerType="DividerType.Middle" Class="ma-0"/>
+        <MudContainer Class="pa-0">
+            <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="() => SetUseProfileColors()">
+                <MudText Class="no-select">Use Profile Colors</MudText>
+                <MudSpacer/>
+                <MudSwitch @bind-Value="useProfileColors" Color="Color.Tertiary" Class="pr-0"/>
             </a>
         </MudContainer>
     </MudPaper>
@@ -30,7 +38,8 @@
 {
     private bool closeToTraySwitch { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.CloseToTray;
     private bool minimizeOnLaunchSwitch { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.MinimizeOnLaunch;
-    private bool AlwaysOnTopSwitch { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.AlwaysTop;
+    private bool alwaysOnTopSwitch { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.AlwaysTop;
+    private bool useProfileColors { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.UseProfileColors;
 
     private void SetCloseToTray()
     {
@@ -48,8 +57,14 @@
 
     private void SetAlwaysOnTop()
     {
-        AlwaysOnTopSwitch = !AlwaysOnTopSwitch;
-        SettingsHelper.Instance.SetAlwaysOnTop(AlwaysOnTopSwitch);
+        alwaysOnTopSwitch = !alwaysOnTopSwitch;
+        SettingsHelper.Instance.SetAlwaysOnTop(alwaysOnTopSwitch);
         // save settings
+    }
+
+    private void SetUseProfileColors()
+    {
+        useProfileColors = !useProfileColors;
+        SettingsHelper.Instance.SetUseProfileColors(useProfileColors);
     }
 }

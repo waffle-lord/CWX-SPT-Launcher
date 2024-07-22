@@ -6,10 +6,8 @@ public enum ELoginTaskResults
     Started = 1,
     Connection = 2,
     Profiles = 3,
-    Fake1 = 4,
-    Fake2 = 5,
-    Fake3 = 6,
-    Success = 7,
-    Failed = 8,
-    Aborted = 9
+    Types = 4,
+    Success = 5,
+    Failed = 6,
+    Aborted = 7
 }

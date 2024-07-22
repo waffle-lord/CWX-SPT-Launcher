@@ -12,6 +12,7 @@
     "CloseToTray": false,
     "MinimizeOnLaunch": false,
     "AlwaysTop": true,
+    "UseProfileColors": true,
     "AdvancedUser": false,
     "SptPath": "C:\\SPT\\spt390"
   },

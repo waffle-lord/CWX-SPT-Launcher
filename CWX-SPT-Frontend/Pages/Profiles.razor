@@ -4,18 +4,24 @@
 
 <MudContainer Class="px-8 my-8" MaxWidth="MaxWidth.Large">
     <MudContainer Class="mt-n6 mb-3 pa-0 d-flex justify-start gap-2">
-        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.PersonAdd" Size="Size.Large" @onclick="() => RunAddTask()" Variant="Variant.Outlined">Create New Profile</MudButton>
-        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.Login" Size="Size.Large" Variant="Variant.Outlined">Login with details</MudButton>
+        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.PersonAdd" Size="Size.Large" @onclick="() => RunAddTask()" Variant="Variant.Outlined" Disabled="@(!IsConnected)">Create New Profile</MudButton>
+        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.Login" Size="Size.Large" Variant="Variant.Outlined" Disabled="@(!IsConnected)">Login with details</MudButton>
     </MudContainer>
     <MudGrid>
         @foreach (var profile in ProfilesList)
         {
             <ProfileCardComponent Profile="@profile" @bind-ProfileList="ProfilesList" />
         }
-        @if (ProfilesList.Count == 0)
+        @if (ProfilesList.Count == 0 && IsConnected)
         {
             <MudItem sm="12">
-                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">If you are connected to a server, please use the above "Login with details" button.</MudAlert>
+                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">The server you are connected too, does not show profiles, please use the above "Login with details" button.</MudAlert>
+            </MudItem>
+        }
+        else if (ProfilesList.Count == 0 && !IsConnected)
+        {
+            <MudItem sm="12">
+                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">Please connect to a Server first!</MudAlert>
             </MudItem>
         }
     </MudGrid>
@@ -23,54 +29,8 @@
 
 @code {
 
-    public List<SptProfileClass> ProfilesList = new List<SptProfileClass>()
-    {
-        new SptProfileClass
-        {
-            Id = "122222222222222222222",
-            Name = "CWX",
-            Password = "",
-            Side = "BEAR",
-            Level = "69",
-            Edition = "The Unheard Edition"
-        },
-        new SptProfileClass
-        {
-            Id = "222222222222222222222",
-            Name = "Waffle",
-            Password = "Waffle",
-            Side = "USEC",
-            Level = "420",
-            Edition = "Edge Of Darkness"
-        },
-        new SptProfileClass
-        {
-            Id = "122222222222222222222",
-            Name = "CWX",
-            Password = "",
-            Side = "BEAR",
-            Level = "69",
-            Edition = "The Unheard Edition"
-        },
-        new SptProfileClass
-        {
-            Id = "222222222222222222222",
-            Name = "Waffle",
-            Password = "Waffle",
-            Side = "USEC",
-            Level = "420",
-            Edition = "Edge Of Darkness"
-        },
-        new SptProfileClass
-        {
-            Id = "333333333333333333333",
-            Name = "Noob",
-            Password = "Waffle",
-            Side = "USEC",
-            Level = "1",
-            Edition = "Standard Edition"
-        }
-    };
+    public List<ServerProfileClass> ProfilesList { get; set; } = ServerHelper.Instance.ProfileList;
+    public bool IsConnected { get; set; } = ServerHelper.Instance.ConnectedServerId != "";
 
     private async Task RunAddTask()
     {
@@ -80,7 +40,7 @@
         if (!result.Canceled)
         {
             // call server and add new empty profile
-            ProfilesList.Add(result.Data as SptProfileClass);
+            ProfilesList.Add(result.Data as ServerProfileClass);
         }
     }
 }

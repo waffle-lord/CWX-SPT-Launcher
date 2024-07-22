@@ -123,4 +123,10 @@ public class SettingsHelper
         // SaveSettings();
         // call to Main to set title
     }
+
+    public void SetUseProfileColors(bool profileColors)
+    {
+        _settings.AppSettings.UseProfileColors = profileColors;
+        SaveSettings();
+    }
 }

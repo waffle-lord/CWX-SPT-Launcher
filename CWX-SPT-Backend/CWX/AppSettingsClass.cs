@@ -9,6 +9,7 @@ public class AppSettingsClass
     public bool CloseToTray { get; set; }
     public bool MinimizeOnLaunch { get; set; }
     public bool AlwaysTop { get; set; }
+    public bool UseProfileColors { get; set; }
     
     // Advanced panel options
     public bool AdvancedUser { get; set; }

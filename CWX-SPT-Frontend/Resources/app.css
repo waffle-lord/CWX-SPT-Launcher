@@ -76,16 +76,28 @@
     opacity: 0.2;
 }
 
-.glow-tue {
+.glow-purple {
     background: radial-gradient(circle at 50% 50%,rgba(76, 0, 255, 1), rgba(76, 0, 255, 0));
 }
 
-.glow-eod {
+.glow-gold {
     background: radial-gradient(circle at 50% 50%, rgb(208, 154, 36, 1), rgba(208, 154, 36, 0));
 }
 
-.glow-std {
+.glow-grey {
     background: radial-gradient(circle at 50% 50%, rgb(200, 200, 200, 1), rgba(200, 200, 200, 0.4));
+}
+
+.glow-blue {
+    background: radial-gradient(circle at 50% 50%, rgb(17, 39, 182), rgba(17, 39, 182, 0.4));
+}
+
+.glow-green {
+    background: radial-gradient(circle at 50% 50%, rgb(115, 255, 0), rgba(115, 255, 0, 0.4));
+}
+
+.glow-red {
+    background: radial-gradient(circle at 50% 50%, rgb(255, 0, 0), rgba(255, 0, 0, 0.4));
 }
 
 .no-pointers {

@@ -4,8 +4,14 @@
     <DialogContent>
         <MudContainer Class="py-4 card-overflow">
             <MudForm Model="Profile" @bind-IsValid="@success" Class="gap-2 mt-3">
-                <MudTextField Immediate="true" @bind-Value="Profile.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Required="true"/>
-                <MudTextField Immediate="true" @bind-Value="Profile.Password" Label="Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                <MudTextField Immediate="true" @bind-Value="Profile.username" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Required="true"/>
+                <MudTextField Immediate="true" @bind-Value="Profile.password" Label="Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                <MudSelect @bind-Value="Profile.edition">
+                    @foreach (var edition in serverEditions)
+                    {
+                        <MudSelectItem Value="@edition">@edition</MudSelectItem>
+                    }
+                </MudSelect>
             </MudForm>
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" @onclick="() => Submit()">Add</MudButton>
@@ -17,7 +23,8 @@
 
 @code {
     private bool success;
-    public SptProfileClass Profile = new SptProfileClass();
+    public RegisterRequestClass Profile = new RegisterRequestClass();
+    private List<string> serverEditions { get; set; } = ServerHelper.Instance.ServerInfo.editions;
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
 
     private void Submit()

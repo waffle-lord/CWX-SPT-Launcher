@@ -7,7 +7,7 @@
         <MudText Class="mb-n4 no-pointers no-select" Typo="Typo.caption">Name:</MudText>
         <MudText Typo="Typo.h6">@Server.Name</MudText>
         <MudDivider DividerType="DividerType.Middle"/>
-        <MudText Class="mb-n3 no-pointers no-select" Typo="Typo.caption">IP:</MudText>
+        <MudText Class="mb-n3 no-pointers no-select" Typo="Typo.caption">Address:</MudText>
         <MudText Typo="Typo.body1">@Server.Ip</MudText>
         <MudContainer Class="pa-0 d-flex mt-2">
             <MudTooltip Text="@((IsConnectedServer) ? "Connected" : "Disconnected")" Arrow="true" Placement="Placement.Right">
@@ -103,5 +103,4 @@
             SettingsHelper.Instance.SetServerSettings(ServerList);
         }
     }
-
 }

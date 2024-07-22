@@ -15,11 +15,15 @@
         <None Remove="Resources\app.css" />
         <None Remove="Resources\app.ico" />
         <None Remove="Resources\settings.json" />
+        <None Remove="Resources\side_usec.png" />
+        <None Remove="Resources\side_bear.png" />
         <EmbeddedResource Include="Resources\index.html" />
         <EmbeddedResource Include="Resources\app.js" />
         <EmbeddedResource Include="Resources\app.css" />
         <EmbeddedResource Include="Resources\app.ico" />
         <EmbeddedResource Include="Resources\settings.json" />
+        <EmbeddedResource Include="Resources\side_usec.png" />
+        <EmbeddedResource Include="Resources\side_bear.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -29,6 +33,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\CWX-SPT-Backend\CWX-SPT-Backend.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="zlib.net">
+        <HintPath>SharedDependencies\zlib.net.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

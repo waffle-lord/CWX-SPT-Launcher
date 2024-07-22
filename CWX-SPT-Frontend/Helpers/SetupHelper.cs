@@ -61,6 +61,9 @@ public class SetupHelper
             _resourcePathing.Add("CWX_SPT_Frontend.Resources.app.js", "app.js");
             _resourcePathing.Add("CWX_SPT_Frontend.Resources.app.css", "app.css");
             _resourcePathing.Add("CWX_SPT_Frontend.Resources.app.ico", "app.ico");
+            // _resourcePathing.Add("CWX_SPT_Frontend.Resources.settings.json", "settings.json");
+            _resourcePathing.Add("CWX_SPT_Frontend.Resources.side_bear.png", "side_bear.png");
+            _resourcePathing.Add("CWX_SPT_Frontend.Resources.side_usec.png", "side_usec.png");
         }
         else
         {
@@ -87,6 +90,16 @@ public class SetupHelper
             if (!File.Exists(Path.Combine(Main.AppPath, "settings.json")))
             {
                 _resourcePathing.Add("CWX_SPT_Frontend.Resources.settings.json", "settings.json");
+            }
+            
+            if (!File.Exists(Path.Combine(Main.AppPath, "side_bear.png")))
+            {
+                _resourcePathing.Add("CWX_SPT_Frontend.Resources.side_bear.png", "side_bear.png");
+            }
+            
+            if (!File.Exists(Path.Combine(Main.AppPath, "side_usec.png")))
+            {
+                _resourcePathing.Add("CWX_SPT_Frontend.Resources.side_usec.png", "side_usec.png");
             }
         }
     }

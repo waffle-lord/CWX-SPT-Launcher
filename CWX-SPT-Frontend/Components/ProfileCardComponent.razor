@@ -1,33 +1,36 @@
-﻿
-@inject ISnackbar Snackbar
+﻿@inject ISnackbar Snackbar
 @inject IDialogService DialogService
 
 <MudItem sm="12" md="4">
     <MudPaper Elevation="2" Class="pa-4 d-flex flex-column flex-none gap-2 card-overflow">
         <MudImage Src=@(ImageName()) Elevation="0" Class=@(ImageClassNames())/>
-        <MudPaper Elevation="0" Class=@(GlowClassNames())/>
+        @if (UseProfileColors)
+        {
+            <MudPaper Elevation="0" Class=@(GlowClassNames())/>
+        }
         <MudText Class="mb-n4 no-pointers no-select" Typo="Typo.caption">Name:</MudText>
-        <MudText Typo="Typo.h6">@Profile.Name</MudText>
+        <MudText Typo="Typo.h6">@Profile.nickname</MudText>
         <MudDivider DividerType="DividerType.Middle"/>
         <MudText Class="mb-n4 no-pointers no-select" Typo="Typo.caption">Level:</MudText>
-        <MudText Typo="Typo.h6">@Profile.Level</MudText>
+        <MudText Typo="Typo.h6">@Profile.currlvl</MudText>
         <MudDivider DividerType="DividerType.Middle"/>
         <MudText Class="mb-n4 no-pointers no-select" Typo="Typo.caption">Edition:</MudText>
-        <MudText Typo="Typo.h6">@Profile.Edition</MudText>
+        <MudText Typo="Typo.h6">@Profile.edition</MudText>
         <MudDivider DividerType="DividerType.Middle"/>
         <MudText Class="mb-n3 no-pointers no-select" Typo="Typo.caption">ID:</MudText>
-        <MudText Typo="Typo.body1">@Profile.Id</MudText>
+        <MudText Typo="Typo.body1">@Profile.profileId</MudText>
         <MudContainer Class="justify-end d-flex pa-0">
-            <MudIconButton Class="mr-1" Color="Color.Default" Icon="@Icons.Material.Filled.Login" Size="Size.Small" @onclick="() => RunStartGameTask()"/>
+            <MudIconButton Class="mr-1" Color="Color.Default" Icon="@Icons.Material.Filled.Login" Size="Size.Small" @onclick="() => _ = RunStartGameTask()"/>
             <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" @onclick="() => _ = RunDeleteTask()"/>
         </MudContainer>
     </MudPaper>
 </MudItem>
 
 @code {
-    [Parameter] public SptProfileClass Profile { get; set; }
-    [Parameter] public List<SptProfileClass> ProfileList { get; set; }
-    [Parameter] public EventCallback<List<SptProfileClass>> ProfileListChanged { get; set; }
+    [Parameter] public ServerProfileClass Profile { get; set; }
+    [Parameter] public List<ServerProfileClass> ProfileList { get; set; }
+    [Parameter] public EventCallback<List<ServerProfileClass>> ProfileListChanged { get; set; }
+    public bool UseProfileColors { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.UseProfileColors;
     private string glowClass { get; set; }
     private string sideClass { get; set; }
 
@@ -38,37 +41,41 @@
 
     public string ImageClassNames()
     {
-        return $"no-pointers background-image-{((Profile.Side.ToLower() != "") ? Profile.Side.ToLower() : "usec")}";
+        return $"no-pointers background-image-{((Profile.side.ToLower() != "") ? Profile.side.ToLower() : "usec")}";
     }
 
     public string ImageName()
     {
-        return $"side_{((Profile.Side.ToLower() != "") ? Profile.Side.ToLower() : "usec")}.png";
+        return $"side_{((Profile.side.ToLower() != "") ? Profile.side.ToLower() : "usec")}.png";
     }
 
     protected override void OnInitialized()
     {
-        switch (Profile.Edition.ToLower())
+        switch (Profile.edition.ToLower())
         {
+            case "spt developer":
+                glowClass = "glow-purple";
+                break;
             case "edge of darkness":
-                glowClass = "glow-eod";
+                glowClass = "glow-gold";
                 break;
             case "the unheard edition":
-                glowClass = "glow-tue";
+                glowClass = "glow-blue";
                 break;
             case "standard edition":
+                glowClass = "glow-grey";
+                break;
             default:
-                glowClass = "glow-std";
                 break;
         }
 
         base.OnInitialized();
     }
 
-    private void RunStartGameTask()
+    private async Task RunStartGameTask()
     {
         var server = SettingsHelper.Instance.GetSettings().Servers.FirstOrDefault(x => x.ServerId == ServerHelper.Instance.ConnectedServerId);
-        
+
         var dialogParams = new DialogParameters();
         dialogParams.Add("Server", server);
         dialogParams.Add("Profile", Profile);

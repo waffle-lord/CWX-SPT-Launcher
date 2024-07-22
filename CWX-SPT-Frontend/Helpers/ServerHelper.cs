@@ -1,4 +1,8 @@
-﻿using CWX_SPT_Backend.CWX;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using ComponentAce.Compression.Libs.zlib;
+using CWX_SPT_Backend.CWX;
+using CWX_SPT_Backend.Models.SPT;
 
 namespace CWX_SPT_Frontend.Helpers;
 
@@ -6,9 +10,11 @@ public class ServerHelper
 {
     private static ServerHelper _instance = null;
     private static readonly object Lock = new object();
-    private object _profiles = new object();
+    public List<ServerProfileClass> ProfileList = new List<ServerProfileClass>();
+    public ServerInfoClass ServerInfo = new ServerInfoClass();
     public string ConnectedServerId = "";
     public bool SelectedProfile = false;
+    public HttpClient NetClient = new HttpClient();
     
     public static ServerHelper Instance
     {
@@ -23,43 +29,36 @@ public class ServerHelper
 
     public async Task<bool> IsServerReachable(ServersClass server)
     {
-        await Task.Delay(500);
+        NetClient.BaseAddress = new Uri("http://" + server.Ip);
+        var task = await NetClient.GetAsync("/launcher/ping");
+        
         return true;
     }
     
     public async Task<bool> GetServerProfiles(ServersClass server)
     {
-        await Task.Delay(500);
+        var task = await NetClient.GetAsync("/launcher/profiles");
+        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(), null);
+        ProfileList = JsonSerializer.Deserialize<List<ServerProfileClass>>(result);
         return true;
     }
-    
-    // TODO: Remove
-    public async Task<bool> GetFakeMessage1(ServersClass server)
+
+    public async Task<bool> GetCreationTypes(ServersClass server)
     {
-        await Task.Delay(500);
-        return true;
-    }
-    
-    // TODO: Remove
-    public async Task<bool> GetFakeMessage2(ServersClass server)
-    {
-        await Task.Delay(500);
-        return true;
-    }
-    
-    // TODO: Remove
-    public async Task<bool> GetFakeMessage3(ServersClass server)
-    {
-        await Task.Delay(500);
+        var task = await NetClient.GetAsync("/launcher/server/connect");
+        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(), null);
+        ServerInfo = JsonSerializer.Deserialize<ServerInfoClass>(result);
         return true;
     }
 
     public void LogoutAndDispose()
     {
         // null profiles
-        _profiles = null;
+        ProfileList = new List<ServerProfileClass>();
+        ServerInfo = new ServerInfoClass();
         ConnectedServerId = "";
         SelectedProfile = false;
+        NetClient = new HttpClient();
     }
 
     public void Login(string serverId)

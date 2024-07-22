@@ -4,7 +4,7 @@
     <DialogContent>
         <MudContainer Class="py-4 card-overflow">
             <MudContainer Class="d-flex flex-column align-center gap-4">
-                @if (Tasks <= ELoginTaskResults.Fake3)
+                @if (Tasks <= ELoginTaskResults.Types)
                 {
                     <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large"/>
                 }
@@ -44,15 +44,17 @@
     private async Task StartLoginTasks()
     {
         Tasks = ELoginTaskResults.Started;
-        TaskText = "Starting login tasks";        
+        TaskText = "Starting login tasks";
         
         // test connection
         Tasks = ELoginTaskResults.Connection;
         TaskText = "Checking connection to server";
+        await Task.Delay(1000); // artificial to hopefully fix "focus on invalid element"
         var reach = await serverHelper.IsServerReachable(Server);
         if (!reach)
         {
             // failed
+            Console.WriteLine("SOMETHING FUCKED UP PINGING SERVER");
             return;
         }
         // passed
@@ -65,47 +67,23 @@
         if (!profiles)
         {
             // failed
+            Console.WriteLine("SOMETHING FUCKED UP GETTING PROFILES");
             return;
         }
         // passed
         
-        // get fake1
-        Tasks = ELoginTaskResults.Fake1;
-        TaskText = "Waffle Fucked Your Mum Last Night!";
+        // get Creation data
+        Tasks = ELoginTaskResults.Types;
+        TaskText = "Getting profile creation data";
         StateHasChanged();
-        var mess1 = await serverHelper.GetFakeMessage1(Server);
-        if (!mess1)
+        var types = await serverHelper.GetCreationTypes(Server);
+        if (!types)
         {
-            // failed
+            Console.WriteLine("SOMETHING FUCKED UP GETTING CREATION DATA");
             return;
         }
         // passed
         
-        // get fake2
-        Tasks = ELoginTaskResults.Fake2;
-        TaskText = "JK KEKW!";
-        StateHasChanged();
-        var mess2 = await serverHelper.GetFakeMessage2(Server);
-        if (!mess2)
-        {
-            // failed
-            return;
-        }
-        // passed
-        
-        // get fake3
-        Tasks = ELoginTaskResults.Fake3;
-        TaskText = "Or am i?";
-        StateHasChanged();
-        var mess3 = await serverHelper.GetFakeMessage3(Server);
-        if (!mess3)
-        {
-            // failed
-            return;
-        }
-        // passed
-        
-        // move to profile screen
         Tasks = ELoginTaskResults.Success;
         TaskText = "Check the Profiles in the NavMenu!";
         StateHasChanged();
