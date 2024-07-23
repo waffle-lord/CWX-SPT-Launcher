@@ -1,6 +1,5 @@
 ﻿@inject ISnackbar Snackbar
 @inject IDialogService DialogService
-@inject NavigationManager NaviMan
 
 <MudItem md="4">
     <MudPaper Elevation="2" Class="pa-4 d-flex flex-column flex-none gap-2 card-overflow">
@@ -31,7 +30,7 @@
 
     protected override void OnInitialized()
     {
-        IsConnectedServer = ServerHelper.Instance.ConnectedServer != null && ServerHelper.Instance.ConnectedServer.ServerId == Server.ServerId;
+        IsConnectedServer = ServerHelper.Instance.ConnectedServer?.ServerId == Server.ServerId;
         base.OnInitialized();
     }
 
@@ -65,8 +64,17 @@
     {
         if (ServerHelper.Instance.ConnectedServer != null)
         {
-            ServerHelper.Instance.LogoutAndDispose();
-            IsConnectedServer = false;
+            if (ServerHelper.Instance.ConnectedServer.ServerId == Server.ServerId)
+            {
+                ServerHelper.Instance.LogoutAndDispose();
+                IsConnectedServer = false;
+                return;
+            }
+            else
+            {
+                ServerHelper.Instance.LogoutAndDispose();
+                IsConnectedServer = false;
+            }
         }
         
         var param = new DialogParameters();
