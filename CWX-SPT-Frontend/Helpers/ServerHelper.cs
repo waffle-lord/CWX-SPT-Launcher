@@ -14,7 +14,6 @@ public class ServerHelper
     public List<ServerProfileClass> ProfileList = new List<ServerProfileClass>();
     public ServerInfoClass ServerInfo = new ServerInfoClass();
     public ServersClass ConnectedServer = null;
-    public bool SelectedProfile = false;
     public HttpClient NetClient = new HttpClient();
 
     public static ServerHelper Instance
@@ -85,7 +84,6 @@ public class ServerHelper
         ProfileList = new List<ServerProfileClass>();
         ServerInfo = new ServerInfoClass();
         ConnectedServer = null;
-        SelectedProfile = false;
         NetClient = new HttpClient();
     }
 
