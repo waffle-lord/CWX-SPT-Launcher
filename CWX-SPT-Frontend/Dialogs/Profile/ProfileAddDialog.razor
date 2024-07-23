@@ -29,7 +29,7 @@
 
     private async void Submit()
     {
-        _ = await ServerHelper.Instance.SendProfileRegister(Profile);
+        await ServerHelper.Instance.SendProfileRegister(Profile);
         StateHasChanged();
         
         MudDialog.Close(DialogResult.Ok(true));
