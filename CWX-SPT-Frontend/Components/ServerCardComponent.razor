@@ -31,16 +31,16 @@
 
     protected override void OnInitialized()
     {
-        IsConnectedServer = ServerHelper.Instance.ConnectedServerId == Server.ServerId;
+        IsConnectedServer = ServerHelper.Instance.ConnectedServer != null && ServerHelper.Instance.ConnectedServer.ServerId == Server.ServerId;
         base.OnInitialized();
     }
 
     private async Task RunEditTask()
     {
-        if (ServerHelper.Instance.ConnectedServerId == Server.ServerId)
+        if (ServerHelper.Instance.ConnectedServer?.ServerId == Server.ServerId)
         {
             ServerHelper.Instance.LogoutAndDispose();
-            IsConnectedServer = ServerHelper.Instance.ConnectedServerId == Server.ServerId;
+            IsConnectedServer = false;
         }
 
         var param = new DialogParameters();
@@ -63,15 +63,12 @@
 
     private async Task RunLoginTask()
     {
-        // if connected comes in as true, we "logout" instead
-        if (ServerHelper.Instance.ConnectedServerId != "" && ServerHelper.Instance.ConnectedServerId == Server.ServerId)
+        if (ServerHelper.Instance.ConnectedServer != null)
         {
             ServerHelper.Instance.LogoutAndDispose();
-            IsConnectedServer = ServerHelper.Instance.ConnectedServerId == Server.ServerId;
-            return;
+            IsConnectedServer = false;
         }
-
-        // wanting to connect to Server
+        
         var param = new DialogParameters();
         param.Add("Server", Server);
 
@@ -80,16 +77,17 @@
 
         if (!result.Canceled)
         {
-            ServerHelper.Instance.Login(Server.ServerId);
-            IsConnectedServer = ServerHelper.Instance.ConnectedServerId == Server.ServerId;
+            ServerHelper.Instance.Login(Server);
+            IsConnectedServer = ServerHelper.Instance.ConnectedServer.ServerId == Server.ServerId;
         }
     }
 
     private async Task RunDeleteTask()
     {
-        if (ServerHelper.Instance.ConnectedServerId == Server.ServerId)
+        if (ServerHelper.Instance.ConnectedServer != null)
         {
             ServerHelper.Instance.LogoutAndDispose();
+            IsConnectedServer = false;
         }
 
         var dialog = await DialogService.ShowAsync<ServerRemoveDialog>("ServerRemoveDialog", SettingsHelper.Instance.DialogOptions);

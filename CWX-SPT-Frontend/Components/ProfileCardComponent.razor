@@ -3,13 +3,16 @@
 
 <MudItem sm="12" md="4">
     <MudPaper Elevation="2" Class="pa-4 d-flex flex-column flex-none gap-2 card-overflow">
-        <MudImage Src=@(ImageName()) Elevation="0" Class=@(ImageClassNames())/>
+        @if (!sideIsUnknown)
+        {
+            <MudImage Src=@(ImageName()) Elevation="0" Class=@(ImageClassNames())/>
+        }
         @if (UseProfileColors)
         {
             <MudPaper Elevation="0" Class=@(GlowClassNames())/>
         }
         <MudText Class="mb-n4 no-pointers no-select" Typo="Typo.caption">Name:</MudText>
-        <MudText Typo="Typo.h6">@Profile.nickname</MudText>
+        <MudText Typo="Typo.h6">@Profile.username</MudText>
         <MudDivider DividerType="DividerType.Middle"/>
         <MudText Class="mb-n4 no-pointers no-select" Typo="Typo.caption">Level:</MudText>
         <MudText Typo="Typo.h6">@Profile.currlvl</MudText>
@@ -31,6 +34,7 @@
     [Parameter] public List<ServerProfileClass> ProfileList { get; set; }
     [Parameter] public EventCallback<List<ServerProfileClass>> ProfileListChanged { get; set; }
     public bool UseProfileColors { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.UseProfileColors;
+    private bool sideIsUnknown { get; set; } = false;
     private string glowClass { get; set; }
     private string sideClass { get; set; }
 
@@ -46,11 +50,16 @@
 
     public string ImageName()
     {
-        return $"side_{((Profile.side.ToLower() != "") ? Profile.side.ToLower() : "usec")}.png";
+        return $"side_{((Profile.side.ToLower() != "unknown") ? Profile.side.ToLower() : "usec")}.png";
     }
 
     protected override void OnInitialized()
     {
+        if (Profile.side.ToLower() == "unknown")
+        {
+            sideIsUnknown = true;
+        }
+        
         switch (Profile.edition.ToLower())
         {
             case "spt developer":
@@ -74,17 +83,17 @@
 
     private async Task RunStartGameTask()
     {
-        var server = SettingsHelper.Instance.GetSettings().Servers.FirstOrDefault(x => x.ServerId == ServerHelper.Instance.ConnectedServerId);
+        //var server = SettingsHelper.Instance.GetSettings().Servers.FirstOrDefault(x => x.ServerId == ServerHelper.Instance.ConnectedServerId);
 
         var dialogParams = new DialogParameters();
-        dialogParams.Add("Server", server);
+        // dialogParams.Add("Server", server);
         dialogParams.Add("Profile", Profile);
 
-        if (server == null || dialogParams == null)
-        {
-            Snackbar.Add("Connect to a server first!", Severity.Warning);
-            return;
-        }
+        // if (server == null || dialogParams == null)
+        // {
+        //     Snackbar.Add("Connect to a server first!", Severity.Warning);
+        //     return;
+        // }
 
         var DialogOptions = new DialogOptions
         {
@@ -104,13 +113,16 @@
 
     private async Task RunDeleteTask()
     {
-        var dialog = await DialogService.ShowAsync<ProfileRemoveDialog>("ProfileRemoveDialog", SettingsHelper.Instance.DialogOptions);
+        var dialogParams = new DialogParameters();
+        dialogParams.Add("Profile", Profile);
+        
+        var dialog = await DialogService.ShowAsync<ProfileRemoveDialog>("ProfileRemoveDialog",dialogParams , SettingsHelper.Instance.DialogOptions);
         var result = await dialog.Result;
 
         if (!result.Canceled)
         {
             // call server and remove profile
-            ProfileList.Remove(Profile);
+            ProfileList = ServerHelper.Instance.ProfileList;
             await ProfileListChanged.InvokeAsync(ProfileList);
         }
     }

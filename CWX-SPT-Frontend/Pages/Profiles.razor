@@ -30,7 +30,7 @@
 @code {
 
     public List<ServerProfileClass> ProfilesList { get; set; } = ServerHelper.Instance.ProfileList;
-    public bool IsConnected { get; set; } = ServerHelper.Instance.ConnectedServerId != "";
+    public bool IsConnected { get; set; } = ServerHelper.Instance.ConnectedServer != null;
 
     private async Task RunAddTask()
     {
@@ -39,8 +39,7 @@
 
         if (!result.Canceled)
         {
-            // call server and add new empty profile
-            ProfilesList.Add(result.Data as ServerProfileClass);
+            ProfilesList = ServerHelper.Instance.ProfileList;
         }
     }
 }

@@ -13,12 +13,14 @@
 </MudDialog>
 
 @code {
+    [Parameter] public ServerProfileClass Profile { get; set; }
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
 
-    private void Submit()
+    private async void Submit()
     {
+        Console.WriteLine("test");
+        await ServerHelper.Instance.SendProfileDelete(Profile);
         MudDialog.Close(DialogResult.Ok(true));
-        Snackbar.Add("Removed!");
     }
 
     private void Cancel()
