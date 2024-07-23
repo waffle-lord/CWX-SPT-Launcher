@@ -40,7 +40,7 @@
         base.OnInitialized();
         _ = StartLoginTasks();
     }
-    
+
     private async Task StartLoginTasks()
     {
         Tasks = ELoginTaskResults.Started;
@@ -55,7 +55,7 @@
             await Task.Delay(20); // artificial to hopefully fix "focus on invalid element"
             await serverHelper.IsServerReachable(Server, token.Token);
             token.Dispose();
-            
+
             // get profile data
             token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             Tasks = ELoginTaskResults.Profiles;
@@ -63,7 +63,7 @@
             StateHasChanged();
             await serverHelper.GetServerProfiles(token.Token);
             token.Dispose();
-            
+
             // get Creation data
             token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             Tasks = ELoginTaskResults.Types;
@@ -77,7 +77,7 @@
             AbortOrFail();
             return;
         }
-        
+
         Tasks = ELoginTaskResults.Success;
         TaskText = "Check the Profiles in the NavMenu!";
         StateHasChanged();
@@ -90,11 +90,11 @@
         {
             Snackbar.Add("Error connecting to server!", Severity.Error);
         }
-        
+
         ServerHelper.Instance.LogoutAndDispose();
         MudDialog.Cancel();
     }
-    
+
     private void Submit()
     {
         MudDialog.Close(DialogResult.Ok(Server));
@@ -107,4 +107,5 @@
         token.Cancel();
         MudDialog.Cancel();
     }
+
 }

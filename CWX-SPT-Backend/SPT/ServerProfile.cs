@@ -4,6 +4,7 @@ public class ServerProfile
 {
     public string username { get; set; }
     public string nickname { get; set; }
+    public bool hasPassword { get; set; }
     public string side { get; set; }
     public int currlvl { get; set; }
     public long currexp { get; set; }

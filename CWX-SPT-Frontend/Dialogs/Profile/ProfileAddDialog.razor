@@ -42,19 +42,19 @@
             AbortOrFail();
             return;
         }
-        
+
         StateHasChanged();
         Snackbar.Add("Added Profile!", Severity.Success);
         MudDialog.Close(DialogResult.Ok(true));
     }
-    
+
     private void AbortOrFail()
     {
         if (!UserCancel)
         {
             Snackbar.Add("Error connecting to server!", Severity.Error);
         }
-        
+
         ServerHelper.Instance.LogoutAndDispose();
         MudDialog.Cancel();
     }
@@ -65,4 +65,5 @@
         token.Cancel();
         MudDialog.Cancel();
     }
+
 }

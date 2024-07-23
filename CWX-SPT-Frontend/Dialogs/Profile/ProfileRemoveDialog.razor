@@ -6,7 +6,7 @@
             <MudText>Do you really want to delete this Profile? This process cannot be undone.</MudText>
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
                 <MudButton Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" @onclick="() => Submit()">Delete</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="() => UserCancelled()">Cancel</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="() => Cancel()">Cancel</MudButton>
             </MudContainer>
         </MudContainer>
     </DialogContent>
@@ -18,6 +18,11 @@
     private CancellationTokenSource token { get; set; }
     private bool UserCancel { get; set; } = false;
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
     private async void Submit()
     {
         try
@@ -26,12 +31,13 @@
             await ServerHelper.Instance.SendProfileDelete(Profile, token.Token);
             token.Dispose();
         }
-        catch (Exception e)
+        catch (TaskCanceledException e) when (token.IsCancellationRequested)
         {
             AbortOrFail();
             return;
         }
 
+        StateHasChanged();
         Snackbar.Add("Removed Profile!", Severity.Success);
         MudDialog.Close(DialogResult.Ok(true));
     }
@@ -40,17 +46,16 @@
     {
         if (!UserCancel)
         {
-            Snackbar.Add("Error connecting to server!", Severity.Error);
+            Snackbar.Add("Error deleting profile from server!", Severity.Error);
         }
-        
+
         ServerHelper.Instance.LogoutAndDispose();
         MudDialog.Cancel();
     }
 
-    private void UserCancelled()
+    private void Cancel()
     {
-        UserCancel = true;
-        token.Cancel();
         MudDialog.Cancel();
     }
+
 }

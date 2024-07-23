@@ -23,6 +23,11 @@
         <MudText Class="mb-n3 no-pointers no-select" Typo="Typo.caption">ID:</MudText>
         <MudText Typo="Typo.body1">@Profile.profileId</MudText>
         <MudContainer Class="justify-end d-flex pa-0">
+            @if (Profile.hasPassword)
+            {
+                <MudIconButton Color="Color.Default" Icon="@Icons.Material.Filled.Lock" Size="Size.Small"/>
+                <MudSpacer/>
+            }
             <MudIconButton Class="mr-1" Color="Color.Default" Icon="@Icons.Material.Filled.Login" Size="Size.Small" @onclick="() => _ = RunStartGameTask()"/>
             <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" @onclick="() => _ = RunDeleteTask()"/>
         </MudContainer>
