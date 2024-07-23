@@ -49,7 +49,7 @@
         // test connection
         Tasks = ELoginTaskResults.Connection;
         TaskText = "Checking connection to server";
-        await Task.Delay(1000); // artificial to hopefully fix "focus on invalid element"
+        await Task.Delay(20); // artificial to hopefully fix "focus on invalid element"
         var reach = await serverHelper.IsServerReachable(Server);
         if (!reach)
         {
