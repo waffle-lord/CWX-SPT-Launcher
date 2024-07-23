@@ -20,7 +20,7 @@
                 <MudText>@TaskText</MudText>
             </MudContainer>
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
-                <MudButton Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" @onclick="() => Cancel()">Cancel</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" @onclick="() => UserCancelled()">Cancel</MudButton>
             </MudContainer>
         </MudContainer>
     </DialogContent>
@@ -33,6 +33,7 @@
     [Parameter] public Servers Server { get; set; }
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
     private CancellationTokenSource token { get; set; }
+    private bool UserCancel { get; set; } = false;
 
     protected override void OnInitialized()
     {
@@ -48,65 +49,34 @@
         try
         {
             // test connection
-            token = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             Tasks = ELoginTaskResults.Connection;
             TaskText = "Checking connection to server";
             await Task.Delay(20); // artificial to hopefully fix "focus on invalid element"
             await serverHelper.IsServerReachable(Server, token.Token);
-        }
-        catch (TaskCanceledException e) when (token.IsCancellationRequested)
-        {
-            AbortOrFail($"user cancelled request: {Tasks.ToString()}");
-            return;
-        }
-        catch (TaskCanceledException e)
-        {
-            AbortOrFail($"Request timed out: {Tasks.ToString()}");
-            return;
-        }
-        token.Dispose();
-
-        try
-        {
+            token.Dispose();
+            
             // get profile data
-            token = new CancellationTokenSource(TimeSpan.FromMilliseconds(15000));
+            token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             Tasks = ELoginTaskResults.Profiles;
             TaskText = "Getting profiles from server";
             StateHasChanged();
             await serverHelper.GetServerProfiles(token.Token);
-        }
-        catch (TaskCanceledException e) when (token.IsCancellationRequested)
-        {
-            AbortOrFail($"user cancelled request: {Tasks.ToString()}");
-            return;
-        }
-        catch (TaskCanceledException e)
-        {
-            AbortOrFail($"Request timed out: {Tasks.ToString()}");
-            return;
-        }
-        token.Dispose();
-        
-        try
-        {
+            token.Dispose();
+            
             // get Creation data
-            token = new CancellationTokenSource(TimeSpan.FromMilliseconds(15000));
+            token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             Tasks = ELoginTaskResults.Types;
             TaskText = "Getting profile creation data";
             StateHasChanged();
             await serverHelper.GetCreationTypes(token.Token);
+            token.Dispose();
         }
         catch (TaskCanceledException e) when (token.IsCancellationRequested)
         {
-            AbortOrFail($"user cancelled request: {Tasks.ToString()}");
+            AbortOrFail();
             return;
         }
-        catch (TaskCanceledException e)
-        {
-            AbortOrFail($"Request timed out: {Tasks.ToString()}");
-            return;
-        }
-        token.Dispose();
         
         Tasks = ELoginTaskResults.Success;
         TaskText = "Check the Profiles in the NavMenu!";
@@ -114,12 +84,15 @@
         Submit();
     }
 
-    private void AbortOrFail(string message)
+    private void AbortOrFail()
     {
-        Console.WriteLine(message);
-        token.Dispose();
+        if (!UserCancel)
+        {
+            Snackbar.Add("Error connecting to server!", Severity.Error);
+        }
+        
         ServerHelper.Instance.LogoutAndDispose();
-        Cancel();
+        MudDialog.Cancel();
     }
     
     private void Submit()
@@ -128,8 +101,9 @@
         Snackbar.Add("Logged In. Visit Profiles Page!", Severity.Success);
     }
 
-    private void Cancel()
+    private void UserCancelled()
     {
+        UserCancel = true;
         token.Cancel();
         MudDialog.Cancel();
     }

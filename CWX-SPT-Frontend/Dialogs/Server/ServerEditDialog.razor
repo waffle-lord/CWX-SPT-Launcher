@@ -23,8 +23,8 @@
 
     private void Submit()
     {
-        MudDialog.Close(DialogResult.Ok(Server));
         Snackbar.Add("Edited Server!", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(Server));
     }
 
     private void Cancel()

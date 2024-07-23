@@ -15,7 +15,7 @@
             </MudForm>
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" @onclick="() => Submit()">Add</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="() => Cancel()">Cancel</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="() => UserCancelled()">Cancel</MudButton>
             </MudContainer>
         </MudContainer>
     </DialogContent>
@@ -26,18 +26,43 @@
     public RegisterRequest Profile = new RegisterRequest();
     private List<string> serverEditions { get; set; } = ServerHelper.Instance.ServerInfo.editions;
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
+    private CancellationTokenSource token { get; set; }
+    private bool UserCancel { get; set; } = false;
 
     private async void Submit()
     {
-        await ServerHelper.Instance.SendProfileRegister(Profile);
-        StateHasChanged();
+        try
+        {
+            token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            await ServerHelper.Instance.SendProfileRegister(Profile, token.Token);
+            token.Dispose();
+        }
+        catch (TaskCanceledException e) when (token.IsCancellationRequested)
+        {
+            AbortOrFail();
+            return;
+        }
         
-        MudDialog.Close(DialogResult.Ok(true));
+        StateHasChanged();
         Snackbar.Add("Added Profile!", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+    
+    private void AbortOrFail()
+    {
+        if (!UserCancel)
+        {
+            Snackbar.Add("Error connecting to server!", Severity.Error);
+        }
+        
+        ServerHelper.Instance.LogoutAndDispose();
+        MudDialog.Cancel();
     }
 
-    private void Cancel()
+    private void UserCancelled()
     {
+        UserCancel = true;
+        token.Cancel();
         MudDialog.Cancel();
     }
 }

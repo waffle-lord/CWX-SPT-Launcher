@@ -28,18 +28,10 @@ public class ServerHelper
             }
         }
     }
-
-    public async Task IsServerReachable(Servers server)
-    {
-        NetClient = new HttpClient();
-        NetClient.BaseAddress = new Uri("http://" + server.Ip);
-        var task = await NetClient.GetAsync("/launcher/ping");
-    }
     
     public async Task IsServerReachable(Servers server, CancellationToken token)
     {
         NetClient = new HttpClient();
-        NetClient.Timeout = TimeSpan.FromSeconds(3);
         NetClient.BaseAddress = new Uri("http://" + server.Ip);
         var task = await NetClient.GetAsync("/launcher/ping", token);
     }
@@ -57,30 +49,12 @@ public class ServerHelper
         var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(), null);
         ProfileList = JsonSerializer.Deserialize<List<ServerProfile>>(result);
     }
-
-    public async Task GetCreationTypes()
-    {
-        var task = await NetClient.GetAsync("/launcher/server/connect");
-        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(), null);
-        ServerInfo = JsonSerializer.Deserialize<ServerInfo>(result);
-    }
     
     public async Task GetCreationTypes(CancellationToken token)
     {
         var task = await NetClient.GetAsync("/launcher/server/connect", token);
         var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(), null);
         ServerInfo = JsonSerializer.Deserialize<ServerInfo>(result);
-    }
-
-    public async Task SendProfileRegister(RegisterRequest request)
-    {
-        var task = await NetClient.PutAsync("/launcher/profile/register",
-            new ByteArrayContent(SimpleZlib.CompressToBytes(JsonSerializer.Serialize(request),
-                zlibConst.Z_BEST_COMPRESSION)));
-        
-        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(), null);
-        Console.WriteLine(result); // currently returns "FAILED | OK"
-        await GetServerProfiles(); // get them again to repopulate TODO: rework server side API
     }
     
     public async Task SendProfileRegister(RegisterRequest request, CancellationToken token)
@@ -92,20 +66,6 @@ public class ServerHelper
         var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(), null);
         Console.WriteLine(result); // currently returns "FAILED | OK"
         await GetServerProfiles(); // get them again to repopulate TODO: rework server side API
-    }
-
-    public async Task SendProfileDelete(ServerProfile profile)
-    {
-        NetClient.DefaultRequestHeaders.Add("Cookie", $"PHPSESSID={profile.profileId}");
-        NetClient.DefaultRequestHeaders.Add("SessionId", profile.profileId);
-        
-        var task = await NetClient.GetAsync("/launcher/profile/remove");
-        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(), null);
-        Console.WriteLine(result); // True or False as a string
-        await GetServerProfiles();
-        
-        NetClient.DefaultRequestHeaders.Remove("Cookie");
-        NetClient.DefaultRequestHeaders.Remove("SessionId");
     }
     
     public async Task SendProfileDelete(ServerProfile profile, CancellationToken token)
