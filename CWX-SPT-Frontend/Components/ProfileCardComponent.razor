@@ -30,9 +30,9 @@
 </MudItem>
 
 @code {
-    [Parameter] public ServerProfileClass Profile { get; set; }
-    [Parameter] public List<ServerProfileClass> ProfileList { get; set; }
-    [Parameter] public EventCallback<List<ServerProfileClass>> ProfileListChanged { get; set; }
+    [Parameter] public ServerProfile Profile { get; set; }
+    [Parameter] public List<ServerProfile> ProfileList { get; set; }
+    [Parameter] public EventCallback<List<ServerProfile>> ProfileListChanged { get; set; }
     public bool UseProfileColors { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.UseProfileColors;
     private bool sideIsUnknown { get; set; } = false;
     private string glowClass { get; set; }

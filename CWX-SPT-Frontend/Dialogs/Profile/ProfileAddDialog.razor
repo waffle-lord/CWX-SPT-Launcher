@@ -23,7 +23,7 @@
 
 @code {
     private bool success;
-    public RegisterRequestClass Profile = new RegisterRequestClass();
+    public RegisterRequest Profile = new RegisterRequest();
     private List<string> serverEditions { get; set; } = ServerHelper.Instance.ServerInfo.editions;
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿namespace CWX_SPT_Backend.CWX;
 
-public class StartLocationClass
+public class StartLocation
 {
     public int X { get; set; }
     public int Y { get; set; }

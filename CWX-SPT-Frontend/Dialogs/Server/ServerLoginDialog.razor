@@ -30,7 +30,7 @@
     private ServerHelper serverHelper = ServerHelper.Instance;
     private ELoginTaskResults Tasks = ELoginTaskResults.NotStarted;
     private string TaskText = "";
-    [Parameter] public ServersClass Server { get; set; }
+    [Parameter] public Servers Server { get; set; }
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
 
     protected override void OnInitialized()

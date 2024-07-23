@@ -24,9 +24,9 @@
 </MudItem>
 
 @code {
-    [Parameter] public ServersClass Server { get; set; }
-    [Parameter] public List<ServersClass> ServerList { get; set; }
-    [Parameter] public EventCallback<List<ServersClass>> ServerListChanged { get; set; }
+    [Parameter] public Servers Server { get; set; }
+    [Parameter] public List<Servers> ServerList { get; set; }
+    [Parameter] public EventCallback<List<Servers>> ServerListChanged { get; set; }
     public bool IsConnectedServer { get; set; } = false;
 
     protected override void OnInitialized()

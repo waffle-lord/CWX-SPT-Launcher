@@ -1,6 +1,6 @@
 ﻿namespace CWX_SPT_Backend.Models.SPT;
 
-public class ServerProfileClass
+public class ServerProfile
 {
     public string username { get; set; }
     public string nickname { get; set; }
@@ -12,5 +12,5 @@ public class ServerProfileClass
     public int maxlvl { get; set; }
     public string profileId { get; set; }
     public string edition { get; set; }
-    public SPTDataClass sptData { get; set; }
+    public SPTData sptData { get; set; }
 }

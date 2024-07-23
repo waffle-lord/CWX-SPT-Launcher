@@ -2,7 +2,7 @@
 
 namespace CWX_SPT_Backend.CWX;
 
-public class ServersClass
+public class Servers
 {
     [Required] public string Ip { get; set; }
     public string Name { get; set; }

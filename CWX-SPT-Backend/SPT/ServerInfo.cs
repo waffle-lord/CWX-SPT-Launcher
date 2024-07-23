@@ -1,6 +1,6 @@
 ﻿namespace CWX_SPT_Backend.Models.SPT;
 
-public class ServerInfoClass
+public class ServerInfo
 {
     public string backendUrl { get; set; }
     public string name { get; set; }

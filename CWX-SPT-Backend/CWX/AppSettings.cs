@@ -1,9 +1,9 @@
 ﻿namespace CWX_SPT_Backend.CWX;
 
-public class AppSettingsClass
+public class AppSettings
 {
-    public StartLocationClass StartLocation { get; set; }
-    public StartSizeClass StartSize { get; set; }
+    public StartLocation StartLocation { get; set; }
+    public StartSize StartSize { get; set; }
     
     // left panel options
     public bool CloseToTray { get; set; }

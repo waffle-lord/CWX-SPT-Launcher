@@ -29,7 +29,7 @@
 
 @code {
 
-    public List<ServerProfileClass> ProfilesList { get; set; } = ServerHelper.Instance.ProfileList;
+    public List<ServerProfile> ProfilesList { get; set; } = ServerHelper.Instance.ProfileList;
     public bool IsConnected { get; set; } = ServerHelper.Instance.ConnectedServer != null;
 
     private async Task RunAddTask()

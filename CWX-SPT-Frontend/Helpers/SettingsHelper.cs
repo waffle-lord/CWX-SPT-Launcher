@@ -9,7 +9,7 @@ public class SettingsHelper
 {
     private static SettingsHelper _instance = null;
     private static readonly object Lock = new object();
-    private SettingsClass _settings = null;
+    private Settings _settings = null;
 
     public DialogOptions DialogOptions = new DialogOptions
     {
@@ -40,11 +40,11 @@ public class SettingsHelper
 
     private void LoadSettingsFromFile()
     {
-        _settings = JsonSerializer.Deserialize<SettingsClass>(
+        _settings = JsonSerializer.Deserialize<Settings>(
             File.ReadAllText(Path.Combine(Main.AppPath, "settings.json")));
     }
 
-    public SettingsClass GetSettings()
+    public Settings GetSettings()
     {
         return _settings;
     }
@@ -74,7 +74,7 @@ public class SettingsHelper
         SaveSettings();
     }
 
-    public void SetServerSettings(List<ServersClass> servers)
+    public void SetServerSettings(List<Servers> servers)
     {
         _settings.Servers = servers;
         SaveSettings();

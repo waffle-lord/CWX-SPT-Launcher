@@ -1,6 +1,6 @@
 ﻿namespace CWX_SPT_Backend.EFT;
 
-public class LoginTokenClass
+public class LoginToken
 {
     public string Username { get; set; }
     public string Password { get; set; }

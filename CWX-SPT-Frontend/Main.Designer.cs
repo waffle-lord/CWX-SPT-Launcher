@@ -24,7 +24,7 @@ partial class Main
         base.Dispose(disposing);
     }
     
-    private void InitializeComponent(SettingsClass settings)
+    private void InitializeComponent(Settings settings)
     {
         SuspendLayout();
 
