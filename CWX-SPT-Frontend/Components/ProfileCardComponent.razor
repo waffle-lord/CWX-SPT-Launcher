@@ -88,48 +88,34 @@
 
     private async Task RunStartGameTask()
     {
-        //var server = SettingsHelper.Instance.GetSettings().Servers.FirstOrDefault(x => x.ServerId == ServerHelper.Instance.ConnectedServerId);
-
-        var dialogParams = new DialogParameters();
-        // dialogParams.Add("Server", server);
-        dialogParams.Add("Profile", Profile);
-
-        // if (server == null || dialogParams == null)
-        // {
-        //     Snackbar.Add("Connect to a server first!", Severity.Warning);
-        //     return;
-        // }
-
-        var DialogOptions = new DialogOptions
-        {
-            Position = DialogPosition.Center,
-            MaxWidth = MaxWidth.Medium,
-            BackdropClick = false,
-            CloseOnEscapeKey = false,
-            NoHeader = true,
-            CloseButton = false,
-            FullScreen = false,
-            FullWidth = true,
-            BackgroundClass = "dialog-backdrop-class"
-        };
-
-        DialogService.ShowAsync<ProfileLoginDialog>("ProfileLoginDialog", dialogParams, DialogOptions);
+        
     }
 
     private async Task RunDeleteTask()
     {
-        var dialogParams = new DialogParameters();
-        dialogParams.Add("Profile", Profile);
-        
+        var dialogParams = new DialogParameters { { "Profile", Profile } };
+
         var dialog = await DialogService.ShowAsync<ProfileRemoveDialog>("ProfileRemoveDialog",dialogParams , SettingsHelper.Instance.DialogOptions);
         var result = await dialog.Result;
 
-        if (!result.Canceled)
+        if (result is { Canceled: false })
         {
-            // call server and remove profile
             ProfileList = ServerHelper.Instance.ProfileList;
             await ProfileListChanged.InvokeAsync(ProfileList);
         }
     }
 
+    private async Task RunEditTask()
+    {
+        var dialogParams = new DialogParameters { { "Profile", Profile } };
+
+        var dialog = await DialogService.ShowAsync<ProfileEditDialog>("ProfileEditDialog", dialogParams, SettingsHelper.Instance.DialogOptions);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false })
+        {
+            ProfileList = ServerHelper.Instance.ProfileList;
+            await ProfileListChanged.InvokeAsync(ProfileList);
+        }
+    }
 }

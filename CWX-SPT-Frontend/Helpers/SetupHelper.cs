@@ -64,6 +64,9 @@ public class SetupHelper
             // _resourcePathing.Add("CWX_SPT_Frontend.Resources.settings.json", "settings.json");
             _resourcePathing.Add("CWX_SPT_Frontend.Resources.side_bear.png", "side_bear.png");
             _resourcePathing.Add("CWX_SPT_Frontend.Resources.side_usec.png", "side_usec.png");
+            _resourcePathing.Add("CWX_SPT_Frontend.Resources.MudBlazor.min.css", "MudBlazor.min.css");
+            _resourcePathing.Add("CWX_SPT_Frontend.Resources.MudBlazor.min.js", "MudBlazor.min.js");
+            _resourcePathing.Add("CWX_SPT_Frontend.Resources.WebView2Loader.dll", "WebView2Loader.dll");
         }
         else
         {
@@ -100,6 +103,21 @@ public class SetupHelper
             if (!File.Exists(Path.Combine(Main.AppPath, "side_usec.png")))
             {
                 _resourcePathing.Add("CWX_SPT_Frontend.Resources.side_usec.png", "side_usec.png");
+            }
+            
+            if (!File.Exists(Path.Combine(Main.AppPath, "WebView2Loader.dll")))
+            {
+                _resourcePathing.Add("CWX_SPT_Frontend.Resources.WebView2Loader.dll", "WebView2Loader.dll");
+            }
+            
+            if (!File.Exists(Path.Combine(Main.AppPath, "MudBlazor.min.js")))
+            {
+                _resourcePathing.Add("CWX_SPT_Frontend.Resources.MudBlazor.min.js", "MudBlazor.min.js");
+            }
+            
+            if (!File.Exists(Path.Combine(Main.AppPath, "MudBlazor.min.css")))
+            {
+                _resourcePathing.Add("CWX_SPT_Frontend.Resources.MudBlazor.min.css", "MudBlazor.min.css");
             }
         }
     }

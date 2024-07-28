@@ -1,9 +1,10 @@
 using CWX_SPT_Frontend.Helpers;
 using Microsoft.AspNetCore.Components.WebView.WindowsForms;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.WinForms;
 using MudBlazor;
 using MudBlazor.Services;
-using Size = System.Drawing.Size;
 
 namespace CWX_SPT_Frontend;
 
@@ -117,8 +118,10 @@ public partial class Main : Form
         {
             Dock = DockStyle.Fill,
             HostPage = Path.Combine(AppPath, "index.html"),
-            Services = services.BuildServiceProvider()
+            Services = services.BuildServiceProvider(),
         };
+
+        CoreWebView2Environment.SetLoaderDllFolderPath(AppPath);
         blazorWebView.RootComponents.Add<BlazorApp>("#app");
         Controls.Add(blazorWebView);
     }
