@@ -1,8 +1,6 @@
 using CWX_SPT_Frontend.Helpers;
 using Microsoft.AspNetCore.Components.WebView.WindowsForms;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Web.WebView2.Core;
-using Microsoft.Web.WebView2.WinForms;
 using MudBlazor;
 using MudBlazor.Services;
 
@@ -10,13 +8,9 @@ namespace CWX_SPT_Frontend;
 
 public partial class Main : Form
 {
-    private SettingsHelper _settingsHelper = null;
-    private bool closeWhenIMeanIt = false;
-    public static readonly string AppPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "CWX-SPT-Launcher\\Resources");
-
-    public static Form MainForm = null;
-    public static Task DebugTitleTask = null;
+    private SettingsHelper _settingsHelper;
+    private bool closeWhenIMeanIt;
+    private static Form MainForm;
     
     public Main()
     {
@@ -34,10 +28,10 @@ public partial class Main : Form
     private void SetUpNotificationIcon()
     {
         this.notifyIcon = new NotifyIcon();
-        this.notifyIcon.Icon = new System.Drawing.Icon(Path.Combine(AppPath, "app.ico"));
+        // this.notifyIcon.Icon = new Icon(Path.Combine("Resources", "app.ico"));
         this.notifyIcon.Visible = true;
         this.notifyIcon.Text = "CWX-SPT-LAUNCHER";
-        this.notifyIcon.MouseClick += new MouseEventHandler(NotifyIconOnClick);
+        this.notifyIcon.MouseClick += NotifyIconOnClick;
         this.notifyIcon.ContextMenuStrip = new ContextMenuStrip();
         this.notifyIcon.ContextMenuStrip.Items.Add("Open", null, (s, e) =>
         {
@@ -83,21 +77,25 @@ public partial class Main : Form
     
     private void NotifyIconOnClick(object sender, MouseEventArgs e)
     {
-        if (e.Button == MouseButtons.Left)
+        if (e.Button != MouseButtons.Left)
         {
-            this.Show();
-            this.WindowState = FormWindowState.Normal;
+            return;
         }
+            
+        this.Show();
+        this.WindowState = FormWindowState.Normal;
     }
 
     private void Main_FormClosing(object sender, FormClosingEventArgs e)
     {
-        if (_settingsHelper.GetSettings().AppSettings.CloseToTray && !closeWhenIMeanIt)
+        if (!_settingsHelper.GetSettings().AppSettings.CloseToTray || closeWhenIMeanIt)
         {
-            e.Cancel = true;
-            this.Hide();
-            this.WindowState = FormWindowState.Minimized;
+            return;
         }
+        
+        e.Cancel = true;
+        this.Hide();
+        this.WindowState = FormWindowState.Minimized;
     }
     
     private void SetUpBlazorWebView()
@@ -114,14 +112,14 @@ public partial class Main : Form
             config.SnackbarConfiguration.HideTransitionDuration = 100;
         });
 
-        var blazorWebView = new BlazorWebView()
+        var blazorWebView = new CWXBlazorWebView()
         {
+            UseEmbeddedResources = true,
             Dock = DockStyle.Fill,
-            HostPage = Path.Combine(AppPath, "index.html"),
+            HostPage = "index.html",
             Services = services.BuildServiceProvider(),
         };
-
-        CoreWebView2Environment.SetLoaderDllFolderPath(AppPath);
+        
         blazorWebView.RootComponents.Add<BlazorApp>("#app");
         Controls.Add(blazorWebView);
     }

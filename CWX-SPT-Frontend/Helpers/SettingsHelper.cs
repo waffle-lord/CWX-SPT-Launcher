@@ -10,6 +10,8 @@ public class SettingsHelper
     private static SettingsHelper _instance = null;
     private static readonly object Lock = new object();
     private Settings _settings = null;
+    public static readonly string AppPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        "CWX-SPT-Launcher\\Resources");
 
     public DialogOptions DialogOptions = new DialogOptions
     {
@@ -41,7 +43,7 @@ public class SettingsHelper
     private void LoadSettingsFromFile()
     {
         _settings = JsonSerializer.Deserialize<Settings>(
-            File.ReadAllText(Path.Combine(Main.AppPath, "settings.json")));
+            File.ReadAllText(Path.Combine(SettingsHelper.AppPath, "settings.json")));
     }
 
     public Settings GetSettings()
@@ -51,7 +53,7 @@ public class SettingsHelper
 
     public void SaveSettings()
     {
-        File.WriteAllText(Path.Combine(Main.AppPath, "settings.json"), JsonSerializer.Serialize(_settings));
+        File.WriteAllText(Path.Combine(SettingsHelper.AppPath, "settings.json"), JsonSerializer.Serialize(_settings));
     }
 
     public void SetClientSizeSettings(int height, int width)

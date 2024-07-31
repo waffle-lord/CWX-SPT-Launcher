@@ -7,43 +7,29 @@
         <LangVersion>latestmajor</LangVersion>
         <UseWindowsForms>true</UseWindowsForms>
         <ImplicitUsings>enable</ImplicitUsings>
+        <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     </PropertyGroup>
 
     <ItemGroup>
-        <None Remove="Resources\index.html" />
-        <None Remove="Resources\app.js" />
-        <None Remove="Resources\app.css" />
-        <None Remove="Resources\app.ico" />
-        <None Remove="Resources\settings.json" />
-        <None Remove="Resources\side_usec.png" />
-        <None Remove="Resources\side_bear.png" />
-        <None Remove="Resources\MudBlazor.min.css" />
-        <None Remove="Resources\MudBlazor.min.js" />
-        <None Remove="Resources\WebView2Loader.dll" />
-        <EmbeddedResource Include="Resources\index.html" />
-        <EmbeddedResource Include="Resources\app.js" />
-        <EmbeddedResource Include="Resources\app.css" />
-        <EmbeddedResource Include="Resources\app.ico" />
-        <EmbeddedResource Include="Resources\settings.json" />
-        <EmbeddedResource Include="Resources\side_usec.png" />
-        <EmbeddedResource Include="Resources\side_bear.png" />
-        <EmbeddedResource Include="Resources\MudBlazor.min.css" />
-        <EmbeddedResource Include="Resources\MudBlazor.min.js" />
-        <EmbeddedResource Include="Resources\WebView2Loader.dll" />
+        <None Remove="Resources\*"/>
+        <EmbeddedResource Include="Resources\*"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.WindowsForms" Version="8.0.70" />
-        <PackageReference Include="MudBlazor" Version="7.3.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.WindowsForms" Version="8.0.70"/>
+        <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.7"/>
+        <PackageReference Include="MudBlazor" Version="7.3.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CWX-SPT-Backend\CWX-SPT-Backend.csproj" />
+        <ProjectReference Include="..\CWX-SPT-Backend\CWX-SPT-Backend.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="zlib.net">
-        <HintPath>SharedDependencies\zlib.net.dll</HintPath>
-      </Reference>
+        <Reference Include="zlib.net">
+            <HintPath>SharedDependencies\zlib.net.dll</HintPath>
+        </Reference>
     </ItemGroup>
+
 </Project>
