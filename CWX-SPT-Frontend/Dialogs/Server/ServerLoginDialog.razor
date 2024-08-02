@@ -20,7 +20,7 @@
                 <MudText>@TaskText</MudText>
             </MudContainer>
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
-                <MudButton Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" @onclick="() => UserCancelled()">Cancel</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" @onclick="UserCancelled">Cancel</MudButton>
             </MudContainer>
         </MudContainer>
     </DialogContent>
@@ -33,7 +33,7 @@
     [Parameter] public Servers Server { get; set; }
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
     private CancellationTokenSource token { get; set; }
-    private bool UserCancel { get; set; } = false;
+    private bool UserCancel { get; set; }
 
     protected override void OnInitialized()
     {
@@ -107,5 +107,4 @@
         token.Cancel();
         MudDialog.Cancel();
     }
-
 }

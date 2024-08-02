@@ -3,7 +3,7 @@ using Microsoft.Extensions.FileProviders;
 
 namespace CWX_SPT_Frontend;
 
-public class CWXBlazorWebView : BlazorWebView
+public class EmbeddedBlazorWebView : BlazorWebView
 {
     public bool UseEmbeddedResources { get; init; }
     public IFileProvider EmbeddedFilesProvider { get; set; }

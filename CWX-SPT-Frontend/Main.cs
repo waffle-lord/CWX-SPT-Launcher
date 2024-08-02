@@ -8,7 +8,7 @@ namespace CWX_SPT_Frontend;
 
 public partial class Main : Form
 {
-    private SettingsHelper _settingsHelper;
+    private readonly SettingsHelper _settingsHelper;
     private bool closeWhenIMeanIt;
     private static Form MainForm;
     
@@ -21,7 +21,7 @@ public partial class Main : Form
         SetLocationToName();
         SetUpBlazorWebView();
         
-        this.FormClosing += (sender, args) => Main_FormClosing(sender, args);
+        this.FormClosing += Main_FormClosing;
         MainForm = this;
     }
     
@@ -112,7 +112,7 @@ public partial class Main : Form
             config.SnackbarConfiguration.HideTransitionDuration = 100;
         });
 
-        var blazorWebView = new CWXBlazorWebView()
+        var blazorWebView = new EmbeddedBlazorWebView()
         {
             UseEmbeddedResources = true,
             Dock = DockStyle.Fill,

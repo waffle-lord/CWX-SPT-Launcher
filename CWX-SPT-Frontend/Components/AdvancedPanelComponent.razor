@@ -1,7 +1,7 @@
 ﻿<MudItem sm="12">
     <MudPaper Class="pa-5 ml-1 gap-2 d-flex flex-column card-overflow" Elevation="3">
         <MudContainer Class="pa-0">
-            <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="() => SetAdvUser()">
+            <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="SetAdvUser">
                 <MudText Class="no-select">Advanced user</MudText>
                 <MudSpacer/>
                 <MudSwitch @bind-Value="advancedUserSwitch" Color="Color.Tertiary"/>

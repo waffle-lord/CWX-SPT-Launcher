@@ -25,11 +25,14 @@
         <MudContainer Class="justify-end d-flex pa-0">
             @if (Profile.hasPassword)
             {
-                <MudIconButton Color="Color.Default" Icon="@Icons.Material.Filled.Lock" Size="Size.Small"/>
+                <MudTooltip Text="Password Protected" Arrow="true" Placement="Placement.Bottom">
+                    <MudIconButton Color="Color.Tertiary" Icon="@Icons.Material.Filled.Lock" Size="Size.Small"/>
+                </MudTooltip>
                 <MudSpacer/>
             }
-            <MudIconButton Class="mr-1" Color="Color.Default" Icon="@Icons.Material.Filled.Login" Size="Size.Small" @onclick="() => _ = RunStartGameTask()"/>
-            <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" @onclick="() => _ = RunDeleteTask()"/>
+            <MudIconButton Class="mr-1" Color="Color.Default" Icon="@Icons.Material.Filled.Login" Size="Size.Small" @onclick="RunStartGameTask"/>
+            <MudIconButton Color="Color.Default" Icon="@Icons.Material.Filled.Build" Size="Size.Small" @onclick="RunEditTask"/>
+            <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" @onclick="RunDeleteTask"/>
         </MudContainer>
     </MudPaper>
 </MudItem>
@@ -38,22 +41,22 @@
     [Parameter] public ServerProfile Profile { get; set; }
     [Parameter] public List<ServerProfile> ProfileList { get; set; }
     [Parameter] public EventCallback<List<ServerProfile>> ProfileListChanged { get; set; }
-    public bool UseProfileColors { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.UseProfileColors;
+    private bool UseProfileColors { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.UseProfileColors;
     private bool sideIsUnknown { get; set; } = false;
     private string glowClass { get; set; }
     private string sideClass { get; set; }
 
-    public string GlowClassNames()
+    private string GlowClassNames()
     {
         return $"card-glow no-pointers {glowClass}";
     }
 
-    public string ImageClassNames()
+    private string ImageClassNames()
     {
         return $"no-pointers background-image-{((Profile.side.ToLower() != "") ? Profile.side.ToLower() : "usec")}";
     }
 
-    public string ImageName()
+    private string ImageName()
     {
         return $"side_{((Profile.side.ToLower() != "unknown") ? Profile.side.ToLower() : "usec")}.png";
     }
@@ -64,24 +67,15 @@
         {
             sideIsUnknown = true;
         }
-        
-        switch (Profile.edition.ToLower())
+
+        glowClass = Profile.edition.ToLower() switch
         {
-            case "spt developer":
-                glowClass = "glow-purple";
-                break;
-            case "edge of darkness":
-                glowClass = "glow-gold";
-                break;
-            case "the unheard edition":
-                glowClass = "glow-blue";
-                break;
-            case "standard edition":
-                glowClass = "glow-grey";
-                break;
-            default:
-                break;
-        }
+            "spt developer" => "glow-purple",
+            "edge of darkness" => "glow-gold",
+            "the unheard edition" => "glow-blue",
+            "standard edition" => "glow-grey",
+            _ => glowClass
+        };
 
         base.OnInitialized();
     }

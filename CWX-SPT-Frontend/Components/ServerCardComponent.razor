@@ -10,15 +10,15 @@
         <MudText Class="mb-n3 no-pointers no-select" Typo="Typo.caption">Address:</MudText>
         <MudText Typo="Typo.body1">@Server.Ip</MudText>
         <MudContainer Class="pa-0 d-flex mt-2">
-            <MudTooltip Text="@((IsConnectedServer) ? "Connected" : "Disconnected")" Arrow="true" Placement="Placement.Right">
-                <MudIcon Icon="@Icons.Material.Filled.Circle" Color="@((IsConnectedServer) ? @Color.Success : @Color.Error)"/>
+            <MudTooltip Text="@(IsConnectedServer ? "Connected" : "Disconnected")" Arrow="true" Placement="Placement.Right">
+                <MudIcon Icon="@Icons.Material.Filled.Circle" Color="@(IsConnectedServer ? Color.Success : Color.Error)"/>
             </MudTooltip>
             <MudSpacer/>
-            <MudTooltip Text="@((!IsConnectedServer) ? "Login" : "Logout")" Arrow="true" Placement="Placement.Left">
-                <MudIconButton Class="mr-1 mb-n2" Color="Color.Default" Icon="@((!IsConnectedServer) ? @Icons.Material.Filled.Login : @Icons.Material.Filled.Logout)" Size="Size.Small" @onclick="() => RunLoginTask()"/>
+            <MudTooltip Text="@(!IsConnectedServer ? "Login" : "Logout")" Arrow="true" Placement="Placement.Left">
+                <MudIconButton Class="mr-1 mb-n2" Color="Color.Default" Icon="@(!IsConnectedServer ? Icons.Material.Filled.Login : Icons.Material.Filled.Logout)" Size="Size.Small" @onclick="RunLoginTask"/>
             </MudTooltip>
-            <MudIconButton Color="Color.Default" Icon="@Icons.Material.Filled.Build" Size="Size.Small" @onclick="() => RunEditTask()"/>
-            <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" @onclick="() => RunDeleteTask()"/>
+            <MudIconButton Color="Color.Default" Icon="@Icons.Material.Filled.Build" Size="Size.Small" @onclick="RunEditTask"/>
+            <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" @onclick="RunDeleteTask"/>
         </MudContainer>
     </MudPaper>
 </MudItem>
@@ -27,7 +27,7 @@
     [Parameter] public Servers Server { get; set; }
     [Parameter] public List<Servers> ServerList { get; set; }
     [Parameter] public EventCallback<List<Servers>> ServerListChanged { get; set; }
-    public bool IsConnectedServer { get; set; } = false;
+    private bool IsConnectedServer { get; set; }
 
     protected override void OnInitialized()
     {
@@ -43,18 +43,20 @@
             IsConnectedServer = false;
         }
 
-        var param = new DialogParameters();
-        param.Add("Server", Server);
+        var param = new DialogParameters { { "Server", Server } };
 
         var dialog = await DialogService.ShowAsync<ServerEditDialog>("ServerEditDialog", param, SettingsHelper.Instance.DialogOptions);
         var result = await dialog.Result;
 
-        if (!result.Canceled)
+        if (result is { Canceled: false })
         {
             var serverToChange = ServerList.FirstOrDefault(x => x.ServerId == Server.ServerId);
 
-            serverToChange.Name = Server.Name;
-            serverToChange.Ip = Server.Ip;
+            if (serverToChange != null)
+            {
+                serverToChange.Name = Server.Name;
+                serverToChange.Ip = Server.Ip;
+            }
 
             SettingsHelper.Instance.SetServerSettings(ServerList);
             await ServerListChanged.InvokeAsync(ServerList);
@@ -71,23 +73,23 @@
                 IsConnectedServer = false;
                 return;
             }
-            else
-            {
-                ServerHelper.Instance.LogoutAndDispose();
-                IsConnectedServer = false;
-            }
+            
+            ServerHelper.Instance.LogoutAndDispose();
+            IsConnectedServer = false;
         }
         
-        var param = new DialogParameters();
-        param.Add("Server", Server);
+        var param = new DialogParameters { { "Server", Server } };
 
         var dialog = await DialogService.ShowAsync<ServerLoginDialog>("ServerLoginDialog", param, SettingsHelper.Instance.DialogOptions);
         var result = await dialog.Result;
 
-        if (!result.Canceled)
+        if (result is { Canceled: false })
         {
             ServerHelper.Instance.Login(Server);
-            IsConnectedServer = ServerHelper.Instance.ConnectedServer.ServerId == Server.ServerId;
+            if (ServerHelper.Instance.ConnectedServer != null)
+            {
+                IsConnectedServer = ServerHelper.Instance.ConnectedServer.ServerId == Server.ServerId;
+            }
             NavMan.NavigateTo("/Profiles");
         }
     }
@@ -103,7 +105,7 @@
         var dialog = await DialogService.ShowAsync<ServerRemoveDialog>("ServerRemoveDialog", SettingsHelper.Instance.DialogOptions);
         var result = await dialog.Result;
 
-        if (!result.Canceled)
+        if (result is { Canceled: false })
         {
             ServerList.Remove(Server);
             await ServerListChanged.InvokeAsync(ServerList);

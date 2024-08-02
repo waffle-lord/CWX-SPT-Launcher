@@ -71,7 +71,6 @@ public class ServerHelper
 
     public void LogoutAndDispose()
     {
-        // null profiles
         ProfileList = [];
         ServerInfo = new ServerInfo();
         ConnectedServer = null;

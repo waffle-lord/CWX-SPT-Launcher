@@ -8,8 +8,8 @@
                 <MudTextField Immediate="true" @bind-Value="Server.Ip" Label="Address" Required="true" RequiredError="IP is required!" Variant="Variant.Outlined" Margin="Margin.Dense" Mask="@ipPortMask"/>
             </MudForm>
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" @onclick="() => Submit()">Add</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="() => Cancel()">Cancel</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" @onclick="Submit">Add</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="Cancel">Cancel</MudButton>
             </MudContainer>
         </MudContainer>
     </DialogContent>
@@ -32,5 +32,4 @@
     {
         MudDialog.Cancel();
     }
-
 }

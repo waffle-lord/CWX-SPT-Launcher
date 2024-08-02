@@ -1,7 +1,7 @@
 ﻿<MudItem sm="6">
     <MudPaper Class="pa-5 mr-1 gap-2 d-flex flex-column card-overflow" Elevation="3">
         <MudContainer Class="pa-0">
-            <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="() => SetCloseToTray()">
+            <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="SetCloseToTray">
                 <MudText Class="no-select">Close to tray</MudText>
                 <MudSpacer/>
                 <MudSwitch @bind-Value="closeToTraySwitch" Color="Color.Tertiary" Class="pr-0"/>
@@ -9,7 +9,7 @@
         </MudContainer>
         <MudDivider DividerType="DividerType.Middle" Class="ma-0"/>
         <MudContainer Class="pa-0">
-            <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="() => SetMinimizeOnLaunch()">
+            <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="SetMinimizeOnLaunch">
                 <MudText Class="no-select">Minimize on game start</MudText>
                 <MudSpacer/>
                 <MudSwitch @bind-Value="minimizeOnLaunchSwitch" Color="Color.Tertiary" Class="pr-0"/>
@@ -17,7 +17,7 @@
         </MudContainer>
         <MudDivider DividerType="DividerType.Middle" Class="ma-0"/>
         <MudContainer Class="pa-0">
-            <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="() => SetAlwaysOnTop()">
+            <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="SetAlwaysOnTop">
                 <MudText Class="no-select">Always on top</MudText>
                 <MudSpacer/>
                 <MudSwitch @bind-Value="alwaysOnTopSwitch" Color="Color.Tertiary" Class="pr-0"/>
@@ -25,7 +25,7 @@
         </MudContainer>
         <MudDivider DividerType="DividerType.Middle" Class="ma-0"/>
         <MudContainer Class="pa-0">
-            <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="() => SetUseProfileColors()">
+            <a class="d-flex justify-center align-center cursor-pointer setting-on-hover py-2 pl-5" @onclick="SetUseProfileColors">
                 <MudText Class="no-select">Use Profile Colors</MudText>
                 <MudSpacer/>
                 <MudSwitch @bind-Value="useProfileColors" Color="Color.Tertiary" Class="pr-0"/>
@@ -45,21 +45,18 @@
     {
         closeToTraySwitch = !closeToTraySwitch;
         SettingsHelper.Instance.SetCloseToTray(closeToTraySwitch);
-        // save settings
     }
 
     private void SetMinimizeOnLaunch()
     {
         minimizeOnLaunchSwitch = !minimizeOnLaunchSwitch;
         SettingsHelper.Instance.SetMinimizeOnLaunch(minimizeOnLaunchSwitch);
-        // save settings
     }
 
     private void SetAlwaysOnTop()
     {
         alwaysOnTopSwitch = !alwaysOnTopSwitch;
         SettingsHelper.Instance.SetAlwaysOnTop(alwaysOnTopSwitch);
-        // save settings
     }
 
     private void SetUseProfileColors()

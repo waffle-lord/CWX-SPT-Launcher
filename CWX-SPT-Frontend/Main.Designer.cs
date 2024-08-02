@@ -6,8 +6,8 @@ partial class Main
 {
     private System.ComponentModel.IContainer components = null;
     private System.Windows.Forms.NotifyIcon notifyIcon = null;
-    private int widthOffset = 16;
-    private int heightOffset = 39;
+    private readonly int widthOffset = 16;
+    private readonly int heightOffset = 39;
     
     protected override void Dispose(bool disposing)
     {

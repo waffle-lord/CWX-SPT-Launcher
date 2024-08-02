@@ -6,8 +6,8 @@
             <MudText>Server: @Server.Ip - @Server.Name</MudText>
             <MudText>Profile: @Profile.profileId - @Profile.username - @Profile.currlvl</MudText>
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" @onclick="() => Cancel()">Start Game</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="() => Cancel()">Close</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" @onclick="Cancel">Start Game</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="Cancel">Close</MudButton>
             </MudContainer>
         </MudContainer>
     </DialogContent>

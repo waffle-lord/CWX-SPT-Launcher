@@ -14,8 +14,8 @@
                 <MudTextField Immediate="true" @bind-Value="Profile.password" Label="Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
             </MudForm>
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" @onclick="() => Submit()">Add</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="() => UserCancelled()">Cancel</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" @onclick="Submit">Add</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="UserCancelled">Cancel</MudButton>
             </MudContainer>
         </MudContainer>
     </DialogContent>
@@ -24,10 +24,10 @@
 @code {
     private bool success;
     public RegisterRequest Profile = new RegisterRequest();
-    private List<string> serverEditions { get; set; } = ServerHelper.Instance.ServerInfo.editions;
+    private List<string> serverEditions { get; } = ServerHelper.Instance.ServerInfo.editions;
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
     private CancellationTokenSource token { get; set; }
-    private bool UserCancel { get; set; } = false;
+    private bool UserCancel { get; set; }
 
     private async void Submit()
     {
@@ -65,5 +65,4 @@
         token.Cancel();
         MudDialog.Cancel();
     }
-
 }

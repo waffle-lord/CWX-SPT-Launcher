@@ -4,8 +4,8 @@
     <DialogContent>
         <MudContainer Class="py-4 card-overflow">
             <MudForm Model="Profile" @bind-IsValid="@success" Class="gap-2 mt-3">
-                @* <MudTextField Immediate="true" @bind-Value="Profile.username" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense"/> *@
-                @* <MudTextField Immediate="true" @bind-Value="Profile" Label="IP" Required="true" RequiredError="IP is required!" Variant="Variant.Outlined" Margin="Margin.Dense"/> *@
+                <MudTextField Immediate="true" @bind-Value="Profile.username" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                <MudTextField Immediate="true" @bind-Value="Profile" Label="IP" Required="true" RequiredError="IP is required!" Variant="Variant.Outlined" Margin="Margin.Dense"/>
             </MudForm>
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" @onclick="() => Submit()">Confirm</MudButton>

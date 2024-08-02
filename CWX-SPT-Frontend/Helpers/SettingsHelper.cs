@@ -7,13 +7,13 @@ namespace CWX_SPT_Frontend.Helpers;
 
 public class SettingsHelper
 {
-    private static SettingsHelper _instance = null;
+    private static SettingsHelper _instance;
     private static readonly object Lock = new object();
-    private Settings _settings = null;
-    public static readonly string AppPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+    private Settings _settings;
+    private static readonly string AppPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "CWX-SPT-Launcher\\Resources");
 
-    public DialogOptions DialogOptions = new DialogOptions
+    public readonly DialogOptions DialogOptions = new DialogOptions
     {
         Position = DialogPosition.Center,
         MaxWidth = MaxWidth.ExtraSmall,
