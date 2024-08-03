@@ -19,9 +19,9 @@
 @code {
     [Parameter] public ServerProfile Profile { get; set; }
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
-    private LoginRequest request { get; set; } = new LoginRequest();
+    private LoginRequest request { get; } = new LoginRequest();
     private CancellationTokenSource token { get; set; }
-    private bool UserCancel { get; set; }
+    private bool UserCancel { get; set; } = false;
 
     protected override void OnInitialized()
     {
@@ -63,5 +63,4 @@
     {
         MudDialog.Cancel();
     }
-
 }

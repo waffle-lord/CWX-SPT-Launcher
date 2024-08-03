@@ -39,11 +39,13 @@
         {
             token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             var result = await ServerHelper.Instance.SendPasswordChange(request, token.Token);
+            
             if (!result)
             {
                 AbortOrFail();
                 return;
             }
+            
             token.Dispose();
         }
         catch (TaskCanceledException e) when (token.IsCancellationRequested)
@@ -56,22 +58,21 @@
         Snackbar.Add("Password Changed!", Severity.Success);
         MudDialog.Close(DialogResult.Ok(true));
     }
-
-    private void UserCancelled()
-    {
-        UserCancel = true;
-        token?.Cancel();
-        MudDialog.Cancel();
-    }
     
     private void AbortOrFail()
     {
         if (!UserCancel)
         {
-            Snackbar.Add("Error connecting to server!", Severity.Error);
+            Snackbar.Add("Unable to change Password!", Severity.Error);
         }
 
-        ServerHelper.Instance.LogoutAndDispose();
+        MudDialog.Cancel();
+    }
+    
+    private void UserCancelled()
+    {
+        UserCancel = true;
+        token?.Cancel();
         MudDialog.Cancel();
     }
 }
