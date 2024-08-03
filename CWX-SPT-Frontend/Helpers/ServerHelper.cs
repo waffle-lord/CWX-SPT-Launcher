@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using ComponentAce.Compression.Libs.zlib;
-using CWX_SPT_Backend.CWX;
-using CWX_SPT_Backend.Models.SPT;
+using CWX_SPT_Launcher_Backend.CWX;
+using CWX_SPT_Launcher_Backend.SPT;
 
 namespace CWX_SPT_Frontend.Helpers;
 
@@ -46,14 +46,21 @@ public class ServerHelper
         ServerInfo = JsonSerializer.Deserialize<ServerInfo>(result);
     }
     
-    public async Task SendProfileRegister(RegisterRequest request, CancellationToken token)
+    public async Task<bool> SendProfileRegister(RegisterRequest request, CancellationToken token)
     {
         var task = await _netClient.PutAsync("/launcher/profile/register",
             new ByteArrayContent(SimpleZlib.CompressToBytes(JsonSerializer.Serialize(request),
                 zlibConst.Z_BEST_COMPRESSION)), token);
         
         var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
+
+        if (result == "FAILED")
+        {
+            return false;
+        }
+        
         await GetServerProfiles(token);
+        return true;
     }
     
     public async Task SendProfileDelete(ServerProfile profile, CancellationToken token)
@@ -68,6 +75,21 @@ public class ServerHelper
         _netClient.DefaultRequestHeaders.Remove("Cookie");
         _netClient.DefaultRequestHeaders.Remove("SessionId");
     }
+    public async Task<bool> SendPasswordChange(PasswordChangeRequest request, CancellationToken token)
+    {
+        var task = await _netClient.PutAsync("/launcher/profile/change/password",
+            new ByteArrayContent(SimpleZlib.CompressToBytes(JsonSerializer.Serialize(request),
+                zlibConst.Z_BEST_COMPRESSION)), token);
+        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
+        
+        if (result == "FAILED")
+        {
+            return false;
+        }
+        
+        await GetServerProfiles(token);
+        return true;
+    }
 
     public void LogoutAndDispose()
     {
@@ -81,4 +103,5 @@ public class ServerHelper
     {
         ConnectedServer = server;
     }
+
 }

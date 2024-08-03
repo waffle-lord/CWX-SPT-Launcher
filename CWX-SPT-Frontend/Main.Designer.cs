@@ -1,4 +1,4 @@
-﻿using CWX_SPT_Backend.CWX;
+﻿using CWX_SPT_Launcher_Backend.CWX;
 
 namespace CWX_SPT_Frontend;
 

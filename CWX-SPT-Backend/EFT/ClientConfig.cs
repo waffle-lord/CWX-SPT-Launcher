@@ -1,4 +1,4 @@
-﻿namespace CWX_SPT_Backend.EFT;
+﻿namespace CWX_SPT_Launcher_Backend.EFT;
 
 public class ClientConfig
 {

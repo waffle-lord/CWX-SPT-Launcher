@@ -4,12 +4,16 @@
     <DialogContent>
         <MudContainer Class="py-4 card-overflow">
             <MudForm Model="Profile" @bind-IsValid="@success" Class="gap-2 mt-3">
-                <MudTextField Immediate="true" @bind-Value="Profile.username" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense"/>
-                <MudTextField Immediate="true" @bind-Value="Profile" Label="IP" Required="true" RequiredError="IP is required!" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                <MudTextField Immediate="true" @bind-Value="request.username" Label="Username" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                @if (Profile.hasPassword)
+                {
+                    <MudTextField Immediate="true" @bind-Value="request.password" Label="Old Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                }
+                <MudTextField Immediate="true" @bind-Value="request.change" Label="New Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
             </MudForm>
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" @onclick="() => Submit()">Confirm</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="() => Cancel()">Cancel</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" @onclick="Submit">Confirm</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="UserCancelled">Cancel</MudButton>
             </MudContainer>
         </MudContainer>
     </DialogContent>
@@ -19,15 +23,55 @@
     private bool success;
     [Parameter] public ServerProfile Profile { get; set; }
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
+    private PasswordChangeRequest request { get; } = new PasswordChangeRequest();
+    private CancellationTokenSource token { get; set; }
+    private bool UserCancel { get; set; }
 
-    private void Submit()
+    protected override void OnInitialized()
     {
-        Snackbar.Add("Edited Server!", Severity.Success);
+        request.username = Profile.username;
+        base.OnInitialized();
+    }
+
+    private async void Submit()
+    {
+        try
+        {
+            token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            var result = await ServerHelper.Instance.SendPasswordChange(request, token.Token);
+            if (!result)
+            {
+                AbortOrFail();
+                return;
+            }
+            token.Dispose();
+        }
+        catch (TaskCanceledException e) when (token.IsCancellationRequested)
+        {
+            AbortOrFail();
+            return;
+        }
+        
+        StateHasChanged();
+        Snackbar.Add("Password Changed!", Severity.Success);
         MudDialog.Close(DialogResult.Ok(true));
     }
 
-    private void Cancel()
+    private void UserCancelled()
     {
+        UserCancel = true;
+        token?.Cancel();
+        MudDialog.Cancel();
+    }
+    
+    private void AbortOrFail()
+    {
+        if (!UserCancel)
+        {
+            Snackbar.Add("Error connecting to server!", Severity.Error);
+        }
+
+        ServerHelper.Instance.LogoutAndDispose();
         MudDialog.Cancel();
     }
 }

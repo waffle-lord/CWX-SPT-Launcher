@@ -4,6 +4,10 @@
     <DialogContent>
         <MudContainer Class="py-4 card-overflow">
             <MudText>Do you really want to delete this Profile? This process cannot be undone.</MudText>
+            @if (Profile.hasPassword)
+            {
+                <MudTextField Immediate="true" @bind-Value="request.password" Label="Old Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+            }
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
                 <MudButton Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" @onclick="Submit">Delete</MudButton>
                 <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="Cancel">Cancel</MudButton>
@@ -15,8 +19,15 @@
 @code {
     [Parameter] public ServerProfile Profile { get; set; }
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
+    private LoginRequest request { get; set; } = new LoginRequest();
     private CancellationTokenSource token { get; set; }
     private bool UserCancel { get; set; }
+
+    protected override void OnInitialized()
+    {
+        request.username = Profile.username;
+        base.OnInitialized();
+    }
 
     private async void Submit()
     {

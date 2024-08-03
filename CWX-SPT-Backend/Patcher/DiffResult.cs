@@ -5,9 +5,9 @@
  * Basuro
  */
 
-using CWX_SPT_Backend.Patcher.Enums;
+using CWX_SPT_Launcher_Backend.Patcher.Enums;
 
-namespace CWX_SPT_Backend.Patcher;
+namespace CWX_SPT_Launcher_Backend.Patcher;
 
 public class DiffResult
 {

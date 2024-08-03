@@ -5,7 +5,7 @@
  * Basuro
  */
 
-namespace CWX_SPT_Backend.Patcher.Enums;
+namespace CWX_SPT_Launcher_Backend.Patcher.Enums;
 
 public enum EDiffResultType
 {

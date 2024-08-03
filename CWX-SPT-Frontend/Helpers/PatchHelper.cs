@@ -6,8 +6,8 @@
  */
 
 using System.Security.Cryptography;
-using CWX_SPT_Backend.Patcher;
-using CWX_SPT_Backend.Patcher.Enums;
+using CWX_SPT_Launcher_Backend.Patcher;
+using CWX_SPT_Launcher_Backend.Patcher.Enums;
 
 namespace CWX_SPT_Frontend.Helpers;
 

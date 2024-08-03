@@ -7,7 +7,7 @@
 
 using System.Text;
 
-namespace CWX_SPT_Backend.Patcher;
+namespace CWX_SPT_Launcher_Backend.Patcher;
 
 public class PatchInfo
 {

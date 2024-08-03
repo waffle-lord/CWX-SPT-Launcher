@@ -34,7 +34,12 @@
         try
         {
             token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-            await ServerHelper.Instance.SendProfileRegister(Profile, token.Token);
+            var result = await ServerHelper.Instance.SendProfileRegister(Profile, token.Token);
+            if (!result)
+            {
+                AbortOrFail();
+                return;
+            }
             token.Dispose();
         }
         catch (TaskCanceledException e) when (token.IsCancellationRequested)
@@ -52,17 +57,16 @@
     {
         if (!UserCancel)
         {
-            Snackbar.Add("Error connecting to server!", Severity.Error);
+            Snackbar.Add("Unable to Add profile!", Severity.Error);
         }
 
-        ServerHelper.Instance.LogoutAndDispose();
         MudDialog.Cancel();
     }
 
     private void UserCancelled()
     {
         UserCancel = true;
-        token.Cancel();
+        token?.Cancel();
         MudDialog.Cancel();
     }
 }

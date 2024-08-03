@@ -53,7 +53,7 @@
 
     private string ImageClassNames()
     {
-        return $"no-pointers background-image-{((Profile.side.ToLower() != "") ? Profile.side.ToLower() : "usec")}";
+        return $"no-pointers background-image-{((Profile.side.ToLower() != "unknown") ? Profile.side.ToLower() : "usec")}";
     }
 
     private string ImageName()

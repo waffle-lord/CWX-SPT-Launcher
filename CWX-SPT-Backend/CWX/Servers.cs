@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CWX_SPT_Backend.CWX;
+namespace CWX_SPT_Launcher_Backend.CWX;
 
 public class Servers
 {

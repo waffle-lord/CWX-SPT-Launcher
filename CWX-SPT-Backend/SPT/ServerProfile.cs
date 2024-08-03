@@ -1,4 +1,4 @@
-﻿namespace CWX_SPT_Backend.Models.SPT;
+﻿namespace CWX_SPT_Launcher_Backend.SPT;
 
 public class ServerProfile
 {
