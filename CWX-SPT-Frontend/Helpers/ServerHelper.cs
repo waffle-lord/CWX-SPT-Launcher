@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Net;
+using System.Text.Json;
 using ComponentAce.Compression.Libs.zlib;
 using CWX_SPT_Launcher_Backend.CWX;
 using CWX_SPT_Launcher_Backend.SPT;
@@ -24,69 +25,102 @@ public class ServerHelper
             }
         }
     }
-    
-    public async Task IsServerReachable(Servers server, CancellationToken token)
+
+    public async Task<bool> IsServerReachable(Servers server, CancellationToken token)
     {
         _netClient = new HttpClient();
         _netClient.BaseAddress = new Uri("http://" + server.Ip);
-        await _netClient.GetAsync("/launcher/ping", token);
+        var task = await _netClient.GetAsync("/launcher/ping", token);
+        if (task.StatusCode != HttpStatusCode.OK)
+        {
+            return false;
+        }
+        
+        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
+        return result == "\"pong!\"";
     }
-    
-    public async Task GetServerProfiles(CancellationToken token)
+
+    public async Task<bool> GetServerProfiles(CancellationToken token)
     {
         var task = await _netClient.GetAsync("/launcher/profiles", token);
+        if (task.StatusCode != HttpStatusCode.OK)
+        {
+            return false;
+        }
+
         var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
         ProfileList = JsonSerializer.Deserialize<List<ServerProfile>>(result);
+        return true;
     }
-    
-    public async Task GetCreationTypes(CancellationToken token)
+
+    public async Task<bool> GetCreationTypes(CancellationToken token)
     {
         var task = await _netClient.GetAsync("/launcher/server/connect", token);
+        if (task.StatusCode != HttpStatusCode.OK)
+        {
+            return false;
+        }
+
         var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
         ServerInfo = JsonSerializer.Deserialize<ServerInfo>(result);
+        return true;
     }
-    
+
     public async Task<bool> SendProfileRegister(RegisterRequest request, CancellationToken token)
     {
         var task = await _netClient.PutAsync("/launcher/profile/register",
             new ByteArrayContent(SimpleZlib.CompressToBytes(JsonSerializer.Serialize(request),
                 zlibConst.Z_BEST_COMPRESSION)), token);
-        
-        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
+        if (task.StatusCode != HttpStatusCode.OK)
+        {
+            return false;
+        }
 
+        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
         if (result == "FAILED")
         {
             return false;
         }
-        
+
         await GetServerProfiles(token);
         return true;
     }
-    
-    public async Task SendProfileDelete(ServerProfile profile, CancellationToken token)
+
+    public async Task<bool> SendProfileDelete(ServerProfile profile, CancellationToken token)
     {
         _netClient.DefaultRequestHeaders.Add("Cookie", $"PHPSESSID={profile.profileId}");
         _netClient.DefaultRequestHeaders.Add("SessionId", profile.profileId);
-        
+
         var task = await _netClient.GetAsync("/launcher/profile/remove", token);
-        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
-        await GetServerProfiles(token);
+        if (task.StatusCode != HttpStatusCode.OK)
+        {
+            return false;
+        }
         
+        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
+        if (result == "false")
+        {
+            return false;
+        }
+        await GetServerProfiles(token);
+
         _netClient.DefaultRequestHeaders.Remove("Cookie");
         _netClient.DefaultRequestHeaders.Remove("SessionId");
+        return true;
     }
+
     public async Task<bool> SendPasswordChange(PasswordChangeRequest request, CancellationToken token)
     {
         var task = await _netClient.PutAsync("/launcher/profile/change/password",
             new ByteArrayContent(SimpleZlib.CompressToBytes(JsonSerializer.Serialize(request),
                 zlibConst.Z_BEST_COMPRESSION)), token);
         var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
-        
+
         if (result == "FAILED")
         {
             return false;
         }
-        
+
         await GetServerProfiles(token);
         return true;
     }
@@ -103,5 +137,4 @@ public class ServerHelper
     {
         ConnectedServer = server;
     }
-
 }

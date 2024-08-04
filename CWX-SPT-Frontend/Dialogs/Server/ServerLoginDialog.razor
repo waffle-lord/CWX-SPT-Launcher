@@ -54,26 +54,48 @@
             Tasks = ELoginTaskResults.Connection;
             TaskText = "Checking connection to server";
             await Task.Delay(20); // artificial to hopefully fix "focus on invalid element"
-            await serverHelper.IsServerReachable(Server, token.Token);
+            var result = await serverHelper.IsServerReachable(Server, token.Token);
             token.Dispose();
+            if (!result)
+            {
+                // Request failed
+                AbortOrFail();
+                return;
+            }
 
             // get profile data
             token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             Tasks = ELoginTaskResults.Profiles;
             TaskText = "Getting profiles from server";
-            StateHasChanged();
-            await serverHelper.GetServerProfiles(token.Token);
+            result = await serverHelper.GetServerProfiles(token.Token);
             token.Dispose();
+            if (!result)
+            {
+                // Request Failed
+                AbortOrFail("Error getting profiles from server!");
+                return;
+            }
 
             // get Creation data
             token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             Tasks = ELoginTaskResults.Types;
             TaskText = "Getting profile creation data";
-            StateHasChanged();
-            await serverHelper.GetCreationTypes(token.Token);
+            result = await serverHelper.GetCreationTypes(token.Token);
             token.Dispose();
+            if (!result)
+            {
+                // Request Failed
+                AbortOrFail("Error getting profile creation data!");
+                return;
+            }
         }
         catch (TaskCanceledException e) when (token.IsCancellationRequested)
+        {
+            // user cancelled request
+            AbortOrFail("Request Timed out!");
+            return;
+        }
+        catch (HttpRequestException e)
         {
             AbortOrFail();
             return;
@@ -85,14 +107,15 @@
         Submit();
     }
 
-    private void AbortOrFail()
+    private void AbortOrFail(string message = "Error connecting to server!")
     {
         if (!UserCancel)
         {
-            Snackbar.Add("Error connecting to server!", Severity.Error);
+            Snackbar.Add(message, Severity.Error);
         }
 
         ServerHelper.Instance.LogoutAndDispose();
+        token?.Cancel();
         MudDialog.Cancel();
     }
 
@@ -105,7 +128,7 @@
     private void UserCancelled()
     {
         UserCancel = true;
-        token.Cancel();
+        token?.Cancel();
         MudDialog.Cancel();
     }
 }

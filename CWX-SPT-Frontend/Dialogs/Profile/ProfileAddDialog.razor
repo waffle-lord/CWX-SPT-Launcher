@@ -7,9 +7,10 @@
                 <MudSelect @bind-Value="Profile.edition" Variant="Variant.Outlined" Label="Edition" Margin="Margin.Dense" Dense="true">
                     @foreach (var edition in serverEditions)
                     {
-                        <MudSelectItem Value="@edition">@edition</MudSelectItem>
+                        <MudSelectItem Value="@edition"/>
                     }
                 </MudSelect>
+                <MudTextField T="string" Text="@tooltipText" Label="Profile Description" Variant="Variant.Outlined" Margin="Margin.Dense" AutoGrow="true" ReadOnly="true"/>
                 <MudTextField Immediate="true" @bind-Value="Profile.username" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Required="true"/>
                 <MudTextField Immediate="true" @bind-Value="Profile.password" Label="Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
             </MudForm>
@@ -29,6 +30,14 @@
     private CancellationTokenSource token { get; set; }
     private bool UserCancel { get; set; }
 
+    private string tooltipText
+    {
+        get
+        {
+            return ServerHelper.Instance.ServerInfo.profileDescriptions.GetValueOrDefault(Profile.edition, "");
+        }
+    }
+
     private async void Submit()
     {
         try
@@ -40,6 +49,7 @@
                 AbortOrFail();
                 return;
             }
+
             token.Dispose();
         }
         catch (TaskCanceledException e) when (token.IsCancellationRequested)
@@ -69,4 +79,5 @@
         token?.Cancel();
         MudDialog.Cancel();
     }
+
 }
