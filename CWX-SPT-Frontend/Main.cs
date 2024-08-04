@@ -123,4 +123,11 @@ public partial class Main : Form
         blazorWebView.RootComponents.Add<BlazorApp>("#app");
         Controls.Add(blazorWebView);
     }
+    
+    public static void MoveWindow(int offsetX, int offsetY)
+    {
+        // Use Win32 API to move the window based on the offset received.
+        MainForm.Left += offsetX;
+        MainForm.Top += offsetY;
+    }
 }
