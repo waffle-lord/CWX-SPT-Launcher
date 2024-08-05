@@ -1,10 +1,11 @@
-using CWX_SPT_Frontend.Helpers;
+using CWX_SPT_Frontend_wf.Helpers;
 using Microsoft.AspNetCore.Components.WebView.WindowsForms;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.JSInterop;
 using MudBlazor;
 using MudBlazor.Services;
 
-namespace CWX_SPT_Frontend;
+namespace CWX_SPT_Frontend_wf;
 
 public partial class Main : Form
 {
@@ -124,10 +125,51 @@ public partial class Main : Form
         Controls.Add(blazorWebView);
     }
     
+    [JSInvokable]
     public static void MoveWindow(int offsetX, int offsetY)
     {
         // Use Win32 API to move the window based on the offset received.
         MainForm.Left += offsetX;
         MainForm.Top += offsetY;
     }
+    
+    private const int CS_DROPSHADOW = 0x00020000;
+    protected override CreateParams CreateParams
+    {
+        get
+        {
+            // add the drop shadow flag for automatically drawing
+            // a drop shadow around the form
+            CreateParams cp = base.CreateParams;
+            cp.ClassStyle |= CS_DROPSHADOW;
+            return cp;
+        }
+    }
+    
+    // protected override void OnResize(EventArgs e)
+    // {
+    //     base.OnResize(e);
+    //     SetRoundedCorners();
+    // }
+    //
+    // private void SetRoundedCorners()
+    // {
+    //     // Create a rounded rectangle region.
+    //     var radius = 20;  // Adjust the radius as needed.
+    //     var region = CreateRoundRectRgn(0, 0, this.Width, this.Height, radius, radius);
+    //     SetWindowRgn(this.Handle, region, true);
+    // }
+    //
+    // protected override void OnPaint(PaintEventArgs e)
+    // {
+    //     base.OnPaint(e);
+    //     SetRoundedCorners();  // Ensure the corners are redrawn properly.
+    // }
+    //
+    // // Win32 API P/Invoke declarations.
+    // [DllImport("gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+    // private static extern IntPtr CreateRoundRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse);
+    //
+    // [DllImport("user32.dll", EntryPoint = "SetWindowRgn")]
+    // private static extern int SetWindowRgn(IntPtr hWnd, IntPtr hRgn, bool bRedraw);
 }

@@ -1,9 +1,8 @@
-﻿using System.IO;
-using System.Text.Json;
+﻿using System.Text.Json;
 using CWX_SPT_Launcher_Backend.CWX;
 using MudBlazor;
 
-namespace CWX_SPT_Frontend.Helpers;
+namespace CWX_SPT_Frontend_wf.Helpers;
 
 public class SettingsHelper
 {
@@ -98,7 +97,7 @@ public class SettingsHelper
     {
         _settings.AppSettings.AlwaysTop = alwaysOnTop;
         SaveSettings();
-        MainWindow.ChangeTopMostSetting(alwaysOnTop);
+        Main.ChangeTopMostSetting(alwaysOnTop);
     }
 
     public void SetAdvancedUser(bool advancedUser)

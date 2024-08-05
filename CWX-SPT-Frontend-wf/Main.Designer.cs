@@ -1,6 +1,6 @@
 ﻿using CWX_SPT_Launcher_Backend.CWX;
 
-namespace CWX_SPT_Frontend;
+namespace CWX_SPT_Frontend_wf;
 
 partial class Main
 {
@@ -27,12 +27,14 @@ partial class Main
     private void InitializeComponent(Settings settings)
     {
         SuspendLayout();
-
+        
+        // FormBorderStyle = FormBorderStyle.None;
         TopMost = _settingsHelper.GetSettings().AppSettings.AlwaysTop;
-        BackColor = Color.FromArgb(36, 36, 36);
+        BackColor = Color.FromArgb( 1, 1, 1);
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         MinimumSize = new Size(1070, 550);
+        ResizeRedraw = true;
 			
         if (settings.FirstRun)
         {

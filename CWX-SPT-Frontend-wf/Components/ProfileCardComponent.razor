@@ -1,0 +1,115 @@
+﻿@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<MudItem sm="12" md="4">
+    <MudPaper Elevation="2" Class="pa-4 d-flex flex-column flex-none gap-2 card-overflow">
+        @if (!sideIsUnknown)
+        {
+            <MudImage Src=@(ImageName()) Elevation="0" Class=@(ImageClassNames())/>
+        }
+        @if (UseProfileColors)
+        {
+            <MudPaper Elevation="0" Class=@(GlowClassNames())/>
+        }
+        <MudText Class="mb-n4 no-pointers no-select" Typo="Typo.caption">Name:</MudText>
+        <MudText Typo="Typo.h6">@Profile.username</MudText>
+        <MudDivider DividerType="DividerType.Middle"/>
+        <MudText Class="mb-n4 no-pointers no-select" Typo="Typo.caption">Level:</MudText>
+        <MudText Typo="Typo.h6">@Profile.currlvl</MudText>
+        <MudDivider DividerType="DividerType.Middle"/>
+        <MudText Class="mb-n4 no-pointers no-select" Typo="Typo.caption">Edition:</MudText>
+        <MudText Typo="Typo.h6">@Profile.edition</MudText>
+        <MudDivider DividerType="DividerType.Middle"/>
+        <MudText Class="mb-n3 no-pointers no-select" Typo="Typo.caption">ID:</MudText>
+        <MudText Typo="Typo.body1">@Profile.profileId</MudText>
+        <MudContainer Class="justify-end d-flex pa-0">
+            @if (Profile.hasPassword)
+            {
+                <MudTooltip Text="Password Protected" Arrow="true" Placement="Placement.Bottom">
+                    <MudIconButton Color="Color.Tertiary" Icon="@Icons.Material.Filled.Lock" Size="Size.Small"/>
+                </MudTooltip>
+                <MudSpacer/>
+            }
+            <MudIconButton Class="mr-1" Color="Color.Default" Icon="@Icons.Material.Filled.Login" Size="Size.Small" @onclick="RunStartGameTask"/>
+            <MudIconButton Color="Color.Default" Icon="@Icons.Material.Filled.Build" Size="Size.Small" @onclick="RunEditTask"/>
+            <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" @onclick="RunDeleteTask"/>
+        </MudContainer>
+    </MudPaper>
+</MudItem>
+
+@code {
+    [Parameter] public ServerProfile Profile { get; set; }
+    [Parameter] public List<ServerProfile> ProfileList { get; set; }
+    [Parameter] public EventCallback<List<ServerProfile>> ProfileListChanged { get; set; }
+    private bool UseProfileColors { get; set; } = SettingsHelper.Instance.GetSettings().AppSettings.UseProfileColors;
+    private bool sideIsUnknown { get; set; } = false;
+    private string glowClass { get; set; }
+    private string sideClass { get; set; }
+
+    private string GlowClassNames()
+    {
+        return $"card-glow no-pointers {glowClass}";
+    }
+
+    private string ImageClassNames()
+    {
+        return $"no-pointers background-image-{((Profile.side.ToLower() != "unknown") ? Profile.side.ToLower() : "usec")}";
+    }
+
+    private string ImageName()
+    {
+        return $"side_{((Profile.side.ToLower() != "unknown") ? Profile.side.ToLower() : "usec")}.png";
+    }
+
+    protected override void OnInitialized()
+    {
+        if (Profile.side.ToLower() == "unknown")
+        {
+            sideIsUnknown = true;
+        }
+
+        glowClass = Profile.edition.ToLower() switch
+        {
+            "spt developer" => "glow-purple",
+            "edge of darkness" => "glow-gold",
+            "the unheard edition" => "glow-blue",
+            "standard edition" => "glow-grey",
+            _ => glowClass
+        };
+
+        base.OnInitialized();
+    }
+
+    private async Task RunStartGameTask()
+    {
+        
+    }
+
+    private async Task RunDeleteTask()
+    {
+        var dialogParams = new DialogParameters { { "Profile", Profile } };
+
+        var dialog = await DialogService.ShowAsync<ProfileRemoveDialog>("ProfileRemoveDialog",dialogParams , SettingsHelper.Instance.DialogOptions);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false })
+        {
+            ProfileList = ServerHelper.Instance.ProfileList;
+            await ProfileListChanged.InvokeAsync(ProfileList);
+        }
+    }
+
+    private async Task RunEditTask()
+    {
+        var dialogParams = new DialogParameters { { "Profile", Profile } };
+
+        var dialog = await DialogService.ShowAsync<ProfileEditDialog>("ProfileEditDialog", dialogParams, SettingsHelper.Instance.DialogOptions);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false })
+        {
+            ProfileList = ServerHelper.Instance.ProfileList;
+            await ProfileListChanged.InvokeAsync(ProfileList);
+        }
+    }
+}

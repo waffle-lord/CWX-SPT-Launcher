@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Components.WebView.Wpf;
+﻿using Microsoft.AspNetCore.Components.WebView.WindowsForms;
 using Microsoft.Extensions.FileProviders;
 
-namespace CWX_SPT_Frontend;
+namespace CWX_SPT_Frontend_wf;
 
 public class EmbeddedBlazorWebView : BlazorWebView
 {
@@ -15,7 +15,7 @@ public class EmbeddedBlazorWebView : BlazorWebView
             return base.CreateFileProvider(contentRootDir);
         }
 
-        EmbeddedFilesProvider = new ManifestEmbeddedFileProvider(typeof(App).Assembly, "Resources");
+        EmbeddedFilesProvider = new ManifestEmbeddedFileProvider(typeof(Program).Assembly, "Resources");
         return EmbeddedFilesProvider;
     }
 }

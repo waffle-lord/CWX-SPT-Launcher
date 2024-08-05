@@ -1,0 +1,35 @@
+﻿{
+  "FirstRun": true,
+  "AppSettings": {
+    "StartLocation": {
+      "X": 0,
+      "Y": 0
+    },
+    "StartSize": {
+      "Width": 0,
+      "Height": 0
+    },
+    "CloseToTray": false,
+    "MinimizeOnLaunch": false,
+    "AlwaysTop": true,
+    "UseProfileColors": true,
+    "AdvancedUser": false,
+    "SptPath": "C:\\SPT\\spt390"
+  },
+  "Servers": [
+    {
+      "Ip": "111.111.111.111:11111",
+      "Name": "asd",
+      "ServerId": "1721162719"
+    },
+    {
+      "Ip": "111.111.111.111:11111",
+      "Name": "qwe",
+      "ServerId": "1721162722"
+    }
+  ],
+  "DebugSettings": {
+    "DebugUser": false,
+    "DebugLocation": false
+  }
+}

@@ -1,11 +1,10 @@
 ﻿using System.Net;
-using System.Net.Http;
 using System.Text.Json;
 using ComponentAce.Compression.Libs.zlib;
 using CWX_SPT_Launcher_Backend.CWX;
 using CWX_SPT_Launcher_Backend.SPT;
 
-namespace CWX_SPT_Frontend.Helpers;
+namespace CWX_SPT_Frontend_wf.Helpers;
 
 public class ServerHelper
 {

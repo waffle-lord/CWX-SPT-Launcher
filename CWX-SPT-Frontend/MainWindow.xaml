@@ -1,0 +1,22 @@
+﻿<Window x:Class="CWX_SPT_Frontend.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:blazor="clr-namespace:Microsoft.AspNetCore.Components.WebView.Wpf;assembly=Microsoft.AspNetCore.Components.WebView.Wpf"
+        xmlns:cwxSptWpf="clr-namespace:CWX_SPT_Frontend"
+        mc:Ignorable="d"
+        Title="CWX-SPT-LAUNCHER" 
+        Height="550" 
+        Width="1070"
+        Background="Gray"
+        MinHeight="550"
+        MinWidth="1070">
+
+    <cwxSptWpf:EmbeddedBlazorWebView UseEmbeddedResources="True" HostPage="index.html" Services="{DynamicResource services}">
+        <cwxSptWpf:EmbeddedBlazorWebView.RootComponents>
+            <blazor:RootComponent Selector="#app" ComponentType="{x:Type cwxSptWpf:Routes}" />
+        </cwxSptWpf:EmbeddedBlazorWebView.RootComponents>
+    </cwxSptWpf:EmbeddedBlazorWebView>
+
+</Window>

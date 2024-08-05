@@ -3,13 +3,12 @@
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0-windows</TargetFramework>
-        <RootNamespace>CWX_SPT_Frontend</RootNamespace>
+        <RootNamespace>CWX_SPT_Frontend-wf</RootNamespace>
         <LangVersion>latestmajor</LangVersion>
+        <UseWindowsForms>true</UseWindowsForms>
         <ImplicitUsings>enable</ImplicitUsings>
-        <UseWPF>true</UseWPF>
         <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-        <ApplicationIcon>Resources\app.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,9 +17,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Wpf" Version="8.0.71" />
-      <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.7" />
-      <PackageReference Include="MudBlazor" Version="7.5.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.WindowsForms" Version="8.0.70"/>
+        <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.7"/>
+        <PackageReference Include="MudBlazor" Version="7.3.0"/>
     </ItemGroup>
 
     <ItemGroup>

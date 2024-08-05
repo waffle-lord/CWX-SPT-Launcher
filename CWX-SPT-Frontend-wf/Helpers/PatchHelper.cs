@@ -5,12 +5,11 @@
  * Basuro
  */
 
-using System.IO;
 using System.Security.Cryptography;
 using CWX_SPT_Launcher_Backend.Patcher;
 using CWX_SPT_Launcher_Backend.Patcher.Enums;
 
-namespace CWX_SPT_Frontend.Helpers;
+namespace CWX_SPT_Frontend_wf.Helpers;
 
 public static class PatchHelper
 {

@@ -1,0 +1,34 @@
+﻿@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudContainer Class="py-4 card-overflow">
+            <MudForm Model="Server" @bind-IsValid="@success" Class="gap-2 mt-3">
+                <MudTextField Immediate="true" @bind-Value="Server.Name" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                <MudTextField Immediate="true" @bind-Value="Server.Ip" Label="IP" Required="true" RequiredError="IP is required!" Variant="Variant.Outlined" Margin="Margin.Dense" Mask="@ipPortMask"/>
+            </MudForm>
+            <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" @onclick="Submit">Confirm</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="Cancel">Cancel</MudButton>
+            </MudContainer>
+        </MudContainer>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    private bool success;
+    private IMask ipPortMask = RegexMask.IPv4(true);
+    [Parameter] public Servers Server { get; set; }
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
+
+    private void Submit()
+    {
+        Snackbar.Add("Edited Server!", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(Server));
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}

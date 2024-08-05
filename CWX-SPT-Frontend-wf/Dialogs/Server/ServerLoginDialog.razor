@@ -1,0 +1,134 @@
+﻿@using CWX_SPT_Launcher_Backend.CWX.Enums
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudContainer Class="py-4 card-overflow">
+            <MudContainer Class="d-flex flex-column align-center gap-4">
+                @if (Tasks <= ELoginTaskResults.Types)
+                {
+                    <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large"/>
+                }
+                else if (Tasks == ELoginTaskResults.Success)
+                {
+                }
+                else if (Tasks == ELoginTaskResults.Failed)
+                {
+                }
+                else if (Tasks == ELoginTaskResults.Aborted)
+                {
+                }
+                <MudText>@TaskText</MudText>
+            </MudContainer>
+            <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
+                <MudButton Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" @onclick="UserCancelled">Cancel</MudButton>
+            </MudContainer>
+        </MudContainer>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    private ServerHelper serverHelper = ServerHelper.Instance;
+    private ELoginTaskResults Tasks = ELoginTaskResults.NotStarted;
+    private string TaskText = "";
+    [Parameter] public Servers Server { get; set; }
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
+    private CancellationTokenSource token { get; set; }
+    private bool UserCancel { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _ = StartLoginTasks();
+    }
+
+    private async Task StartLoginTasks()
+    {
+        Tasks = ELoginTaskResults.Started;
+        TaskText = "Starting login tasks";
+
+        try
+        {
+            // test connection
+            token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            Tasks = ELoginTaskResults.Connection;
+            TaskText = "Checking connection to server";
+            await Task.Delay(20); // artificial to hopefully fix "focus on invalid element"
+            var result = await serverHelper.IsServerReachable(Server, token.Token);
+            token.Dispose();
+            if (!result)
+            {
+                // Request failed
+                AbortOrFail();
+                return;
+            }
+
+            // get profile data
+            token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            Tasks = ELoginTaskResults.Profiles;
+            TaskText = "Getting profiles from server";
+            result = await serverHelper.GetServerProfiles(token.Token);
+            token.Dispose();
+            if (!result)
+            {
+                // Request Failed
+                AbortOrFail("Error getting profiles from server!");
+                return;
+            }
+
+            // get Creation data
+            token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            Tasks = ELoginTaskResults.Types;
+            TaskText = "Getting profile creation data";
+            result = await serverHelper.GetCreationTypes(token.Token);
+            token.Dispose();
+            if (!result)
+            {
+                // Request Failed
+                AbortOrFail("Error getting profile creation data!");
+                return;
+            }
+        }
+        catch (TaskCanceledException e) when (token.IsCancellationRequested)
+        {
+            // user cancelled request
+            AbortOrFail("Request Timed out!");
+            return;
+        }
+        catch (HttpRequestException e)
+        {
+            AbortOrFail();
+            return;
+        }
+
+        Tasks = ELoginTaskResults.Success;
+        TaskText = "Check the Profiles in the NavMenu!";
+        StateHasChanged();
+        Submit();
+    }
+
+    private void AbortOrFail(string message = "Error connecting to server!")
+    {
+        if (!UserCancel)
+        {
+            Snackbar.Add(message, Severity.Error);
+        }
+
+        ServerHelper.Instance.LogoutAndDispose();
+        token?.Cancel();
+        MudDialog.Cancel();
+    }
+
+    private void Submit()
+    {
+        MudDialog.Close(DialogResult.Ok(Server));
+        Snackbar.Add("Logged In. Visit Profiles Page!", Severity.Success);
+    }
+
+    private void UserCancelled()
+    {
+        UserCancel = true;
+        token?.Cancel();
+        MudDialog.Cancel();
+    }
+}

@@ -1,0 +1,66 @@
+﻿@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudContainer Class="py-4 card-overflow">
+            <MudText>Do you really want to delete this Profile? This process cannot be undone.</MudText>
+            @if (Profile.hasPassword)
+            {
+                <MudTextField Immediate="true" @bind-Value="request.password" Label="Old Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+            }
+            <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
+                <MudButton Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" @onclick="Submit">Delete</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="Cancel">Cancel</MudButton>
+            </MudContainer>
+        </MudContainer>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [Parameter] public ServerProfile Profile { get; set; }
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
+    private LoginRequest request { get; } = new LoginRequest();
+    private CancellationTokenSource token { get; set; }
+    private bool UserCancel { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        request.username = Profile.username;
+        base.OnInitialized();
+    }
+
+    private async void Submit()
+    {
+        try
+        {
+            token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            await ServerHelper.Instance.SendProfileDelete(Profile, token.Token);
+            token.Dispose();
+        }
+        catch (TaskCanceledException e) when (token.IsCancellationRequested)
+        {
+            AbortOrFail();
+            return;
+        }
+
+        StateHasChanged();
+        Snackbar.Add("Removed Profile!", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void AbortOrFail()
+    {
+        if (!UserCancel)
+        {
+            Snackbar.Add("Error deleting profile from server!", Severity.Error);
+        }
+
+        ServerHelper.Instance.LogoutAndDispose();
+        MudDialog.Cancel();
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}

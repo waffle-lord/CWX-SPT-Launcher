@@ -1,5 +1,4 @@
 ﻿@inherits LayoutComponentBase
-@inject IJSRuntime JS
 
 <MudThemeProvider IsDarkMode="true"/>
 <MudPopoverProvider/>
@@ -7,22 +6,14 @@
 <MudDialogProvider/>
 
 <MudLayout>
-    <MudAppBar Dense="true" Elevation="0">
-        <div id="draggable-container" style="height: 100%; width: 100%" @onmousedown="StartDragging"></div>
-    </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" Width="150px" ClipMode="DrawerClipMode.Always" Elevation="0" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Breakpoint="Breakpoint.None">
+    <MudDrawer @bind-Open="_drawerOpen" Width="150px" ClipMode="DrawerClipMode.Never" Elevation="0" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Breakpoint="Breakpoint.None">
         <NavMenu/>
     </MudDrawer>
-    <MudMainContent Class="pt-14">
+    <MudMainContent Class="pt-1">
         @Body
     </MudMainContent>
 </MudLayout>
 
 @code {
     bool _drawerOpen = true;
-    
-    private async Task StartDragging(MouseEventArgs e)
-    {
-        await JS.InvokeVoidAsync("startDragging", e.ClientX, e.ClientY);
-    }
 }

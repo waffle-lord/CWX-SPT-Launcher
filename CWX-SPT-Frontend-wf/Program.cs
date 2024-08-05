@@ -1,4 +1,4 @@
-namespace CWX_SPT_Frontend;
+namespace CWX_SPT_Frontend_wf;
 
 static class Program
 {
