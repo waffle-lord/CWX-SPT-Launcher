@@ -6,8 +6,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CWX-SPT-Backend", "CWX-SPT-
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CWX-SPT-Frontend", "CWX-SPT-Frontend\CWX-SPT-Frontend.csproj", "{8841D9B5-154D-4522-9B80-6635412A2FDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CWX-SPT-Frontend-Ava", "CWX-SPT-Frontend-Ava\CWX-SPT-Frontend-Ava.csproj", "{E2ACDF5C-BD02-4927-A39D-0AA886E84BBD}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +24,5 @@ Global
 		{8841D9B5-154D-4522-9B80-6635412A2FDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8841D9B5-154D-4522-9B80-6635412A2FDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8841D9B5-154D-4522-9B80-6635412A2FDC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E2ACDF5C-BD02-4927-A39D-0AA886E84BBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E2ACDF5C-BD02-4927-A39D-0AA886E84BBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E2ACDF5C-BD02-4927-A39D-0AA886E84BBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E2ACDF5C-BD02-4927-A39D-0AA886E84BBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
