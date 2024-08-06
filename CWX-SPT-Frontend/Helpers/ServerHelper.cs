@@ -13,6 +13,7 @@ public class ServerHelper
     private static readonly object Lock = new object();
     public List<ServerProfile> ProfileList = [];
     public ServerInfo ServerInfo = new ServerInfo();
+    public Dictionary<string, SPTMod> ModList = [];
     public Servers ConnectedServer;
     private HttpClient _netClient;
 
@@ -64,6 +65,19 @@ public class ServerHelper
 
         var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
         ServerInfo = JsonSerializer.Deserialize<ServerInfo>(result);
+        return true;
+    }
+
+    public async Task<bool> GetModList(CancellationToken token)
+    {
+        var task = await _netClient.GetAsync("/launcher/server/loadedServerMods", token);
+        if (task.StatusCode != HttpStatusCode.OK)
+        {
+            return false;
+        }
+
+        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
+        ModList = JsonSerializer.Deserialize<Dictionary<string, SPTMod>>(result);
         return true;
     }
 
@@ -129,6 +143,7 @@ public class ServerHelper
     public void LogoutAndDispose()
     {
         ProfileList = [];
+        ModList = [];
         ServerInfo = new ServerInfo();
         ConnectedServer = null;
         _netClient = new HttpClient();

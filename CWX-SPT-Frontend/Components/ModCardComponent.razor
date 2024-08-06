@@ -1,0 +1,16 @@
+﻿<MudItem sm="12" md="4">
+    <MudPaper Elevation="2" Class="pa-4 d-flex flex-column flex-none gap-2 card-overflow">
+        <MudText Class="mb-n4 no-pointers no-select" Typo="Typo.caption">Name:</MudText>
+        <MudText Typo="Typo.h6" Class="text-ellipsis">@Mod.name</MudText>
+        <MudDivider DividerType="DividerType.Middle"/>
+        <MudText Class="mb-n4 no-pointers no-select" Typo="Typo.caption">Author:</MudText>
+        <MudText Typo="Typo.h6" Class="text-ellipsis">@Mod.author</MudText>
+        <MudDivider DividerType="DividerType.Middle"/>
+        <MudText Class="mb-n4 no-pointers no-select" Typo="Typo.caption">Version:</MudText>
+        <MudText Typo="Typo.h6" Class="text-ellipsis">@Mod.version</MudText>
+    </MudPaper>
+</MudItem>
+
+@code {
+    [Parameter] public SPTMod Mod { get; set; }
+}

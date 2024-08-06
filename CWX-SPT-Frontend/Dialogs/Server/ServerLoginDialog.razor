@@ -5,18 +5,9 @@
     <DialogContent>
         <MudContainer Class="py-4 card-overflow">
             <MudContainer Class="d-flex flex-column align-center gap-4">
-                @if (Tasks <= ELoginTaskResults.Types)
+                @if (Tasks < ELoginTaskResults.Success)
                 {
                     <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large"/>
-                }
-                else if (Tasks == ELoginTaskResults.Success)
-                {
-                }
-                else if (Tasks == ELoginTaskResults.Failed)
-                {
-                }
-                else if (Tasks == ELoginTaskResults.Aborted)
-                {
                 }
                 <MudText>@TaskText</MudText>
             </MudContainer>
@@ -53,6 +44,7 @@
             token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             Tasks = ELoginTaskResults.Connection;
             TaskText = "Checking connection to server";
+            StateHasChanged();
             await Task.Delay(20); // artificial to hopefully fix "focus on invalid element"
             var result = await serverHelper.IsServerReachable(Server, token.Token);
             token.Dispose();
@@ -67,6 +59,7 @@
             token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             Tasks = ELoginTaskResults.Profiles;
             TaskText = "Getting profiles from server";
+            StateHasChanged();
             result = await serverHelper.GetServerProfiles(token.Token);
             token.Dispose();
             if (!result)
@@ -80,12 +73,27 @@
             token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             Tasks = ELoginTaskResults.Types;
             TaskText = "Getting profile creation data";
+            StateHasChanged();
             result = await serverHelper.GetCreationTypes(token.Token);
             token.Dispose();
             if (!result)
             {
                 // Request Failed
                 AbortOrFail("Error getting profile creation data!");
+                return;
+            }
+            
+            // get Mod List
+            token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            Tasks = ELoginTaskResults.Mods;
+            TaskText = "Getting Active Server Mods";
+            StateHasChanged();
+            result = await serverHelper.GetModList(token.Token);
+            token.Dispose();
+            if (!result)
+            {
+                // Request Failed
+                AbortOrFail("Error getting mod list from server!");
                 return;
             }
         }

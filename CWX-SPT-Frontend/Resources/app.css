@@ -117,3 +117,9 @@ a.setting-on-hover:hover {
 .no-select {
     user-select: none;
 }
+
+.text-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

@@ -7,7 +7,8 @@ public enum ELoginTaskResults
     Connection = 2,
     Profiles = 3,
     Types = 4,
-    Success = 5,
-    Failed = 6,
-    Aborted = 7
+    Mods = 5,
+    Success = 6,
+    Failed = 7,
+    Aborted = 8
 }

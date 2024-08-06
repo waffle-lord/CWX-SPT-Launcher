@@ -1,0 +1,33 @@
+﻿@page "/Mods"
+
+<MudContainer Class="px-8 my-8" MaxWidth="MaxWidth.Large">
+    <MudContainer Class="d-flex justify-center mt-n5 mb-4">
+        <MudText Typo="Typo.h5">Active Server Mod List</MudText>
+    </MudContainer>
+    <MudGrid>
+        @if (mods.Count > 0)
+        {
+            @foreach (var mod in mods)
+            {
+                <ModCardComponent Mod="@mod"/>
+            }
+        }
+        else if (mods.Count == 0 && !IsConnected)
+        {
+            <MudItem sm="12">
+                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">Please connect to a Server first!</MudAlert>
+            </MudItem>
+        }
+        else if (mods.Count == 0)
+        {
+            <MudItem sm="12">
+                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">No server mods loaded!</MudAlert>
+            </MudItem>
+        }
+    </MudGrid>
+</MudContainer>
+
+@code {
+    private bool IsConnected { get; } = ServerHelper.Instance.ConnectedServer != null;
+    private List<SPTMod> mods { get; set; } = ServerHelper.Instance.ModList.Values.ToList();
+}
