@@ -3,10 +3,24 @@
 <MudDialog>
     <DialogContent>
         <MudContainer Class="py-4 card-overflow">
-            <MudText>Server: @Server.Ip - @Server.Name</MudText>
-            <MudText>Profile: @Profile.profileId - @Profile.username - @Profile.currlvl</MudText>
+            <MudForm Model="request" @bind-IsValid="@success" Class="gap-2 mt-3">
+                @if (Profile != null)
+                {
+                    <MudTextField Immediate="true" @bind-Value="request.Username" Label="Username" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="true" Required="true" ReadOnly="true"/>
+                    @if (Profile.HasPassword)
+                    {
+                        <MudTextField Immediate="true" @bind-Value="request.Password" Label="Password" Variant="Variant.Outlined" Margin="Margin.Dense" Required="true"/>
+                    }
+                }
+                else
+                {
+                    <MudTextField Immediate="true" @bind-Value="request.Username" Label="Username" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="false" Required="true"/>
+                    <MudTextField Immediate="true" @bind-Value="request.Password" Label="Password" Variant="Variant.Outlined" Margin="Margin.Dense" HelperTextOnFocus="true" HelperText="If the profile does NOT have a password, leave this blank!"/>
+                }
+            </MudForm>
+            
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" @onclick="Cancel">Start Game</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" @onclick="RunLoginTask">Start Game</MudButton>
                 <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="Cancel">Close</MudButton>
             </MudContainer>
         </MudContainer>
@@ -14,9 +28,25 @@
 </MudDialog>
 
 @code {
-    [Parameter] public Servers Server { get; set; }
-    [Parameter] public ServerProfile Profile { get; set; }
+    private bool success;
+    [Parameter] public ServerProfile Profile { get; set; } = null;
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
+    private LoginRequest request { get; set; } = new LoginRequest();
+
+    protected override void OnInitialized()
+    {
+        if (Profile != null)
+        {
+            request.Username = Profile.Username;
+        }
+        
+        base.OnInitialized();
+    }
+
+    private async Task RunLoginTask()
+    {
+        Console.WriteLine(JsonSerializer.Serialize(request));
+    }
 
     private void Cancel()
     {

@@ -4,6 +4,7 @@ using System.Text.Json;
 using ComponentAce.Compression.Libs.zlib;
 using CWX_SPT_Launcher_Backend.CWX;
 using CWX_SPT_Launcher_Backend.SPT;
+using CWX_SPT_Launcher_Backend.SPT.Request;
 
 namespace CWX_SPT_Frontend.Helpers;
 
@@ -103,8 +104,8 @@ public class ServerHelper
 
     public async Task<bool> SendProfileDelete(ServerProfile profile, CancellationToken token)
     {
-        _netClient.DefaultRequestHeaders.Add("Cookie", $"PHPSESSID={profile.profileId}");
-        _netClient.DefaultRequestHeaders.Add("SessionId", profile.profileId);
+        _netClient.DefaultRequestHeaders.Add("Cookie", $"PHPSESSID={profile.ProfileID}");
+        _netClient.DefaultRequestHeaders.Add("SessionId", profile.ProfileID);
 
         var task = await _netClient.GetAsync("/launcher/profile/remove", token);
         if (task.StatusCode != HttpStatusCode.OK)

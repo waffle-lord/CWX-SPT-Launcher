@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace CWX_SPT_Launcher_Backend.SPT;
+namespace CWX_SPT_Launcher_Backend.SPT.Response;
 
-public class ServerInfo
+public class TypesResponse
 {
     [JsonPropertyName("response")] public Dictionary<string, string> Response { get; set; } = new Dictionary<string, string>();
 }

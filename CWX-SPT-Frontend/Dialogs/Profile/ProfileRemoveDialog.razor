@@ -4,9 +4,9 @@
     <DialogContent>
         <MudContainer Class="py-4 card-overflow">
             <MudText>Do you really want to delete this Profile? This process cannot be undone.</MudText>
-            @if (Profile.hasPassword)
+            @if (Profile.HasPassword)
             {
-                <MudTextField Immediate="true" @bind-Value="request.password" Label="Old Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                <MudTextField Immediate="true" @bind-Value="request.Password" Label="Old Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
             }
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
                 <MudButton Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" @onclick="Submit">Delete</MudButton>
@@ -25,7 +25,7 @@
 
     protected override void OnInitialized()
     {
-        request.username = Profile.username;
+        request.Username = Profile.Username;
         base.OnInitialized();
     }
 

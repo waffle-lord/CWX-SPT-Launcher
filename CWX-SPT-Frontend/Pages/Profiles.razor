@@ -4,7 +4,7 @@
 <MudContainer Class="px-8 my-8" MaxWidth="MaxWidth.Large">
     <MudContainer Class="mt-n6 mb-3 pa-0 d-flex justify-start gap-2">
         <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.PersonAdd" Size="Size.Large" @onclick="RunAddTask" Variant="Variant.Outlined" Disabled="@(!IsConnected)">Create New Profile</MudButton>
-        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.Login" Size="Size.Large" Variant="Variant.Outlined" Disabled="@(!IsConnected)">Login with details</MudButton>
+        <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Filled.Login" Size="Size.Large" @onclick="RunLoginTask" Variant="Variant.Outlined" Disabled="@(!IsConnected)">Login with details</MudButton>
     </MudContainer>
     <MudGrid>
         @foreach (var profile in ProfilesList)
@@ -39,6 +39,17 @@
         if (result is { Canceled: false })
         {
             ProfilesList = ServerHelper.Instance.ProfileList;
+        }
+    }
+
+    private async Task RunLoginTask()
+    {
+        var dialog = await DialogService.ShowAsync<ProfileLoginDialog>("ProfileLoginDialog", SettingsHelper.Instance.DialogOptions);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false })
+        {
+            
         }
     }
 }

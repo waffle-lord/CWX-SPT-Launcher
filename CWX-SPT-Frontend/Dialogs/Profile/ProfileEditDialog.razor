@@ -4,12 +4,12 @@
     <DialogContent>
         <MudContainer Class="py-4 card-overflow">
             <MudForm Model="Profile" @bind-IsValid="@success" Class="gap-2 mt-3">
-                <MudTextField Immediate="true" @bind-Value="request.username" Label="Username" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="true"/>
-                @if (Profile.hasPassword)
+                <MudTextField Immediate="true" @bind-Value="request.Username" Label="Username" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="true"/>
+                @if (Profile.HasPassword)
                 {
-                    <MudTextField Immediate="true" @bind-Value="request.password" Label="Old Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                    <MudTextField Immediate="true" @bind-Value="request.Password" Label="Old Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
                 }
-                <MudTextField Immediate="true" @bind-Value="request.change" Label="New Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                <MudTextField Immediate="true" @bind-Value="request.Change" Label="New Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
             </MudForm>
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" @onclick="Submit">Confirm</MudButton>
@@ -29,7 +29,7 @@
 
     protected override void OnInitialized()
     {
-        request.username = Profile.username;
+        request.Username = Profile.Username;
         base.OnInitialized();
     }
 

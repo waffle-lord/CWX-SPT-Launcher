@@ -1,13 +1,19 @@
-﻿<MudItem sm="12" md="4">
-    <MudPaper Elevation="2" Class="pa-4 d-flex flex-column flex-none gap-2 card-overflow">
-        <MudText Class="mb-n4 no-pointers no-select" Typo="Typo.caption">Name:</MudText>
-        <MudText Typo="Typo.h6" Class="text-ellipsis">@Mod.name</MudText>
-        <MudDivider DividerType="DividerType.Middle"/>
-        <MudText Class="mb-n4 no-pointers no-select" Typo="Typo.caption">Author:</MudText>
-        <MudText Typo="Typo.h6" Class="text-ellipsis">@Mod.author</MudText>
-        <MudDivider DividerType="DividerType.Middle"/>
-        <MudText Class="mb-n4 no-pointers no-select" Typo="Typo.caption">Version:</MudText>
-        <MudText Typo="Typo.h6" Class="text-ellipsis">@Mod.version</MudText>
+﻿<MudItem sm="12" Class="pt-3">
+    <MudPaper Elevation="2" Class="py-2 px-4 d-flex card-overflow">
+        <MudGrid>
+            <MudItem sm="6">
+                <MudText Class="no-pointers no-select" Typo="Typo.caption">Name:</MudText>
+                <MudText Typo="Typo.h6" Class="text-ellipsis mt-n2">@Mod.Name</MudText>
+            </MudItem>
+            <MudItem sm="4">
+                <MudText Class="no-pointers no-select" Typo="Typo.caption">Author:</MudText>
+                <MudText Typo="Typo.h6" Class="text-ellipsis mt-n2">@Mod.Author</MudText>
+            </MudItem>
+            <MudItem sm="2">
+                <MudText Class="no-pointers no-select" Typo="Typo.caption">Version:</MudText>
+                <MudText Typo="Typo.h6" Class="text-ellipsis mt-n2">@Mod.Version</MudText>
+            </MudItem>
+        </MudGrid>
     </MudPaper>
 </MudItem>
 

@@ -4,15 +4,15 @@
     <DialogContent>
         <MudContainer Class="py-4 card-overflow">
             <MudForm Model="Profile" @bind-IsValid="@success" Class="gap-2 mt-3">
-                <MudSelect @bind-Value="Profile.edition" Variant="Variant.Outlined" Label="Edition" Margin="Margin.Dense" Dense="true">
+                <MudSelect @bind-Value="Profile.Edition" Variant="Variant.Outlined" Label="Edition" Margin="Margin.Dense" Dense="true">
                     @foreach (var edition in serverEditions)
                     {
                         <MudSelectItem Value="@edition"/>
                     }
                 </MudSelect>
                 <MudTextField T="string" Text="@tooltipText" Label="Profile Description" Variant="Variant.Outlined" Margin="Margin.Dense" AutoGrow="true" ReadOnly="true"/>
-                <MudTextField Immediate="true" @bind-Value="Profile.username" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Required="true"/>
-                <MudTextField Immediate="true" @bind-Value="Profile.password" Label="Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                <MudTextField Immediate="true" @bind-Value="Profile.Username" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Required="true"/>
+                <MudTextField Immediate="true" @bind-Value="Profile.Password" Label="Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
             </MudForm>
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" @onclick="Submit">Add</MudButton>
@@ -25,7 +25,7 @@
 @code {
     private bool success;
     public RegisterRequest Profile = new RegisterRequest();
-    private List<string> serverEditions { get; } = ServerHelper.Instance.ServerInfo.editions;
+    private List<string> serverEditions { get; } = ServerHelper.Instance.ServerInfo.Response.Keys.ToList();
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
     private CancellationTokenSource token { get; set; }
     private bool UserCancel { get; set; }
@@ -34,7 +34,7 @@
     {
         get
         {
-            return ServerHelper.Instance.ServerInfo.profileDescriptions.GetValueOrDefault(Profile.edition, "");
+            return ServerHelper.Instance.ServerInfo.Response.GetValueOrDefault(Profile.Edition, "");
         }
     }
 
