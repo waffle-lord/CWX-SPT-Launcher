@@ -32,6 +32,7 @@
     {
         try
         {
+            serverHelper.SetupHttpClient(Server);
             await CallServer(ERequestTask.Ping, "Checking connection to server");
             await CallServer(ERequestTask.Profiles, "Getting profiles from server", "Error getting profiles from server!");
             await CallServer(ERequestTask.Types, "Getting profile creation data from server", "Error getting profile creation data!");
@@ -66,7 +67,7 @@
 
         var result = option switch
         {
-            ERequestTask.Ping => await serverHelper.IsServerReachable(Server, token.Token),
+            ERequestTask.Ping => await serverHelper.GetAsync<PingResponse>("/launcher/v2/ping", token.Token),
             ERequestTask.Profiles => await serverHelper.GetAsync<ProfilesResponse>("/launcher/v2/profiles", token.Token),
             ERequestTask.Types => await serverHelper.GetAsync<TypesResponse>("/launcher/v2/types", token.Token),
             ERequestTask.Mods => await serverHelper.GetAsync<ModsResponse>("/launcher/v2/mods", token.Token),

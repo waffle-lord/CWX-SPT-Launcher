@@ -44,6 +44,8 @@ public class ServerHelper
             case ModsResponse casting3:
                 ModList = casting3.Response;
                 return true;
+            case PingResponse casting4:
+                return casting4.Response == "pong!";
             default:
                 return false;
         }
@@ -71,14 +73,10 @@ public class ServerHelper
         }
     }
 
-    public async Task<bool> IsServerReachable(Servers server, CancellationToken token)
+    public void SetupHttpClient(Servers server)
     {
         _netClient = new HttpClient();
         _netClient.BaseAddress = new Uri("http://" + server.Ip);
-        var task = await _netClient.GetAsync("/launcher/v2/ping", token);
-
-        var result = JsonSerializer.Deserialize<PingResponse>(SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token)));
-        return result.Response == "pong!";
     }
 
     public void LogoutAndDispose()
