@@ -9,16 +9,16 @@
                     <MudTextField Immediate="true" @bind-Value="request.Username" Label="Username" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="true" Required="true" ReadOnly="true"/>
                     @if (Profile.HasPassword)
                     {
-                        <MudTextField Immediate="true" @bind-Value="request.Password" Label="Password" Variant="Variant.Outlined" Margin="Margin.Dense" Required="true"/>
+                        <PasswordFieldComponent @bind-Password="request.Password"/>
                     }
                 }
                 else
                 {
                     <MudTextField Immediate="true" @bind-Value="request.Username" Label="Username" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="false" Required="true"/>
-                    <MudTextField Immediate="true" @bind-Value="request.Password" Label="Password" Variant="Variant.Outlined" Margin="Margin.Dense" HelperTextOnFocus="true" HelperText="If the profile does NOT have a password, leave this blank!"/>
+                    <PasswordFieldComponent @bind-Password="request.Password"/>
                 }
             </MudForm>
-            
+
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" @onclick="RunLoginTask">Start Game</MudButton>
                 <MudButton Variant="Variant.Filled" Color="Color.Default" @onclick="Cancel">Close</MudButton>
@@ -39,7 +39,7 @@
         {
             request.Username = Profile.Username;
         }
-        
+
         base.OnInitialized();
     }
 
@@ -52,4 +52,5 @@
     {
         MudDialog.Cancel();
     }
+
 }

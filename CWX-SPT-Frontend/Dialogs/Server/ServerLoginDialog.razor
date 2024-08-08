@@ -5,10 +5,7 @@
     <DialogContent>
         <MudContainer Class="py-4 card-overflow">
             <MudContainer Class="d-flex flex-column align-center gap-4">
-                @if (Tasks < ELoginTaskResults.Success)
-                {
-                    <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large"/>
-                }
+                <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large"/>
                 <MudText>@TaskText</MudText>
             </MudContainer>
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
@@ -20,7 +17,6 @@
 
 @code {
     private ServerHelper serverHelper = ServerHelper.Instance;
-    private ELoginTaskResults Tasks = ELoginTaskResults.NotStarted;
     private string TaskText = "";
     [Parameter] public Servers Server { get; set; }
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
@@ -35,71 +31,16 @@
 
     private async Task StartLoginTasks()
     {
-        Tasks = ELoginTaskResults.Started;
-        TaskText = "Starting login tasks";
-
         try
         {
-            // test connection
-            token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-            Tasks = ELoginTaskResults.Connection;
-            TaskText = "Checking connection to server";
-            StateHasChanged();
-            await Task.Delay(20); // artificial to hopefully fix "focus on invalid element"
-            var result = await serverHelper.IsServerReachable(Server, token.Token);
-            token.Dispose();
-            if (!result)
-            {
-                // Request failed
-                AbortOrFail();
-                return;
-            }
+            await CallServer(ERequestTask.Ping, "Checking connection to server");
+            await CallServer(ERequestTask.Profiles, "Getting profiles from server", "Error getting profiles from server!");
+            await CallServer(ERequestTask.Types, "Getting profile creation data from server", "Error getting profile creation data!");
+            await CallServer(ERequestTask.Mods, "Getting active mod list from server", "Error getting mod list from server!");
 
-            // get profile data
-            token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-            Tasks = ELoginTaskResults.Profiles;
-            TaskText = "Getting profiles from server";
-            StateHasChanged();
-            result = await serverHelper.GetServerProfiles(token.Token);
-            token.Dispose();
-            if (!result)
-            {
-                // Request Failed
-                AbortOrFail("Error getting profiles from server!");
-                return;
-            }
-
-            // get Creation data
-            token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-            Tasks = ELoginTaskResults.Types;
-            TaskText = "Getting profile creation data";
-            StateHasChanged();
-            result = await serverHelper.GetCreationTypes(token.Token);
-            token.Dispose();
-            if (!result)
-            {
-                // Request Failed
-                AbortOrFail("Error getting profile creation data!");
-                return;
-            }
-            
-            // get Mod List
-            token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-            Tasks = ELoginTaskResults.Mods;
-            TaskText = "Getting Active Server Mods";
-            StateHasChanged();
-            result = await serverHelper.GetModList(token.Token);
-            token.Dispose();
-            if (!result)
-            {
-                // Request Failed
-                AbortOrFail("Error getting mod list from server!");
-                return;
-            }
         }
-        catch (TaskCanceledException e) when (token.IsCancellationRequested)
+        catch (TaskCanceledException e) when (token is { IsCancellationRequested: true })
         {
-            // user cancelled request
             AbortOrFail("Request Timed out!");
             return;
         }
@@ -108,11 +49,37 @@
             AbortOrFail();
             return;
         }
-
-        Tasks = ELoginTaskResults.Success;
-        TaskText = "Check the Profiles in the NavMenu!";
-        StateHasChanged();
+        catch (Exception e)
+        {
+            AbortOrFail();
+            return;
+        }
+        
         Submit();
+    }
+    
+    private async Task CallServer(ERequestTask option, string taskText = "", string failString = "")
+    {
+        token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+        TaskText = taskText;
+        StateHasChanged();
+        await Task.Delay(20);
+
+        var result = option switch
+        {
+            ERequestTask.Ping => await serverHelper.IsServerReachable(Server, token.Token),
+            ERequestTask.Profiles => await serverHelper.GetAsync<ProfilesResponse>("/launcher/v2/profiles", token.Token),
+            ERequestTask.Types => await serverHelper.GetAsync<TypesResponse>("/launcher/v2/types", token.Token),
+            ERequestTask.Mods => await serverHelper.GetAsync<ModsResponse>("/launcher/v2/mods", token.Token),
+            _ => false
+        };
+
+        if (!result)
+        {
+            AbortOrFail(failString);
+            return;
+        }
+        token?.Dispose();
     }
 
     private void AbortOrFail(string message = "Error connecting to server!")

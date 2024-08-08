@@ -1,10 +1,9 @@
-﻿using System.Net;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Text.Json;
 using ComponentAce.Compression.Libs.zlib;
 using CWX_SPT_Launcher_Backend.CWX;
 using CWX_SPT_Launcher_Backend.SPT;
-using CWX_SPT_Launcher_Backend.SPT.Request;
+using CWX_SPT_Launcher_Backend.SPT.Response;
 
 namespace CWX_SPT_Frontend.Helpers;
 
@@ -13,7 +12,7 @@ public class ServerHelper
     private static ServerHelper _instance;
     private static readonly object Lock = new object();
     public List<ServerProfile> ProfileList = [];
-    public ServerInfo ServerInfo = new ServerInfo();
+    public Dictionary<string, string> ProfileTypes = new Dictionary<string, string>();
     public Dictionary<string, SPTMod> ModList = [];
     public Servers ConnectedServer;
     private HttpClient _netClient;
@@ -29,125 +28,66 @@ public class ServerHelper
         }
     }
 
+    public async Task<bool> GetAsync<T>(string url, CancellationToken token)
+    {
+        var task = await _netClient.GetAsync(url, token);
+        var result = JsonSerializer.Deserialize<T>(SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token)));
+
+        switch (result)
+        {
+            case ProfilesResponse casting1:
+                ProfileList = casting1.Response;
+                return true;
+            case TypesResponse casting2:
+                ProfileTypes = casting2.Response;
+                return true;
+            case ModsResponse casting3:
+                ModList = casting3.Response;
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public async Task<bool> PutAsync<T, U>(string url, U request, CancellationToken token)
+    {
+        var content = new ByteArrayContent(SimpleZlib.CompressToBytes(JsonSerializer.Serialize(request), zlibConst.Z_BEST_COMPRESSION));
+        var task = await _netClient.PutAsync(url, content, token);
+        var result = JsonSerializer.Deserialize<T>(SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token)));
+
+        switch (result)
+        {
+            case RegisterResponse casting1:
+                ProfileList = casting1.Profiles;
+                return casting1.Response;
+            case RemoveResponse casting2:
+                ProfileList = casting2.Profiles;
+                return casting2.Response;
+            case PasswordChangeResponse casting3:
+                ProfileList = casting3.Profiles;
+                return casting3.Response;
+            default:
+                return false;
+        }
+    }
+
     public async Task<bool> IsServerReachable(Servers server, CancellationToken token)
     {
         _netClient = new HttpClient();
         _netClient.BaseAddress = new Uri("http://" + server.Ip);
-        var task = await _netClient.GetAsync("/launcher/ping", token);
-        if (task.StatusCode != HttpStatusCode.OK)
-        {
-            return false;
-        }
-        
-        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
-        return result == "\"pong!\"";
-    }
+        var task = await _netClient.GetAsync("/launcher/v2/ping", token);
 
-    public async Task<bool> GetServerProfiles(CancellationToken token)
-    {
-        var task = await _netClient.GetAsync("/launcher/profiles", token);
-        if (task.StatusCode != HttpStatusCode.OK)
-        {
-            return false;
-        }
-
-        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
-        ProfileList = JsonSerializer.Deserialize<List<ServerProfile>>(result);
-        return true;
-    }
-
-    public async Task<bool> GetCreationTypes(CancellationToken token)
-    {
-        var task = await _netClient.GetAsync("/launcher/server/connect", token);
-        if (task.StatusCode != HttpStatusCode.OK)
-        {
-            return false;
-        }
-
-        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
-        ServerInfo = JsonSerializer.Deserialize<ServerInfo>(result);
-        return true;
-    }
-
-    public async Task<bool> GetModList(CancellationToken token)
-    {
-        var task = await _netClient.GetAsync("/launcher/server/loadedServerMods", token);
-        if (task.StatusCode != HttpStatusCode.OK)
-        {
-            return false;
-        }
-
-        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
-        ModList = JsonSerializer.Deserialize<Dictionary<string, SPTMod>>(result);
-        return true;
-    }
-
-    public async Task<bool> SendProfileRegister(RegisterRequest request, CancellationToken token)
-    {
-        var task = await _netClient.PutAsync("/launcher/profile/register",
-            new ByteArrayContent(SimpleZlib.CompressToBytes(JsonSerializer.Serialize(request),
-                zlibConst.Z_BEST_COMPRESSION)), token);
-        if (task.StatusCode != HttpStatusCode.OK)
-        {
-            return false;
-        }
-
-        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
-        if (result == "FAILED")
-        {
-            return false;
-        }
-
-        await GetServerProfiles(token);
-        return true;
-    }
-
-    public async Task<bool> SendProfileDelete(ServerProfile profile, CancellationToken token)
-    {
-        _netClient.DefaultRequestHeaders.Add("Cookie", $"PHPSESSID={profile.ProfileID}");
-        _netClient.DefaultRequestHeaders.Add("SessionId", profile.ProfileID);
-
-        var task = await _netClient.GetAsync("/launcher/profile/remove", token);
-        if (task.StatusCode != HttpStatusCode.OK)
-        {
-            return false;
-        }
-        
-        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
-        if (result == "false")
-        {
-            return false;
-        }
-        await GetServerProfiles(token);
-
-        _netClient.DefaultRequestHeaders.Remove("Cookie");
-        _netClient.DefaultRequestHeaders.Remove("SessionId");
-        return true;
-    }
-
-    public async Task<bool> SendPasswordChange(PasswordChangeRequest request, CancellationToken token)
-    {
-        var task = await _netClient.PutAsync("/launcher/profile/change/password",
-            new ByteArrayContent(SimpleZlib.CompressToBytes(JsonSerializer.Serialize(request),
-                zlibConst.Z_BEST_COMPRESSION)), token);
-        var result = SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token));
-
-        if (result == "FAILED")
-        {
-            return false;
-        }
-
-        await GetServerProfiles(token);
-        return true;
+        var result = JsonSerializer.Deserialize<PingResponse>(SimpleZlib.Decompress(await task.Content.ReadAsByteArrayAsync(token)));
+        return result.Response == "pong!";
     }
 
     public void LogoutAndDispose()
     {
         ProfileList = [];
         ModList = [];
-        ServerInfo = new ServerInfo();
+        ProfileTypes = new Dictionary<string, string>();
         ConnectedServer = null;
-        _netClient = new HttpClient();
+        _netClient = null;
     }
 
     public void Login(Servers server)

@@ -123,3 +123,7 @@ a.setting-on-hover:hover {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+.edition-text {
+    background-color: #303038;
+}

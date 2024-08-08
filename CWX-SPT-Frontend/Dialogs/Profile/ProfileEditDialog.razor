@@ -7,9 +7,9 @@
                 <MudTextField Immediate="true" @bind-Value="request.Username" Label="Username" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="true"/>
                 @if (Profile.HasPassword)
                 {
-                    <MudTextField Immediate="true" @bind-Value="request.Password" Label="Old Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                    <PasswordFieldComponent @bind-Password="request.Password" Title="Old Password"/>
                 }
-                <MudTextField Immediate="true" @bind-Value="request.Change" Label="New Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                <PasswordFieldComponent @bind-Password="request.Change" Title="New Password"/>
             </MudForm>
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" @onclick="Submit">Confirm</MudButton>
@@ -38,7 +38,7 @@
         try
         {
             token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-            var result = await ServerHelper.Instance.SendPasswordChange(request, token.Token);
+            var result = await ServerHelper.Instance.PutAsync<PasswordChangeResponse, PasswordChangeRequest>("/launcher/v2/passwordChange", request, token.Token);
             
             if (!result)
             {
@@ -46,9 +46,9 @@
                 return;
             }
             
-            token.Dispose();
+            token?.Dispose();
         }
-        catch (TaskCanceledException e) when (token.IsCancellationRequested)
+        catch (TaskCanceledException e) when (token is { IsCancellationRequested: true })
         {
             AbortOrFail();
             return;

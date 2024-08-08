@@ -3,16 +3,19 @@
 <MudDialog>
     <DialogContent>
         <MudContainer Class="py-4 card-overflow">
-            <MudForm Model="Profile" @bind-IsValid="@success" Class="gap-2 mt-3">
-                <MudSelect @bind-Value="Profile.Edition" Variant="Variant.Outlined" Label="Edition" Margin="Margin.Dense" Dense="true">
+            <MudForm Model="Request" @bind-IsValid="@success" Class="gap-2 mt-3">
+                <MudSelect @bind-Value="Request.Edition" Variant="Variant.Outlined" Label="Edition" Margin="Margin.Dense" Dense="true" Required="true">
                     @foreach (var edition in serverEditions)
                     {
                         <MudSelectItem Value="@edition"/>
                     }
                 </MudSelect>
-                <MudTextField T="string" Text="@tooltipText" Label="Profile Description" Variant="Variant.Outlined" Margin="Margin.Dense" AutoGrow="true" ReadOnly="true"/>
-                <MudTextField Immediate="true" @bind-Value="Profile.Username" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Required="true"/>
-                <MudTextField Immediate="true" @bind-Value="Profile.Password" Label="Password" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                <MudTextField Immediate="true" @bind-Value="Request.Username" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" Required="true"/>
+                <PasswordFieldComponent @bind-Password="Request.Password"/>
+                @if (tooltipText != "")
+                {
+                    <MudCard Class="pa-2 edition-text" Outlined="true"><MudText>@tooltipText</MudText></MudCard>
+                }
             </MudForm>
             <MudContainer Class="mt-3 d-flex justify-end pa-0 gap-2">
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" @onclick="Submit">Add</MudButton>
@@ -24,8 +27,8 @@
 
 @code {
     private bool success;
-    public RegisterRequest Profile = new RegisterRequest();
-    private List<string> serverEditions { get; } = ServerHelper.Instance.ServerInfo.Response.Keys.ToList();
+    public RegisterRequest Request = new RegisterRequest();
+    private List<string> serverEditions { get; } = ServerHelper.Instance.ProfileTypes.Keys.ToList();
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
     private CancellationTokenSource token { get; set; }
     private bool UserCancel { get; set; }
@@ -34,7 +37,7 @@
     {
         get
         {
-            return ServerHelper.Instance.ServerInfo.Response.GetValueOrDefault(Profile.Edition, "");
+            return ServerHelper.Instance.ProfileTypes.GetValueOrDefault(Request.Edition, "");
         }
     }
 
@@ -43,16 +46,16 @@
         try
         {
             token = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-            var result = await ServerHelper.Instance.SendProfileRegister(Profile, token.Token);
+            var result = await ServerHelper.Instance.PutAsync<RegisterResponse, RegisterRequest>("/launcher/v2/Register", Request, token.Token);
             if (!result)
             {
                 AbortOrFail();
                 return;
             }
 
-            token.Dispose();
+            token?.Dispose();
         }
-        catch (TaskCanceledException e) when (token.IsCancellationRequested)
+        catch (TaskCanceledException e) when (token is { IsCancellationRequested: true })
         {
             AbortOrFail();
             return;

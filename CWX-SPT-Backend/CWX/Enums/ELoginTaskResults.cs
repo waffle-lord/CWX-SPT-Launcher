@@ -1,14 +1,9 @@
 ﻿namespace CWX_SPT_Launcher_Backend.CWX.Enums;
 
-public enum ELoginTaskResults
+public enum ERequestTask
 {
-    NotStarted = 0,
-    Started = 1,
-    Connection = 2,
-    Profiles = 3,
-    Types = 4,
-    Mods = 5,
-    Success = 6,
-    Failed = 7,
-    Aborted = 8
+    Ping = 0,
+    Profiles = 1,
+    Types = 2,
+    Mods = 3
 }

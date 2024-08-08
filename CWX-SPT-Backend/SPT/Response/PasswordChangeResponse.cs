@@ -2,7 +2,7 @@
 
 namespace CWX_SPT_Launcher_Backend.SPT.Response;
 
-public class PasswordChangeResponse
+public class PasswordChangeResponse : ISptResponse<bool>
 {
     [JsonPropertyName("response")] public bool Response { get; set; }
     [JsonPropertyName("profiles")] public List<ServerProfile> Profiles { get; set; } = [];

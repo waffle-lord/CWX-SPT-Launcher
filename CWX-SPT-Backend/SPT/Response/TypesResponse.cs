@@ -2,7 +2,7 @@
 
 namespace CWX_SPT_Launcher_Backend.SPT.Response;
 
-public class TypesResponse
+public class TypesResponse : ISptResponse<Dictionary<string, string>>
 {
     [JsonPropertyName("response")] public Dictionary<string, string> Response { get; set; } = new Dictionary<string, string>();
 }

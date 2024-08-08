@@ -2,8 +2,8 @@
 
 namespace CWX_SPT_Launcher_Backend.SPT.Response;
 
-public class PingResponse : ISptResponse<string>
+public interface ISptResponse<T>
 {
     [JsonPropertyName("response")]
-    public string Response { get; set; } = "";
+    public T Response { get; set; }
 }
