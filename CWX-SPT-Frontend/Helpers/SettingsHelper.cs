@@ -42,8 +42,14 @@ public class SettingsHelper
 
     private void LoadSettingsFromFile()
     {
+        // check if exists
+        if (!File.Exists(Path.Combine(AppPath, "settings.json")))
+        {
+            SaveDefaults();
+        }
+        // if not save
         _settings = JsonSerializer.Deserialize<Settings>(
-            File.ReadAllText(Path.Combine(SettingsHelper.AppPath, "settings.json")));
+            File.ReadAllText(Path.Combine(AppPath, "settings.json")));
     }
 
     public Settings GetSettings()
@@ -53,7 +59,7 @@ public class SettingsHelper
 
     public void SaveSettings()
     {
-        File.WriteAllText(Path.Combine(SettingsHelper.AppPath, "settings.json"), JsonSerializer.Serialize(_settings));
+        File.WriteAllText(Path.Combine(AppPath, "settings.json"), JsonSerializer.Serialize(_settings));
     }
 
     public void SetClientSizeSettings(int height, int width)
@@ -130,5 +136,55 @@ public class SettingsHelper
     {
         _settings.AppSettings.UseProfileColors = profileColors;
         SaveSettings();
+    }
+
+    private void SaveDefaults()
+    {
+        Directory.CreateDirectory(AppPath);
+        File.WriteAllText(Path.Combine(AppPath, "settings.json"), GetDefaults());
+    }
+
+    private string GetDefaults()
+    {
+        // work around not being able to read embedded json
+        var settings = new Settings
+        {
+            FirstRun = true,
+            AppSettings = new AppSettings
+            {
+                StartLocation = new StartLocation
+                {
+                    X = 0,
+                    Y = 0
+                },
+                StartSize = new StartSize
+                {
+                    Height = 0,
+                    Width = 0
+                },
+                CloseToTray = false,
+                MinimizeOnLaunch = false,
+                AlwaysTop = false,
+                UseProfileColors = true,
+                AdvancedUser = false,
+                SptPath = @"C:\\SPT\\spt310"
+            },
+            Servers =
+            [
+                new Servers
+                {
+                    Ip = "127.0.0.1:6969",
+                    Name = "LocalHost",
+                    ServerId = "1721162719"
+                }
+            ],
+            DebugSettings = new DebugSettings()
+            {
+                DebugLocation = false,
+                DebugUser = false
+            }
+        };
+
+        return JsonSerializer.Serialize(settings);
     }
 }
