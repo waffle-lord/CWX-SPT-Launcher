@@ -4,5 +4,5 @@ namespace CWX_SPT_Launcher_Backend.SPT.Response;
 
 public class ProfilesResponse : ISptResponse<List<ServerProfile>>
 {
-    [JsonPropertyName("response")] public List<ServerProfile> Response { get; set; } = [];
+    public List<ServerProfile> Response { get; set; } = [];
 }

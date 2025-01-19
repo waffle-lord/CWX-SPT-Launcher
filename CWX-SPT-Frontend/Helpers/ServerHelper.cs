@@ -45,7 +45,7 @@ public class ServerHelper
                 ModList = casting3.Response;
                 return true;
             case PingResponse casting4:
-                return casting4.Response == "pong!";
+                return casting4.Response == "Pong!";
             default:
                 return false;
         }

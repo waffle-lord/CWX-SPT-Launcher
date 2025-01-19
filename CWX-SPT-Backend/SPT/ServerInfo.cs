@@ -4,5 +4,5 @@ namespace CWX_SPT_Launcher_Backend.SPT;
 
 public class ServerInfo
 {
-    [JsonPropertyName("response")] public Dictionary<string, string> Types { get; set; } = new Dictionary<string, string>();
+    public Dictionary<string, string> Types { get; set; } = new Dictionary<string, string>();
 }
