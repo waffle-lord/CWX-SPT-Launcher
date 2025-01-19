@@ -88,8 +88,8 @@
     background: radial-gradient(circle at 50% 50%, rgb(200, 200, 200, 1), rgba(200, 200, 200, 0.4));
 }
 
-.glow-blue {
-    background: radial-gradient(circle at 50% 50%, rgb(17, 39, 182), rgba(17, 39, 182, 0.4));
+.glow-cyan {
+    background: radial-gradient(circle at 50% 50%, rgb(0, 154, 201), rgba(0, 154, 201, 0.6));
 }
 
 .glow-green {

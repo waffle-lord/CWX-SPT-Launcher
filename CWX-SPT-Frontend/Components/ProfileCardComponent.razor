@@ -70,11 +70,12 @@
 
         glowClass = Profile.Edition.ToLower() switch
         {
-            "spt developer" => "glow-purple",
+            "spt zero to hero" => "glow-red",
             "edge of darkness" => "glow-gold",
-            "the unheard edition" => "glow-blue",
-            "standard edition" => "glow-grey",
-            _ => glowClass
+            "unheard" => "glow-cyan",
+            "spt easy start" => "glow-green",
+            "spt developer" => "glow-purple",
+            _ => "glow-grey"
         };
 
         base.OnInitialized();
