@@ -14,7 +14,7 @@ public class ServerHelper
     public List<ServerProfile> ProfileList = [];
     public Dictionary<string, string> ProfileTypes = new Dictionary<string, string>();
     public Dictionary<string, SPTMod> ModList = [];
-    public Servers ConnectedServer;
+    public Server ConnectedServer;
     private HttpClient _netClient;
 
     public static ServerHelper Instance
@@ -73,10 +73,10 @@ public class ServerHelper
         }
     }
 
-    public void SetupHttpClient(Servers server)
+    public void SetupHttpClient(Server server)
     {
         _netClient = new HttpClient();
-        _netClient.BaseAddress = new Uri("http://" + server.Ip);
+        _netClient.BaseAddress = server.BackenUrl;
     }
 
     public void LogoutAndDispose()
@@ -88,7 +88,7 @@ public class ServerHelper
         _netClient = null;
     }
 
-    public void Login(Servers server)
+    public void Login(Server server)
     {
         ConnectedServer = server;
     }

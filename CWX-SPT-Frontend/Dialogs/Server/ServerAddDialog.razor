@@ -18,7 +18,7 @@
 @code {
     private bool success;
     private IMask ipPortMask = RegexMask.IPv4(true);
-    public Servers Server = new Servers();
+    public Server Server = new Server();
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
 
     private void Submit()

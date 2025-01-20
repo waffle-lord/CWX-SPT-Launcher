@@ -24,7 +24,7 @@
 </MudContainer>
 
 @code {
-    private List<Servers> ServerList = SettingsHelper.Instance.GetSettings().Servers;
+    private List<Server> ServerList = SettingsHelper.Instance.GetSettings().Servers;
 
     private async Task RunAddTask()
     {
@@ -33,7 +33,7 @@
 
         if (result is { Canceled: false })
         {
-            ServerList.Add(result.Data as Servers);
+            ServerList.Add(result.Data as Server);
             SettingsHelper.Instance.SetServerSettings(ServerList);
         }
     }

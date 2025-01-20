@@ -82,7 +82,7 @@ public class SettingsHelper
         SaveSettings();
     }
 
-    public void SetServerSettings(List<Servers> servers)
+    public void SetServerSettings(List<Server> servers)
     {
         _settings.Servers = servers;
         SaveSettings();
@@ -171,7 +171,7 @@ public class SettingsHelper
             },
             Servers =
             [
-                new Servers
+                new Server
                 {
                     Ip = "127.0.0.1:6969",
                     Name = "LocalHost",

@@ -17,7 +17,7 @@
 @code {
     private ServerHelper serverHelper = ServerHelper.Instance;
     private string TaskText = "";
-    [Parameter] public Servers Server { get; set; }
+    [Parameter] public Server Server { get; set; }
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
     private CancellationTokenSource token { get; set; }
     private bool UserCancel { get; set; }
