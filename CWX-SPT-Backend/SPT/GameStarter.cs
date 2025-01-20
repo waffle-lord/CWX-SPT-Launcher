@@ -17,6 +17,7 @@ using CWX_SPT_Launcher_Backend.SPT;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Serilog;
+using SPT.Launcher.Helpers;
 
 namespace SPT.Launcher
 {
@@ -29,7 +30,6 @@ namespace SPT.Launcher
         private const string registryInstall = @"Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\EscapeFromTarkov";
 
         private const string registrySettings = @"Software\Battlestate Games\EscapeFromTarkov";
-``
         public GameStarter(ILogger logger) //string gamePath = null, string originalGamePath = null, string[] excludeFromCleanup = null)
         {
             _logger = logger;
