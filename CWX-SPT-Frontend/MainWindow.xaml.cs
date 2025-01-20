@@ -2,10 +2,15 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Shapes;
 using CWX_SPT_Frontend.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using MudBlazor.Services;
+using Serilog;
+using Serilog.Events;
+using SPT.Launcher;
+using Path = System.IO.Path;
 
 namespace CWX_SPT_Frontend;
 
@@ -24,7 +29,19 @@ public partial class MainWindow : Window
         InitializeComponent();
         CustomizeComponent();
 
+        var logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "user", "logs");
+
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Verbose()
+            .WriteTo.File(logPath,
+                rollingInterval: RollingInterval.Day,
+                restrictedToMinimumLevel: LogEventLevel.Debug,
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Context}] [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+            
+            .CreateLogger();
+
         var serviceCollection = new ServiceCollection();
+        serviceCollection.AddLogging(builder => builder.AddSerilog());
         serviceCollection.AddWpfBlazorWebView();
         serviceCollection.AddBlazorWebViewDeveloperTools();
         serviceCollection.AddMudServices(config =>
