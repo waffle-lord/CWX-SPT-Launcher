@@ -1,7 +1,179 @@
-﻿<MudContainer Class="mt-n6 mb-3 pa-0 d-flex justify-start gap-2">
-    <MudButton Color="Color.Primary" Size="Size.Small" Variant="Variant.Outlined">Remove Registry Keys</MudButton>
-    <MudButton Color="Color.Primary" Size="Size.Small" Variant="Variant.Outlined">Load Live Settings</MudButton>
-    <MudButton Color="Color.Primary" Size="Size.Small" Variant="Variant.Outlined">Clear Game Settings</MudButton>
-    <MudButton Color="Color.Primary" Size="Size.Small" Variant="Variant.Outlined">Clean Temp Files</MudButton>
-    <MudButton Color="Color.Primary" Size="Size.Small" Variant="Variant.Outlined">Copy Logs</MudButton>
+﻿@using System.IO
+@using System.Windows
+@using Size = MudBlazor.Size
+@using Serilog
+@inject ISnackbar Snackbar
+@inject ILogger Logger
+
+<MudContainer Class="mt-n6 mb-3 pa-0 d-flex justify-start gap-2">
+    <MudButton OnClick="ResetGameSettingsCommand" Color="Color.Primary" Size="Size.Small" Variant="Variant.Outlined">Load Live Settings</MudButton>
+    <MudButton OnClick="ClearGameSettingsCommand" Color="Color.Primary" Size="Size.Small" Variant="Variant.Outlined">Clear Game Settings</MudButton>
+    <MudButton OnClick="CleanTempFilesCommand" Color="Color.Primary" Size="Size.Small" Variant="Variant.Outlined">Clean Temp Files</MudButton>
+    <MudButton OnClick="" Color="Color.Primary" Size="Size.Small" Variant="Variant.Outlined">Copy Logs</MudButton>
 </MudContainer>
+
+@code
+{
+    public async Task ResetGameSettingsCommand()
+        {
+            LogManager.Instance.Info("[Settings] Reseting game settings ...");
+            string EFTSettingsFolder = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Battlestate Games", "Escape from Tarkov", "Settings");
+            string SPTSettingsFolder = Path.Join(LauncherSettingsProvider.Instance.GamePath, "user", "sptsettings");
+
+            if (!Directory.Exists(EFTSettingsFolder))
+            {
+                LogManager.Instance.Warning($"[Settings] EFT settings folder not found, can't reset :: Path: {EFTSettingsFolder}");
+                SendNotification("", LocalizationProvider.Instance.load_live_settings_failed, Avalonia.Controls.Notifications.NotificationType.Error);
+                return;
+            }
+
+            try
+            {
+                Directory.CreateDirectory(SPTSettingsFolder);
+
+                foreach (string dirPath in Directory.GetDirectories(EFTSettingsFolder, "*", SearchOption.AllDirectories))
+                {
+                    Directory.CreateDirectory(dirPath.Replace(EFTSettingsFolder, SPTSettingsFolder));
+                }
+
+                //Copy all the files & Replaces any files with the same name
+                foreach (string newPath in Directory.GetFiles(EFTSettingsFolder, "*.*", SearchOption.AllDirectories))
+                {
+                    File.Copy(newPath, newPath.Replace(EFTSettingsFolder, SPTSettingsFolder), true);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.Exception(ex);
+                SendNotification("", LocalizationProvider.Instance.load_live_settings_failed, Avalonia.Controls.Notifications.NotificationType.Error);
+                return;
+            }
+            
+            LogManager.Instance.Info("[Settings] Game settings reset to live settings");
+            SendNotification("", LocalizationProvider.Instance.load_live_settings_succeeded, Avalonia.Controls.Notifications.NotificationType.Success);
+        }
+    
+    private void CleanTempFilesCommand()
+    {
+        Logger.Information("[Settings] Clearing temp files ...");
+        bool filesCleared = false; // gameStarter.CleanTempFiles();
+
+        if (filesCleared)
+        {
+            Logger.Information("[Settings] Temp files cleared");
+            //SendNotification("", LocalizationProvider.Instance.clean_temp_files_succeeded, NotificationType.Success);
+            Snackbar.Add("Temp files cleared", Severity.Success);
+        }
+        else
+        {
+            Logger.Information("[Settings] Temp files failed to clear");
+            //SendNotification("", LocalizationProvider.Instance.clean_temp_files_failed, NotificationType.Error);
+            Snackbar.Add("Failed to clear temp settings", Severity.Error);
+        }
+    }
+    
+    public async Task ClearGameSettingsCommand()
+    {
+        Logger.Information("[Settings] Clearing game settings ...");
+        var SPTSettingsDir = new DirectoryInfo(Path.Join(LauncherSettingsProvider.Instance.GamePath, "user", "sptsettings"));
+
+        try
+        {
+            SPTSettingsDir.Delete(true);
+
+            Directory.CreateDirectory(SPTSettingsDir.FullName);
+        }
+        catch(Exception ex)
+        {
+            Logger.Error(ex, "");
+            //SendNotification("", LocalizationProvider.Instance.clear_game_settings_failed, Avalonia.Controls.Notifications.NotificationType.Error);
+            Snackbar.Add("Failed to clear game settings", Severity.Error);
+            return;
+        }
+            
+        Logger.Information("[Settings] Game settings cleared");
+        // SendNotification("", LocalizationProvider.Instance.clear_game_settings_succeeded, Avalonia.Controls.Notifications.NotificationType.Success);
+        Snackbar.Add("Game settings Cleared", Severity.Success);
+    }
+    
+    public async Task CopyLogsToClipboard()
+        {
+            LogManager.Instance.Info("[Settings] Copying logs to clipboard ...");
+
+            if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                if (desktop.MainWindow?.Clipboard == null)
+                {
+                    LogManager.Instance.Error("[Settings] Failed to get clipboard");
+                    return;
+                }
+
+                var filesToCopy = new List<string> { LogManager.Instance.LogFile };
+                
+                var serverLog = Path.Join(LauncherSettingsProvider.Instance.GamePath, @"\user\logs",
+                    $"server-{DateTime.Now:yyyy-MM-dd}.log");
+                var bepinexLog = Path.Join(LauncherSettingsProvider.Instance.GamePath, @"BepInEx\LogOutput.log");
+
+                if (AccountManager.SelectedAccount?.id != null)
+                {
+                    filesToCopy.Add(Path.Join(LauncherSettingsProvider.Instance.GamePath, @"\user\profiles",
+                        $"{AccountManager.SelectedAccount.id}.json"));
+                }
+
+                if (File.Exists(serverLog))
+                {
+                    filesToCopy.Add(serverLog);
+                }
+
+                if (File.Exists(bepinexLog))
+                {
+                    filesToCopy.Add(bepinexLog);
+                }
+
+                var logsPath = Path.Join(LauncherSettingsProvider.Instance.GamePath, "Logs");
+                if (Directory.Exists(logsPath))
+                {
+                    var traceLogs = Directory.GetFiles(logsPath, $"{DateTime.Now:yyyy.MM.dd}_* traces.log",
+                        SearchOption.AllDirectories);
+
+                    var log = traceLogs.Length > 0 ? traceLogs[0] : "";
+
+                    if (!string.IsNullOrWhiteSpace(log))
+                    {
+                        filesToCopy.Add(log);
+                    }
+                }
+                
+                List<IStorageFile> files = new List<IStorageFile>();
+
+                foreach (var logPath in filesToCopy)
+                {
+                    var file = await desktop.MainWindow.StorageProvider.TryGetFileFromPathAsync(logPath);
+
+                    if (file != null)
+                    {
+                        LogManager.Instance.Debug($"file to copy :: {logPath}");
+                        files.Add(file);
+                        continue;
+                    }
+                    
+                    LogManager.Instance.Warning($"failed to get file to copy :: {logPath}");
+                }
+
+                if (files.Count == 0)
+                {
+                    LogManager.Instance.Warning("[Settings] Failed to copy log files");
+                    SendNotification("", LocalizationProvider.Instance.copy_failed);
+                }
+
+                var data = new DataObject();
+
+                data.Set(DataFormats.Files, files.ToArray());
+                
+                await desktop.MainWindow.Clipboard.SetDataObjectAsync(data);
+                
+                LogManager.Instance.Info($"[Settings] {files.Count} log/s copied to clipboard");
+                SendNotification("", $"{files.Count} {LocalizationProvider.Instance.copied}");
+            }
+        }
+}
